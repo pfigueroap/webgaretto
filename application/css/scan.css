@@ -1,0 +1,55 @@
+.CardScan {
+  position: relative;
+  width: 14.8rem;
+}
+.CardScan-img {
+  display: block;
+  box-sizing: border-box;
+
+}
+.CardScan-laser {
+  background-color: red;
+  height: 0.25rem;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  opacity: 0.5;
+  -webkit-animation: laser-scan 5s infinite cubic-bezier(.22,.85,.44,1); /* Safari 4+ */
+  -moz-animation:    laser-scan 5s infinite cubic-bezier(.22,.85,.44,1); /* Fx 5+ */
+  -o-animation:      laser-scan 5s infinite cubic-bezier(.22,.85,.44,1); /* Opera 12+ */
+  animation:         laser-scan 5s infinite cubic-bezier(.22,.85,.44,1); /* IE 10+, Fx 29+ */
+}
+
+
+@-webkit-keyframes laser-scan {
+  0%   { top: 0; opacity: 0}
+  36% { top: 0; opacity: 0}
+  40% { top: 0; opacity: 0.5}
+  70%   { top: 100%; }
+  98% { top: 0; opacity: 0.5}
+  100%   { top: 0; opacity: 0 }
+}
+@-moz-keyframes laser-scan {
+  0%   { top: 0; opacity: 0}
+  36% { top: 0; opacity: 0}
+  40% { top: 0; opacity: 0.5}
+  70%   { top: 100%; }
+  98% { top: 0; opacity: 0.5}
+  100%   { top: 0; opacity: 0 }
+}
+@-o-keyframes laser-scan {
+  0%   { top: 0; opacity: 0}
+  36% { top: 0; opacity: 0}
+  40% { top: 0; opacity: 0.5}
+  70%   { top: 100%; }
+  98% { top: 0; opacity: 0.5}
+  100%   { top: 0; opacity: 0 }
+}
+@keyframes laser-scan {
+  0%   { top: 0; opacity: 0}
+  36% { top: 0; opacity: 0}
+  40% { top: 0; opacity: 0.5}
+  70%   { top: 100%; }
+  98% { top: 0; opacity: 0.5}
+  100%   { top: 0; opacity: 0 }
+}

@@ -1,0 +1,11 @@
+equipo;flota;f_detencion;h_inicio;h_fin;duracion;detencion;prioridad_det;workorder;prioridad_work;tarea;id_material
+8350;797F;2017-06-30;8:00;20:00;12;Inspección sistema dirección y convertidor;2;Sistema de dirección;3;Manguera 1;1
+8350;797F;2017-06-30;8:00;20:00;12;Inspección sistema dirección y convertidor;2;Sistema de dirección;3;Manguera 2;2
+8350;797F;2017-06-30;8:00;20:00;12;Inspección sistema dirección y convertidor;2;Sistema de dirección;3;Manguera 3;3
+8350;797F;2017-06-30;8:00;20:00;12;Inspección sistema dirección y convertidor;2;Convertidor;1;Manguera 4;5
+8350;797F;2017-06-30;8:00;20:00;12;Inspección sistema dirección y convertidor;2;Convertidor;1;Manguera 5;6
+8350;797F;2017-06-30;8:00;20:00;12;Inspección sistema dirección y convertidor;2;Convertidor;1;Manguera 6;7
+8353;797F;2017-07-15;7:00;17:00;10;Inspección Frenos;3;Frenos;3;Manguera 7;8
+8353;797F;2017-07-15;7:00;17:00;10;Inspección Frenos;3;Frenos;3;Manguera 8;9
+8353;797F;2017-07-15;7:00;17:00;10;Inspección Frenos;3;Frenos;3;Manguera 9;10
+8353;797F;2017-07-15;7:00;17:00;10;Inspección Frenos;3;Frenos;3;Manguera 10;11

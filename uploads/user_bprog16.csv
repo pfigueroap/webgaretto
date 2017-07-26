@@ -1,0 +1,7 @@
+nombre_1;nombre_2;apellido_1;apellido_2;correo;rut;celular;nacionalidad;empresa;cargo;genero;codigo_trabajador;ubicacion
+Marco;Antonio;Blanco;Muñoz;marco.blanco@bigdataprog.com;7.517.276-1;991589679;CL;1;1;Masculino;35;1
+Roy;;Tapia;;roy.tapia@bigdataprog.com;11.111.111-1;997311088;CL;1;2;Masculino;36;1
+Andrés;;Valenzuela;;andres.valenzuela@bprog.cl;22.222.222-2;954233744;CL;1;2;Masculino;37;2
+Rodrigo;;Valenzuela;;rodrigo.valenzuela@bprog.cl;33.333.333-3;998904508;CL;2;1;Masculino;38;2
+Camila;;Orellana;;camila.orellana@bprog.cl;44.444.444-4;978803959;CL;2;2;Femenino;39;2
+Jason;;Tapia;;jas.tapia@bprog.cl;55.555.555-5;995444026;CL;2;2;Masculino;40;2
