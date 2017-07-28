@@ -6,7 +6,7 @@
 		<table role="presentation" aria-hidden="true" aria-hidden="true" cellspacing="0" cellpadding="0" border="0" align="center" width="600" style="margin: auto;" class="email-container">
 			<tr>
 				<td style="padding: 20px 0; text-align: center">
-					<img src="<?php echo base_url(); ?>application/images/logo2.png">
+					<img src="<?php echo base_url(); ?>application/images/logo2.png" width="300">
 				</td>
 			</tr>
 		</table>
