@@ -21,8 +21,8 @@ class Inicio_mod extends CI_Controller {
         $this->db->query("INSERT INTO usuarios (usuario,clave,correo,tipo) VALUES ('{$usuario}',SHA1('{$clave}'),'{$correo}','{$tipo}')");
     }
     function informacion($usuario){
-        $query = $this->db->query("SELECT * FROM usuarios AS u INNER JOIN empresa AS e ON u.id_empresa = e.id_empresa 
-        INNER JOIN nacion AS n ON u.id_nacion = n.id_nacion WHERE usuario = '{$usuario}' AND estado = '0'");
+        #$query = $this->db->query("SELECT * FROM usuarios AS u INNER JOIN empresa AS e ON u.id_empresa = e.id_empresa INNER JOIN nacion AS n ON u.id_nacion = n.id_nacion WHERE usuario = '{$usuario}' AND estado = '0'");
+        $query = $this->db->query("SELECT * FROM usuarios WHERE usuario = '{$usuario}' AND estado = '0'");
         $result = $query->result();
         $info = (array) $result[0];
         return $info;
@@ -53,6 +53,20 @@ class Inicio_mod extends CI_Controller {
         $result = $query->result();
         $datos = (array) $result[0];
         return $datos;
+    }
+    function valida_pass($usuario,$clave){
+        $query = $this->db->query("SELECT * FROM usuarios WHERE usuario = '{$usuario}' AND clave = SHA1('{$clave}') AND estado = '0'");
+        $valida = 0;
+        if($query->num_rows == 1){
+            $result = $query->result();
+            $datos = (array) $result[0];
+            $valida = 1;
+        }
+        return $valida;
+    }
+    function edit_pass($usuario,$clave){
+        $this->db->query("UPDATE usuarios SET clave = SHA1('{$clave}') WHERE usuario = '{$usuario}' AND estado = '0'");
+        return 1;
     }
 }
 ?>

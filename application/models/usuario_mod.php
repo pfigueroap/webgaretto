@@ -8,8 +8,7 @@ class Usuario_mod extends CI_Controller {
         $this->load->database();
     }
     function usuarios($tipo){
-        $query = $this->db->query("SELECT * FROM usuarios AS u INNER JOIN empresa AS e ON u.id_empresa = e.id_empresa 
-        INNER JOIN nacion AS n ON u.id_nacion = n.id_nacion WHERE tipo = '{$tipo}' AND estado = '0'");
+        $query = $this->db->query("SELECT * FROM usuarios WHERE tipo = '{$tipo}' AND estado = '0'");
         $result = $query->result();
         $usuarios = (array) $result;
         return $usuarios;
@@ -46,11 +45,26 @@ class Usuario_mod extends CI_Controller {
         $this->db->query("UPDATE usuarios SET estado = '1' WHERE id_usuario = '{$id_usuario}'");
     }
     function informacion($id_usuario){
-        $query = $this->db->query("SELECT * FROM usuarios AS u INNER JOIN empresa AS e ON u.id_empresa = e.id_empresa 
-        INNER JOIN nacion AS n ON u.id_nacion = n.id_nacion WHERE id_usuario = '{$id_usuario}' AND estado = '0'");
+        $query = $this->db->query("SELECT * FROM usuarios WHERE id_usuario = '{$id_usuario}' AND estado = '0'");
         $result = $query->result();
         $info = (array) $result[0];
         return $info;
+    }
+    function valida_user($usuario,$rut){
+        $valida = 0;
+        $query = $this->db->query("SELECT * FROM usuarios WHERE usuario = '{$usuario}' AND estado = '0'");
+        if($query->num_rows > 0) $valida = 1;
+        $query = $this->db->query("SELECT * FROM usuarios WHERE rut = '{$rut}' AND estado = '0'");
+        if($query->num_rows > 0) $valida = 1;
+        return $valida;
+    }
+    function valida_edit($usuario,$rut,$id_usuario){
+        $valida = 0;
+        $query = $this->db->query("SELECT * FROM usuarios WHERE usuario = '{$usuario}' AND estado = '0' AND id_usuario != '{$id_usuario}'");
+        if($query->num_rows > 0) $valida = 1;
+        $query = $this->db->query("SELECT * FROM usuarios WHERE rut = '{$rut}' AND estado = '0' AND id_usuario != '{$id_usuario}'");
+        if($query->num_rows > 0) $valida = 1;
+        return $valida;
     }
 }
 ?>

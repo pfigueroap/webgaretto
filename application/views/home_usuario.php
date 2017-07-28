@@ -23,8 +23,8 @@
                     <?php }elseif($clase == 'registrar'){ ?>
                     <div class="card-header"><h3 class="title">Registrar Usuario</h3></div>
                     <?php } ?>
-                    <input type="text" class="form-control" disabled>
-                    <div class="profile_img col-md-2" style="height: 500px; display:inline-block; text-align:center;">
+                    <input type="text" class="form-control" value="<?php echo $mensaje; ?>" style="text-align:center;" disabled>
+                    <div class="profile_img col-md-2" style="height: 800px; display:inline-block; text-align:center;">
                         <div class="CardScan" style="display:inline-block; text-align:center;">
                             <div class="CardScan-laser"></div>
                             <div class="profile_picd">
@@ -36,11 +36,11 @@
                     if($clase == 'perfil' or $clase == 'registrar') echo form_open('inicio_con/edit_user'); 
                     elseif($clase == 'usuario' or $clase == 'editar') echo form_open('usuario_con/mod_user/'.$info['tipo'].'/'.$clase);?>
                     <div class="col-md-5 col-sm-12 col-xs-12 form-group">
-                        <label class="control-label col-md-4 col-sm-3 col-xs-12" for="first-name">Nombres </label>
+                        <label class="control-label col-md-4 col-sm-3 col-xs-12" for="first-name">Usuario </label>
                         <div class="col-md-8 col-sm-6 col-xs-12">
-                            <input name="nombres" type="text" onkeypress="return soloLetras(event)" class="form-control col-md-7 col-xs-12 parsley-success" required
-                            <?php if($clase == 'perfil' or $clase == 'editar'){ ?> value="<?php echo $info['nombre_1']." ".$info['nombre_2']; ?>" 
-                            <?php }elseif($clase == 'usuario' or $clase == 'registrar'){ ?> placeholder="Nombres" <?php } ?>>
+                            <input name="usuario" type="text" onkeypress="return soloLetras(event)" class="form-control col-md-7 col-xs-12 parsley-success" required
+                            <?php if($clase == 'perfil' or $clase == 'editar'){ ?> value="<?php echo $info['usuario']; ?>" 
+                            <?php }elseif($clase == 'usuario' or $clase == 'registrar'){ ?> placeholder="Usuario" <?php } ?>>
                         </div>
                     </div>
                     <div class="col-md-5 col-sm-12 col-xs-12 form-group">
@@ -52,11 +52,27 @@
                         </div>
                     </div>
                     <div class="col-md-5 col-sm-12 col-xs-12 form-group">
+                        <label class="control-label col-md-4 col-sm-3 col-xs-12" for="first-name">Nombres </label>
+                        <div class="col-md-8 col-sm-6 col-xs-12">
+                            <input name="nombres" type="text" onkeypress="return soloLetras(event)" class="form-control col-md-7 col-xs-12 parsley-success" required
+                            <?php if($clase == 'perfil' or $clase == 'editar'){ ?> value="<?php echo $info['nombre_1']." ".$info['nombre_2']; ?>" 
+                            <?php }elseif($clase == 'usuario' or $clase == 'registrar'){ ?> placeholder="Nombres" <?php } ?>>
+                        </div>
+                    </div>
+                    <div class="col-md-5 col-sm-12 col-xs-12 form-group">
                         <label class="control-label col-md-4 col-sm-3 col-xs-12" for="first-name">Apellidos </label>
                         <div class="col-md-8 col-sm-6 col-xs-12">
                             <input name="apellidos" type="text" onkeypress="return soloLetras(event)" class="form-control col-md-7 col-xs-12 parsley-success" required
                             <?php if($clase == 'perfil' or $clase == 'editar'){ ?> value="<?php echo $info['apellido_1']." ".$info['apellido_2']; ?>"
                             <?php }elseif($clase == 'usuario' or $clase == 'registrar'){ ?> placeholder="Apellidos" <?php } ?>>
+                        </div>
+                    </div>
+                    <div class="col-md-5 col-sm-12 col-xs-12 form-group">
+                        <label class="control-label col-md-4 col-sm-3 col-xs-12" for="first-name">Dirección </label>
+                        <div class="col-md-8 col-sm-6 col-xs-12">
+                            <input name="direccion" type="text" class="form-control col-md-7 col-xs-12 parsley-success" required
+                            <?php if($clase == 'perfil' or $clase == 'editar' or $clase == 'registrar'){ ?> value="<?php echo $info['direccion']; ?>"
+                            <?php }elseif($clase == 'usuario'){ ?> placeholder="Direccion" <?php } ?>>
                         </div>
                     </div>
                     <div class="col-md-5 col-sm-12 col-xs-12 form-group">
@@ -125,6 +141,7 @@
                     <div class="col-md-12 text-right">
                         <?php if($clase == 'perfil'){ ?>
                         <button id="btnSubmit" class="btn btn-default btn-xs" style="background: #af1416;"><i class="fa fa-edit" ></i> Guardar Cambios</button>
+                        <a href="<?php echo site_url("inicio_con/cambiar_pass"); ?>" class="btn btn-default btn-xs" style="background: #af1416;"><i class="fa fa-key"></i> Cambiar Contraseña </a>
                         <a href="<?php echo site_url("inicio_con/index"); ?>" class="btn btn-default btn-xs" style="background: #af1416;"><i class="fa fa-reply"></i> Volver </a>
                         <?php }elseif($clase == 'usuario'){ ?>
                         <button id="btnSubmit" class="btn btn-default btn-xs" style="background: #af1416;"><i class="fa fa-user-plus" ></i> Crear Usuario</button>

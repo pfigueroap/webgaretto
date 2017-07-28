@@ -129,7 +129,7 @@ class Inicio_con extends CI_Controller {
     }
     public function edit_user(){
         $data = $this->valida();
-        $post = array('correo','celular','rut','id_empresa','id_nacion','genero');
+        $post = array('correo','celular','rut','id_empresa','id_nacion','genero','direccion');
         foreach ($post as $value)
             $info[$value] = $this->input->post($value);
         $nombres = split(" ",$this->input->post('nombres'));
@@ -150,6 +150,27 @@ class Inicio_con extends CI_Controller {
         }
         $this->inicio_mod->edit_user($info,$data['usuario']);
         $data['page'] = 'home_cont';
+        $this->load->view('home',$data);
+    }
+    public function cambiar_pass(){
+        $data = $this->valida();
+        $data['page'] = 'pass';
+        $this->load->view('home',$data);
+    }
+    public function edit_pass(){
+        $data = $this->valida();
+        $posts = array('pass','new_pass','conf_new_pass');
+        foreach ($posts as $post)
+            $info[$post] = $this->input->post($post);
+        $valida = $this->inicio_mod->valida_pass($data['usuario'],$info['pass']);
+        if($info['new_pass'] != $info['conf_new_pass']) $data['mensaje'] = "La Confirmación de la contraseña no corresponde.";
+        elseif($valida == 0) $data['mensaje'] = "La Contraseña no corresponde.";
+        elseif($valida == 1){
+            $conf = $this->inicio_mod->edit_pass($data['usuario'],$info['new_pass']);
+            if($conf == 1) $data['mensaje'] = "La Contraseña ha sido cambiada exitosamente.";
+            else $data['mensaje'] = "Ups!, ha ocurrido un problema.";
+        }
+        $data['page'] = 'pass';
         $this->load->view('home',$data);
     }
 }
