@@ -41,19 +41,21 @@ class Inicio_con extends CI_Controller {
             $info[$post] = $this->input->post($post);
         $info['user'] = $this->session->userdata('usuario');
         $info['fecha'] = date("Y-m-d");
-        $info['hora'] = date("H:i:s"); 
-        #$info['estado'] = $this->enviar_email($info['email'],$info['nombre'],'pablo.figueroa@bprog.cl',$info['asunto'],$info['mensaje']);
-        $this->enviar_email($info['email'],$info['nombre'],'pablo.figueroa@bprog.cl',$info['asunto'],$info['mensaje']);
+        $info['hora'] = date("H:i:s");
+        $data = $this->inicio_mod->web();
+        $info['email_des'] = $data['sec4_email'];
+        $info['estado'] = $this->enviar_email($info['email'],$info['nombre'],$info['email_des'],$info['asunto'],$info['mensaje']);
         $this->inicio_mod->insert_tab($info,'contacto');
         $this->page();
     }
     function enviar_email($email_org,$nombre,$email_des,$asunto,$mensaje){
-        #$config['mailtype'] = 'html';
-        #$this->email->initialize();
+        $config['mailtype'] = 'html';
+        $this->email->initialize($config);
         $this->email->from($email_org,$nombre);
         $this->email->to($email_des);
         $this->email->subject($asunto);
-        $this->email->message($mensaje);
+        $data['mensaje'] = $mensaje;
+        $this->email->message($this->load->view('email',$data,true));
         $this->email->send();
     }
     public function edit_web(){
