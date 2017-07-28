@@ -55,6 +55,8 @@ class Inicio_con extends CI_Controller {
         $this->email->to($email_des);
         $this->email->subject($asunto);
         $data['mensaje'] = $mensaje;
+        $data['asunto'] = $asunto;
+        $data['nombre'] = $nombre;
         $this->email->message($this->load->view('email',$data,true));
         return $this->email->send();
     }
