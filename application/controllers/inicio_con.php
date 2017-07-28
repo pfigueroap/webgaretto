@@ -56,7 +56,7 @@ class Inicio_con extends CI_Controller {
         $this->email->subject($asunto);
         $data['mensaje'] = $mensaje;
         $this->email->message($this->load->view('email',$data,true));
-        $this->email->send();
+        return $this->email->send();
     }
     public function edit_web(){
         $data = $this->valida();
