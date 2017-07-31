@@ -101,7 +101,7 @@ class Inicio_con extends CI_Controller {
         if($tipo != ''){
             $asunto = "Registro de usuario";
             $mensaje = "Se ha registrado en la plataforma de garetto el usuario ".$data['usuario']." asociado a este correo.";
-            $this->enviar_email('contacto@wegaretto.cl',"Estimado",$data['correo'],$asunto,$mensaje);
+            $this->enviar_email('contacto@wegaretto.cl',"Equipo Garetto",$data['correo'],$asunto,$mensaje);
             $data['info'] = $data['datos'];
             $data['empresas'] = $this->inicio_mod->variable('empresa');
             $data['naciones'] = $this->inicio_mod->variable('nacion');
