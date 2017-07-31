@@ -173,5 +173,28 @@ class Inicio_con extends CI_Controller {
         $data['page'] = 'pass';
         $this->load->view('home',$data);
     }
+    public function activar_reloj(){
+        $url = "http://www.relojgaretto.cl/sensores/agregar";  
+        $postData = array(
+            "usuario" => "pablo",
+            "rut_usuario" => "16016083",
+            "email_usuario" => "pfigueroap.plaza@gmail.com", 
+            "clave" => sha1("pablo"),
+            "modelo" => "FGT45",
+            "marca" => "ZKT",
+            "cantidad" => "1");  
+        /*Convierte el array en el formato adecuado para cURL*/  
+        $elements = array();
+        foreach ($postData as $name=>$value) {  
+           $elements[] = "{$name}=".urlencode($value);  
+        }  
+        $handler = curl_init();  
+        curl_setopt($handler, CURLOPT_URL, $url);  
+        curl_setopt($handler, CURLOPT_POST,true);  
+        curl_setopt($handler, CURLOPT_POSTFIELDS, $elements);  
+        $response = curl_exec ($handler);  
+        curl_close($handler);
+        echo $response;
+    }
 }
 ?>
