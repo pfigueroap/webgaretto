@@ -40,14 +40,16 @@
                         <div class="col-md-8 col-sm-6 col-xs-12">
                             <input name="usuario" type="text" onkeypress="return soloLetras(event)" class="form-control col-md-7 col-xs-12 parsley-success" required
                             <?php if($clase == 'perfil' or $clase == 'editar'){ ?> value="<?php echo $info['usuario']; ?>" 
-                            <?php }elseif($clase == 'usuario' or $clase == 'registrar'){ ?> placeholder="Usuario" <?php } ?>>
+                            <?php }elseif($clase == 'registrar'){ ?> value="<?php echo $usuario; ?>" readonly  
+                            <?php }elseif($clase == 'usuario'){ ?> placeholder="Usuario" <?php } ?>>
                         </div>
                     </div>
                     <div class="col-md-5 col-sm-12 col-xs-12 form-group">
                         <label class="control-label col-md-4 col-sm-3 col-xs-12" for="first-name">Correo </label>
                         <div class="col-md-8 col-sm-6 col-xs-12">
                             <input name="correo" type="email" class="form-control col-md-7 col-xs-12 parsley-success" required
-                            <?php if($clase == 'perfil' or $clase == 'editar' or $clase == 'registrar'){ ?> value="<?php echo $info['correo']; ?>"
+                            <?php if($clase == 'perfil' or $clase == 'editar'){ ?> value="<?php echo $info['correo']; ?>"
+                            <?php }elseif($clase == 'registrar'){ ?> value="<?php echo $correo; ?>" readonly 
                             <?php }elseif($clase == 'usuario'){ ?> placeholder="Correo" <?php } ?>>
                         </div>
                     </div>

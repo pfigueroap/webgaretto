@@ -93,12 +93,15 @@ class Inicio_con extends CI_Controller {
         }else $this->load->view('login');
     }
     public function registro(){
-        $usuario = $this->input->post('username');
+        $data['usuario'] = $this->input->post('username');
         $clave = $this->input->post('password');
-        $correo = $this->input->post('email');
-        $this->inicio_mod->registra_user($usuario,$clave,$correo,'2'); #Tipo 2: Cliente
-        $this->inicio_mod->valida_user($usuario,$clave);
-        if($this->session->userdata('usuario') != ''){
+        $data['correo'] = $this->input->post('email');
+        $this->inicio_mod->registra_user($data['usuario'],$clave,$data['correo'],'2'); #Tipo 2: Cliente
+        $tipo = $this->inicio_mod->valida_user($data['usuario'],$clave);
+        if($tipo != ''){
+            $asunto = "Registro de usuario";
+            $mensaje = "Se ha registrado en la plataforma de garetto el usuario ".$data['usuario']." asociado a este correo."
+            $this->enviar_email('contacto@wegaretto.cl',"Estimado",$data['correo'],$asunto,$mensaje);
             $data['info'] = $data['datos'];
             $data['empresas'] = $this->inicio_mod->variable('empresa');
             $data['naciones'] = $this->inicio_mod->variable('nacion');
