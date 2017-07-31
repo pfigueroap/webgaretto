@@ -184,14 +184,15 @@ class Inicio_con extends CI_Controller {
             "marca" => "ZKT",
             "cantidad" => "1");  
         /*Convierte el array en el formato adecuado para cURL*/  
-        $elements = array();
-        foreach ($postData as $name=>$value) {  
-           $elements[] = "{$name}=".urlencode($value);  
-        }  
+        #$elements = array();
+        #foreach ($postData as $name=>$value) {  
+        #   $elements[] = "{$name}=".urlencode($value);  
+        #}  
         $handler = curl_init();  
         curl_setopt($handler, CURLOPT_URL, $url);  
         curl_setopt($handler, CURLOPT_POST,true);  
-        curl_setopt($handler, CURLOPT_POSTFIELDS, $elements);  
+        #curl_setopt($handler, CURLOPT_POSTFIELDS, $elements);
+        curl_setopt($handler, CURLOPT_POSTFIELDS, $postData);
         $response = curl_exec ($handler);  
         curl_close($handler);
         echo $response;
