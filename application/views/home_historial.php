@@ -51,8 +51,12 @@
                                     ?></td>
                                     <td><?php echo number_format($registro->total,0,",","."); ?></td>
                                     <td>
+                                        <?php if($registro->estado != '6'){ ?>
                                         <a href="<?php echo site_url("historial_con/eliminar_orden/{$registro->id_tmp_compra}"); ?>" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> Borrar </a>
                                         <a href="<?php echo site_url("historial_con/detalle_registro/".$registro->id_tmp_compra); ?>" class="btn btn-info btn-xs"><i class="fa fa-pencil"></i> Editar </a>
+                                        <?php }else{ ?>
+                                        <a href="#" class="btn btn-success btn-xs"><i class="fa fa-check"></i> Validado </a>
+                                        <?php } ?>
                                     </td>
                                 </tr>
                                 <?php } ?>
