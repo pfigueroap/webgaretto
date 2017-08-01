@@ -29,18 +29,29 @@
                             <tbody id="myTable">
                                 <?php foreach ($registros as $registro) { ?>
                                 <tr>
-                                    <td><?php echo $registro->nombre_1." ".$registro->nombre_2; ?></td>
+                                    <td><?php echo $registro->nombre_1." ".$registro->apellido_1; ?></td>
                                     <td><?php echo $registro->rut; ?></td>
                                     <td><?php echo $registro->id_tmp_compra; ?></td>
                                     <td><?php echo $registro->f_ingreso; ?></td>
                                     <td><?php echo $registro->h_ingreso; ?></td>
-                                    <td><?php if($registro->estado == '3') echo "Venta"; 
+                                    <td><?php 
+                                    if($registro->estado == '0') echo "Por pagar"; 
+                                    elseif($registro->estado == '1') echo "Transferencia"; 
+                                    elseif($registro->estado == '2') echo "WebPay"; 
+                                    elseif($registro->estado == '3') echo "Venta"; 
                                     elseif($registro->estado == '4') echo "Arriendo";
-                                    elseif($registro->estado == '5') echo "Regalo";?></td>
+                                    elseif($registro->estado == '5') echo "Regalo";
+                                    elseif($registro->estado == '6') echo "Validado";
+                                    ?></td>
                                     <td><?php echo number_format($registro->total,0,",","."); ?></td>
                                     <td>
-                                        <a href="<?php echo site_url("operacion_con/eliminar_orden/{$compra->id_tmp_compra}"); ?>" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> Borrar </a>
+                                        <a href="<?php echo site_url("operacion_con/eliminar_orden/{$registro->id_tmp_compra}"); ?>" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> Borrar </a>
                                         <a href="<?php echo site_url("operacion_con/detalle_registro/".$registro->id_tmp_compra); ?>" class="btn btn-info btn-xs"><i class="fa fa-pencil"></i> Editar </a>
+                                        <?php if($registro->estado != '6'){ ?>
+                                        <a href="<?php echo site_url("operacion_con/validar_orden/".$registro->id_tmp_compra); ?>" class="btn btn-warning btn-xs"><i class="fa fa-handshake-o"></i> Validar </a>
+                                        <?php }else{ ?>
+                                        <a href="<?php echo site_url("operacion_con/invalidar_orden/".$registro->id_tmp_compra); ?>" class="btn btn-success btn-xs"><i class="fa fa-check"></i> Validado </a>
+                                        <?php } ?>
                                     </td>
                                 </tr>
                                 <?php } ?>

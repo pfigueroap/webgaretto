@@ -59,9 +59,11 @@ class Operacion_con extends CI_Controller {
         return $datos;
     }
     public function crear_compra(){
+        $data = $this->valida();
         $compras = $this->formulario();
         if(count($compras) > 0){
-            $this->operacion_mod->crear_registro($compras,'0','0');
+            $id_usuario = $this->operacion_mod->id_usuario($data['usuario']);
+            $this->operacion_mod->crear_registro($compras,'0',$id_usuario);
             $this->carro_compras();
         }else $this->index_run('1');
     }
@@ -97,8 +99,8 @@ class Operacion_con extends CI_Controller {
             $data['compras'] = $this->operacion_mod->tmp_compras($data['usuario']);
             $data['validador'] = '0';
             #Validar WebPay en caso de $pago = 'webpay'
-            $data['id_compra'] = '1';
-            #$id_compra = $this->operacion_mod->registrar_compra($usuario,$pago,$total,$data['compras'],$despacho,$direccion,$validador);
+            #$data['id_compra'] = '1';
+            $data['id_compra'] = $this->operacion_mod->registrar_compra($data['usuario'],$data['pago'],$data['total'],$data['compras'],$data['despacho'],$data['direccion'],$data['validador']);
             $data['page'] = 'home_comprobante';
             $this->load->view('home',$data);
         }else{
@@ -155,6 +157,37 @@ class Operacion_con extends CI_Controller {
         }elseif($tipo == 'venta') $this->index_run('2');
         elseif($tipo == 'arriendo') $this->index_run('3');
         elseif($tipo == 'regalo') $this->index_run('4');
+    }
+    public function validar_orden(){
+        $id_tmp_compra = $this->uri->segment(3);
+        $this->operacion_mod->validar_orden($id_tmp_compra,'6');
+        $this->activar_reloj($id_tmp_compra);
+        $this->ordenes();
+    }
+    public function invalidar_orden(){
+        $id_tmp_compra = $this->uri->segment(3);
+        $this->operacion_mod->validar_orden($id_tmp_compra,'0');
+        $this->ordenes();
+    }
+    function activar_reloj($id_tmp_compra){
+        $url = "http://www.relojgaretto.cl/sensores/agregar";
+        $info = $this->operacion_mod->info_compra($id_tmp_compra);
+        $postData = array(
+            "usuario" => $info['usuario'],
+            "rut_usuario" => str_replace(array(".","-"),"",$info['rut']),
+            "email_usuario" => $info['correo'], 
+            "clave" => $info['clave'],
+            "modelo" => "FGT45",
+            "marca" => "ZKT",
+            "cantidad" => "1");
+        $handler = curl_init();
+        curl_setopt($handler, CURLOPT_URL, $url);
+        curl_setopt($handler, CURLOPT_POST,true);
+        curl_setopt($handler, CURLOPT_POSTFIELDS, $postData);
+        #$response = curl_exec ($handler);
+        curl_exec ($handler);  
+        curl_close($handler);
+        #echo $response;
     }
 }
 ?>

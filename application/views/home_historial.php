@@ -17,26 +17,45 @@
                         <table class="table table-hover">
                             <thead>
                                 <tr>
-                                    <th>colum 1</th>
-                                    <th>colum 2</th>
-                                    <th>colum 3</th>
-                                    <th>colum 4</th>
+                                    <th>Cliente</th>
+                                    <th>Rut Cliente</th>
+                                    <th>ID Operación</th>
+                                    <th>Fecha Operación</th>
+                                    <th>Hora Operación</th>
+                                    <th>Tipo Operación</th>
+                                    <th>Total</th>
+                                    <th>Acciones</th>
                                 </tr>
                             </thead>
                             <tbody id="myTable">
+                                <?php foreach ($registros as $registro) { ?>
                                 <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                            </tbody>
-                            <tbody>
-                                <tr>
-                                    <td><input onkeyup="doSearch('searchTerm0','0')" id="searchTerm0" type="search" class="form-control input-sm" placeholder="Buscar Fecha detención" aria-controls="datatable-responsive" style="width:100%"></td>
-                                    <td><input onkeyup="doSearch('searchTerm1','1')" id="searchTerm1" type="search" class="form-control input-sm" placeholder="Buscar Duración" aria-controls="datatable-responsive" style="width:100%"></td>
-                                    <td><input onkeyup="doSearch('searchTerm2','2')" id="searchTerm2" type="search" class="form-control input-sm" placeholder="Buscar Tarea" aria-controls="datatable-responsive" style="width:100%"></td>
-                                    <td><input onkeyup="doSearch('searchTerm3','3')" id="searchTerm3" type="search" class="form-control input-sm" placeholder="Buscar Workorder" aria-controls="datatable-responsive" style="width:100%"></td>
+                                    <?php if($registro->nombre_1 == ''){ ?>
+                                    <td><?php echo $info['nombre_1']." ".$info['apellido_1']; ?></td>
+                                    <td><?php echo $info['rut']; ?></td>
+                                    <?php }else{ ?>
+                                    <td><?php echo $registro->nombre_1." ".$registro->apellido_1; ?></td>
+                                    <td><?php echo $registro->rut; ?></td>
+                                    <?php } ?>
+                                    <td><?php echo $registro->id_tmp_compra; ?></td>
+                                    <td><?php echo $registro->f_ingreso; ?></td>
+                                    <td><?php echo $registro->h_ingreso; ?></td>
+                                    <td><?php 
+                                    if($registro->estado == '0') echo "Por pagar"; 
+                                    elseif($registro->estado == '1') echo "Transferencia"; 
+                                    elseif($registro->estado == '2') echo "WebPay"; 
+                                    elseif($registro->estado == '3') echo "Venta"; 
+                                    elseif($registro->estado == '4') echo "Arriendo";
+                                    elseif($registro->estado == '5') echo "Regalo";
+                                    elseif($registro->estado == '6') echo "Validado";
+                                    ?></td>
+                                    <td><?php echo number_format($registro->total,0,",","."); ?></td>
+                                    <td>
+                                        <a href="<?php echo site_url("historial_con/eliminar_orden/{$registro->id_tmp_compra}"); ?>" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> Borrar </a>
+                                        <a href="<?php echo site_url("historial_con/detalle_registro/".$registro->id_tmp_compra); ?>" class="btn btn-info btn-xs"><i class="fa fa-pencil"></i> Editar </a>
+                                    </td>
                                 </tr>
+                                <?php } ?>
                             </tbody>
                         </table>
                     </div>

@@ -20,7 +20,7 @@ class Operacion_mod extends CI_Controller {
         return $productos;
     }
     function crear_registro($registros,$estado,$id_cliente){
-    	# $estado [compra temporal: 0], [transferencia por validar: 1], [webpay pagado: 2], [venta temporal: 3]
+    	# $estado [compra temporal: 0], [transferencia por validar: 1], [webpay pagado: 2], [venta temporal: 3], [arriendo: 4], [regalo: 5], [validado: 6]
     	$this->db->query("INSERT INTO tmp_compra (usuario,f_ingreso,h_ingreso,estado,id_cliente) VALUES ('{$registros[0]['usuario']}','{$registros[0]['f_ingreso']}','{$registros[0]['h_ingreso']}','{$estado}','{$id_cliente}')");
     	$id_tmp_compra = $this->db->insert_id();
     	foreach ($registros as $r) {
@@ -30,7 +30,7 @@ class Operacion_mod extends CI_Controller {
     	return $id_tmp_compra;
     }
     function tmp_compras($usuario){
-    	$query = $this->db->query("SELECT p.cod_prod, p.producto, p.cod_bar, p.modelo, p.marca, t.id_tmp_detalle, t.prc_vta, t.mnd_vta, t.cantidad, t.total FROM tmp_det_compra AS t
+    	$query = $this->db->query("SELECT p.cod_prod, p.producto, p.cod_bar, p.modelo, p.marca, t.id_tmp_compra, t.id_tmp_detalle, t.prc_vta, t.mnd_vta, t.cantidad, t.total FROM tmp_det_compra AS t
     		INNER JOIN producto AS p ON t.id_producto = p.id_producto
     		WHERE t.estado = '0' AND t.usuario = '{$usuario}' AND t.estado = '0'");
         $result = $query->result();
@@ -63,8 +63,13 @@ class Operacion_mod extends CI_Controller {
     	if($pago == 'transferencia') $estado = '1'; #Transferencia por validar
     	elseif($pago == 'webpay' and $validador == '0') $estado = '0'; #De vuelta al carro de compras
     	elseif($pago == 'webpay' and $validador == '1') $estado = '2'; #Compra Pagada con webpay
-    	foreach ($compras as $compra)
-    		$this->db->query("UPDATE tmp_det_compra SET id_compra = '{$id_compra}', estado = '{$estado}' WHERE id_tmp_detalle = '{$compra->id_tmp_detalle}'");
+    	foreach ($compras as $compra){
+            $id_tmp_compra = $compra->id_tmp_compra;
+    		$this->db->query("UPDATE tmp_det_compra SET id_compra = '{$id_compra}', estado = '{$estado}' 
+                WHERE id_tmp_detalle = '{$compra->id_tmp_detalle}'");
+        }
+        $this->db->query("UPDATE tmp_compra SET direccion = '{$direccion}', estado = '{$estado}', f_pago = '{$pago}', t_despacho = '{$despacho}'  
+            WHERE id_tmp_compra = '{$id_tmp_compra}'");
     	return $id_compra;
     }
     function clientes(){
@@ -76,9 +81,9 @@ class Operacion_mod extends CI_Controller {
     function registros(){
     	$query = $this->db->query("SELECT c.id_tmp_compra, c.f_ingreso, c.h_ingreso, c.estado, u.nombre_1, u.apellido_1, u.rut, SUM(d.total) AS total 
     		FROM tmp_compra AS c 
-    		INNER JOIN usuarios AS u ON c.id_cliente = u.id_usuario 
+    		LEFT JOIN usuarios AS u ON c.id_cliente = u.id_usuario 
     		INNER JOIN tmp_det_compra AS d ON c.id_tmp_compra = d.id_tmp_compra 
-    		WHERE c.estado = '3' OR c.estado = '4' OR c.estado = '5' GROUP BY c.id_tmp_compra");
+    		GROUP BY c.id_tmp_compra ORDER BY c.f_ingreso DESC, c.h_ingreso DESC");
     	$result = $query->result();
         $registros = (array) $result;
         return $registros;
@@ -113,6 +118,24 @@ class Operacion_mod extends CI_Controller {
     }
     function actualizar_orden($id_tmp_compra,$despacho, $direccion,$pago){
     	$this->db->query("UPDATE tmp_compra SET t_despacho = '{$despacho}', direccion = '{$direccion}', f_pago = '{$pago}' WHERE id_tmp_compra = '{$id_tmp_compra}'");
+    }
+    function id_usuario($usuario){
+        $query = $this->db->query("SELECT id_usuario FROM usuarios WHERE usuario = '{$usuario}'"); 
+        $result = $query->result();
+        $usuario = (array) $result[0];
+        return $usuario["id_usuario"];
+    }
+    function validar_orden($id_tmp_compra,$estado){
+        $this->db->query("UPDATE tmp_det_compra SET estado = '{$estado}' WHERE id_tmp_compra = '{$id_tmp_compra}'");
+        $this->db->query("UPDATE tmp_compra SET estado = '{$estado}' WHERE id_tmp_compra = '{$id_tmp_compra}'");
+    }
+    function info_compra($id_tmp_compra){
+        $query = $this->db->query("SELECT u.usuario, u.clave, u.rut, u.correo FROM tmp_compra AS c 
+            INNER JOIN usuarios AS u ON c.id_cliente = u.id_usuario 
+            WHERE c.id_tmp_compra = '{$id_tmp_compra}'");
+        $result = $query->result();
+        $info = (array) $result[0];
+        return $info;
     }
 }
 ?>

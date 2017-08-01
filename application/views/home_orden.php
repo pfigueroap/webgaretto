@@ -21,7 +21,11 @@
                                 </tr>
                                 <tr>
                                     <td><?php echo $orden['id_tmp_compra'];?></td>
+                                    <?php if($orden['nombre_1'] == ''){ ?>
+                                    <td><?php echo $info['nombre_1']." ".$info['apellido_1']; ?></td>
+                                    <?php }else{ ?>
                                     <td><?php echo $orden['nombre_1']." ".$orden['apellido_1'];?></td>
+                                    <?php } ?>
                                     <td><?php echo number_format($orden['total'],0,",",".");?></td>
                                     <td>CLP</td>
                                 </tr>
@@ -33,11 +37,17 @@
                                 </tr>
                                 <tr>
                                     <td><?php 
-                                    if($orden['estado'] == '3') echo "Venta";
+                                    if($orden['estado'] == '0') echo "Por pagar"; 
+                                    elseif($orden['estado'] == '1') echo "Transferencia"; 
+                                    elseif($orden['estado'] == '2') echo "WebPay"; 
+                                    elseif($orden['estado'] == '3') echo "Venta"; 
                                     elseif($orden['estado'] == '4') echo "Arriendo";
-                                    elseif($orden['estado'] == '5') echo "Regalo";
-                                    ?></td>
+                                    elseif($orden['estado'] == '5') echo "Regalo";?></td>
+                                    <?php if($orden['rut'] == ''){ ?>
+                                    <td><?php echo $info['rut']; ?></td>
+                                    <?php }else{ ?>
                                     <td><?php echo $orden['rut'];?></td>
+                                    <?php } ?>
                                     <td><?php echo $orden['f_ingreso'] ?></td>
                                     <td><?php echo $orden['h_ingreso']?></td>
                                 </tr>
@@ -76,7 +86,12 @@
                                     <td id="estadoTfila col1"><?php echo $arr_mnd[$producto->mnd_vta]; ?></td>
                                     <td id="estadoTfila col1"><?php echo number_format($producto->cantidad,0,",","."); ?></td>
                                     <td id="estadoTfila col1"><?php echo number_format($producto->total,0,",","."); ?></td>
-                                    <td><a href="<?php echo site_url("operacion_con/eliminar_det_orden/".$orden['id_tmp_compra']."/".$producto->id_tmp_detalle); ?>" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> Borrar </a></td>
+                                    <td><?php if($clase == 'historial'){ ?>
+                                        <a href="<?php echo site_url("historial_con/eliminar_det_orden/".$orden['id_tmp_compra']."/".$producto->id_tmp_detalle); ?>" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> Borrar </a>
+                                        <?php }else{ ?>
+                                        <a href="<?php echo site_url("operacion_con/eliminar_det_orden/".$orden['id_tmp_compra']."/".$producto->id_tmp_detalle); ?>" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> Borrar </a>
+                                        <?php } ?>
+                                    </td>
                                 </tr>
                                 <?php } ?>
                             </tbody>
@@ -86,11 +101,19 @@
                         <ul class="pagination pagination-lg pager" id="myPager"></ul> 
                     </div><!-- Revisar paginado - Fallan los números -->
                     <div class="col-md-12 text-right">
+                        <?php if($clase == 'historial'){ ?>
+                        <a href="<?php echo site_url("historial_con/index"); ?>" class="btn btn-default btn-xs" style="background: #af1416;"><i class="fa fa-reply"></i> Volver al Historial </a>
+                        <a href="<?php echo site_url("historial_con/eliminar_orden/".$orden['id_tmp_compra']); ?>" class="btn btn-default btn-xs" style="background: #af1416;"><i class="fa fa-trash-o"></i> Eliminar Orden </a>
+                        <?php }else{ ?>
                         <a href="<?php echo site_url("operacion_con/ordenes"); ?>" class="btn btn-default btn-xs" style="background: #af1416;"><i class="fa fa-reply"></i> Volver a Ordenes </a>
                         <a href="<?php echo site_url("operacion_con/eliminar_orden/".$orden['id_tmp_compra']); ?>" class="btn btn-default btn-xs" style="background: #af1416;"><i class="fa fa-trash-o"></i> Eliminar Orden </a>
+                        <?php } ?>
                     </div>
                 </div>
-                <?php echo form_open('operacion_con/actualizar_orden/'.$orden['id_tmp_compra']); ?>
+                <?php 
+                if($clase == 'historial') echo form_open('historial_con/actualizar_orden/'.$orden['id_tmp_compra']);
+                else echo form_open('operacion_con/actualizar_orden/'.$orden['id_tmp_compra']); 
+                ?>
                 <div class="row">
                     <div class="col-lg-6 col-md-12">
                     <div class="card">
