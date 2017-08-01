@@ -50,7 +50,8 @@
                                         <?php if($registro->estado != '6'){ ?>
                                         <a href="<?php echo site_url("operacion_con/validar_orden/".$registro->id_tmp_compra); ?>" class="btn btn-warning btn-xs"><i class="fa fa-handshake-o"></i> Validar </a>
                                         <?php }else{ ?>
-                                        <a href="<?php echo site_url("operacion_con/invalidar_orden/".$registro->id_tmp_compra); ?>" class="btn btn-success btn-xs"><i class="fa fa-check"></i> Validado </a>
+                                        <!--a href="<?php #echo site_url("operacion_con/invalidar_orden/".$registro->id_tmp_compra); ?>" class="btn btn-success btn-xs"><i class="fa fa-check"></i> Validado </a-->
+                                        <a href="#" class="btn btn-success btn-xs"><i class="fa fa-check"></i> Validado </a>
                                         <?php } ?>
                                     </td>
                                 </tr>
