@@ -134,12 +134,9 @@ class Operacion_con extends CI_Controller {
         $id_tmp_compra = $this->uri->segment(3);
         $data = $this->data_comprobante($id_tmp_compra);
         $html = $this->load->view('home_pdf',$data,true);
-        #$html = "<html><body>Test<br></body></html>";
         $this->mydompdf->load_html($html);
         $this->mydompdf->render();
-        $this->mydompdf->stream("welcome.pdf", array(
-            "Attachment" => false
-        ));
+        $this->mydompdf->stream("comprobante.pdf", array("Attachment" => false));
     }
     public function ordenes(){
         $data = $this->valida();

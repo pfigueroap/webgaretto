@@ -26,7 +26,6 @@
                         <h3 class="title">Información de Compra Rechazada</h3>
                         <?php }} ?>
                     </div>
-                    <br/>
                     <div class="table-responsive">
                         <table class="table table-hover">
                             <tbody id="myTable">
@@ -79,7 +78,6 @@
                     <div class="card-header">
                         <h3 class="title">Registro de compras</h3>
                     </div>
-                    <br/>
                     <div class="table-responsive">
                         <table class="table table-hover">
                             <thead>
@@ -113,16 +111,14 @@
                         </table>
                     </div>
                     <div class="col-md-12 text-right">
-                        <ul class="pagination pagination-lg pager" id="myPager"></ul> 
-                    </div><!-- Revisar paginado - Fallan los números -->
-                    <div class="col-md-12 text-right">
                         <?php if($clase == 'historial'){ ?>
                         <a href="<?php echo site_url("historial_con/index"); ?>" class="btn btn-default btn-xs" style="background: #af1416;"><i class="fa fa-reply"></i> Volver </a>
+                        <a href="<?php echo site_url("historial_con/down_comprobante/".$id_tmp_compra); ?>" target="_blank" class="btn btn-primary btn-xs" style="background: #af1416;     box-shadow:none;" > <i class="fa fa-file-pdf-o"></i> Descargar Comprobante</a>
                         <?php }elseif($clase == 'ordenes'){ ?>
                         <a href="<?php echo site_url("operacion_con/ordenes"); ?>" class="btn btn-default btn-xs" style="background: #af1416;"><i class="fa fa-reply"></i> Volver </a>
+                        <a href="<?php echo site_url("operacion_con/down_comprobante/".$id_tmp_compra); ?>" target="_blank" class="btn btn-primary btn-xs" style="background: #af1416;     box-shadow:none;" > <i class="fa fa-file-pdf-o"></i> Descargar Comprobante</a>
                         <?php } ?>
-                        <!--a href="<?php echo site_url("operacion_con/down_comprobante/".$id_tmp_compra); ?>" target="_blank" class="btn btn-primary btn-xs" style="background: #af1416;     box-shadow:none;" > <i class="fa fa-file-pdf-o"></i> Descargar Comprobante</a-->
-                        <button onclick="window.print();" class="btn btn-primary btn-xs" style="background: #af1416;     box-shadow:none;" > <i class="fa fa-file-pdf-o"></i> Imprimir Comprobante</button>
+                        <button onclick="window.print();" class="btn btn-primary btn-xs" style="background: #af1416;     box-shadow:none;" > <i class="fa fa-print"></i> Imprimir Comprobante</button>
                     </div>
                 </div>
             </div>

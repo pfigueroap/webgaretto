@@ -5,6 +5,7 @@ class Historial_con extends CI_Controller {
     function __construct(){
         parent::__construct();
         $this->load->library('session');
+        $this->load->library('mydompdf');
         $this->load->helper(array('form', 'url'));
         $this->load->model('historial_mod');
     }
@@ -26,8 +27,6 @@ class Historial_con extends CI_Controller {
             $data['registros'] = $this->historial_mod->registros($data['usuario']);
             $data['info'] = $this->historial_mod->usuario($data['usuario']);
             $data['page'] = 'home_historial';
-            #echo "<PRE>";
-            #var_dump($data);
             $this->load->view('home',$data);
         }
     }
@@ -58,19 +57,32 @@ class Historial_con extends CI_Controller {
         $this->historial_mod->eliminar_det_orden($id_tmp_detalle);
         $this->det_orden($id_tmp_compra);
     }
-    public function comprobante(){
+    function data_comprobante($id_tmp_compra){
         $data = $this->valida();
-        $id_tmp_compra = $this->uri->segment(3);
+        $data['id_tmp_compra'] = $id_tmp_compra; 
         $data['validador'] = '0';
         $orden = $this->historial_mod->orden($id_tmp_compra);
         foreach ($orden as $key => $value)
             $data[$key] = $value;
-        $data['pago'] = $data['f_pago'];
         $data['clase'] = 'historial';
+        $data['pago'] = $data['f_pago'];
         $data['despacho'] = $data['t_despacho'];
         $data['compras'] = $this->historial_mod->detalle_registro($id_tmp_compra);
         $data['page'] = 'home_comprobante';
+        return $data;
+    }
+    public function comprobante(){
+        $id_tmp_compra = $this->uri->segment(3);
+        $data = $this->data_comprobante($id_tmp_compra);
         $this->load->view('home',$data);
+    }
+    public function down_comprobante(){
+        $id_tmp_compra = $this->uri->segment(3);
+        $data = $this->data_comprobante($id_tmp_compra);
+        $html = $this->load->view('home_pdf',$data,true);
+        $this->mydompdf->load_html($html);
+        $this->mydompdf->render();
+        $this->mydompdf->stream("comprobante.pdf", array("Attachment" => false));
     }
 }
 ?>
