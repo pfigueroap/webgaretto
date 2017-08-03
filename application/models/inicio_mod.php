@@ -68,5 +68,13 @@ class Inicio_mod extends CI_Controller {
         $this->db->query("UPDATE usuarios SET clave = SHA1('{$clave}') WHERE usuario = '{$usuario}' AND estado = '0'");
         return 1;
     }
+    function valida_edit($rut,$correo,$id_usuario){
+        $valida = 0;
+        $query = $this->db->query("SELECT * FROM usuarios WHERE rut = '{$rut}' AND estado = '0' AND id_usuario != '{$id_usuario}'");
+        if($query->num_rows > 0) $valida = 1;
+        $query = $this->db->query("SELECT * FROM usuarios WHERE correo = '{$correo}' AND estado = '0' AND id_usuario != '{$id_usuario}'");
+        if($query->num_rows > 0) $valida = 1;
+        return $valida;
+    }
 }
 ?>

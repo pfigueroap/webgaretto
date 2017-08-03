@@ -132,6 +132,7 @@ class Inicio_con extends CI_Controller {
     }
     public function edit_user(){
         $data = $this->valida();
+        $id_usuario = $this->input->post('id_usuario');
         $post = array('correo','celular','rut','id_empresa','id_nacion','genero','direccion');
         foreach ($post as $value)
             $info[$value] = $this->input->post($value);
@@ -151,8 +152,16 @@ class Inicio_con extends CI_Controller {
             $info['apellido_1'] = $apellidos[0];
             $info['apellido_2'] = '';
         }
-        $this->inicio_mod->edit_user($info,$data['usuario']);
-        $data['page'] = 'home_cont';
+        $valida = $this->inicio_mod->valida_edit($info['rut'],$info['correo'],$id_usuario);
+        if($valida == 0){
+            $this->inicio_mod->edit_user($info,$data['usuario']);
+            $data['mensaje'] = "El perfil fue editado exitosamente.";
+        }elseif($valida == 1) $data['mensaje'] = "El usuario, correo o rut modificados, ya existe en el sistema.";
+        $data['info'] = $this->inicio_mod->informacion($data['usuario']);
+        $data['empresas'] = $this->inicio_mod->variable('empresa');
+        $data['naciones'] = $this->inicio_mod->variable('nacion');
+        $data['clase'] = 'perfil';
+        $data['page'] = 'home_usuario';
         $this->load->view('home',$data);
     }
     public function cambiar_pass(){

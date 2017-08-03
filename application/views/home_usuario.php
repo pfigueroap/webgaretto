@@ -39,7 +39,8 @@
                         <label class="control-label col-md-4 col-sm-3 col-xs-12" for="first-name">Usuario </label>
                         <div class="col-md-8 col-sm-6 col-xs-12">
                             <input name="usuario" type="text" onkeypress="return soloLetras(event)" class="form-control col-md-7 col-xs-12 parsley-success" required
-                            <?php if($clase == 'perfil' or $clase == 'editar'){ ?> value="<?php echo $info['usuario']; ?>" 
+                            <?php if($clase == 'perfil'){ ?> value="<?php echo $info['usuario']; ?>" readonly 
+                            <?php }elseif($clase == 'editar'){ ?> value="<?php echo $info['usuario']; ?>"
                             <?php }elseif($clase == 'registrar'){ ?> value="<?php echo $usuario; ?>" readonly  
                             <?php }elseif($clase == 'usuario'){ ?> placeholder="Usuario" <?php } ?>>
                         </div>

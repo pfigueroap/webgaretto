@@ -69,11 +69,11 @@ class Usuario_con extends CI_Controller {
         }
         $info = $this->split($info,'nombre',$this->input->post('nombres'));
         $info = $this->split($info,'apellido',$this->input->post('apellidos'));
-        if($clase == 'usuario') $valida = $this->usuario_mod->valida_user($info['usuario'],$info['rut']);
-        elseif($clase == 'editar') $valida = $this->usuario_mod->valida_edit($info['usuario'],$info['rut'],$id_usuario);
+        if($clase == 'usuario') $valida = $this->usuario_mod->valida_user($info['usuario'],$info['rut'],$info['correo']);
+        elseif($clase == 'editar') $valida = $this->usuario_mod->valida_edit($info['usuario'],$info['rut'],$info['correo'],$id_usuario);
         if($valida == 1){
-            if($clase == 'usuario') $this->crear_user($info['tipo'],"El usuario o rut ya existe en el sistema.");
-            elseif($clase == 'editar') $this->edit_user($info['tipo'],$id_usuario,"El usuario o rut modificados, ya existe en el sistema.");
+            if($clase == 'usuario') $this->crear_user($info['tipo'],"El usuario, correo o rut ya existe en el sistema.");
+            elseif($clase == 'editar') $this->edit_user($info['tipo'],$id_usuario,"El usuario, correo o rut modificados, ya existe en el sistema.");
         }elseif($valida == 0){
             if($clase == 'usuario') $this->usuario_mod->add_user($info);
             elseif ($clase == 'editar') $this->usuario_mod->edit_user($info,$id_usuario);

@@ -79,7 +79,7 @@ class Operacion_mod extends CI_Controller {
         return $clientes;
     }
     function registros(){
-    	$query = $this->db->query("SELECT c.id_tmp_compra, c.f_ingreso, c.h_ingreso, c.estado, u.nombre_1, u.apellido_1, u.rut, SUM(d.total) AS total 
+    	$query = $this->db->query("SELECT c.id_tmp_compra, c.f_ingreso, c.h_ingreso, c.estado, c.valida, u.nombre_1, u.apellido_1, u.rut, SUM(d.total) AS total 
     		FROM tmp_compra AS c 
     		LEFT JOIN usuarios AS u ON c.id_cliente = u.id_usuario 
     		INNER JOIN tmp_det_compra AS d ON c.id_tmp_compra = d.id_tmp_compra 
@@ -126,13 +126,17 @@ class Operacion_mod extends CI_Controller {
         return $usuario["id_usuario"];
     }
     function validar_orden($id_tmp_compra,$estado){
-        $this->db->query("UPDATE tmp_det_compra SET estado = '{$estado}' WHERE id_tmp_compra = '{$id_tmp_compra}'");
-        $this->db->query("UPDATE tmp_compra SET estado = '{$estado}' WHERE id_tmp_compra = '{$id_tmp_compra}'");
+        $this->db->query("UPDATE tmp_det_compra SET valida = '{$estado}' WHERE id_tmp_compra = '{$id_tmp_compra}' AND id_producto = '2'");
+        $this->db->query("UPDATE tmp_compra SET valida = '{$estado}' WHERE id_tmp_compra = '{$id_tmp_compra}'");
     }
-    function info_compra($id_tmp_compra){
-        $query = $this->db->query("SELECT u.usuario, u.clave, u.rut, u.correo FROM tmp_compra AS c 
+    function info_reloj($id_tmp_compra){
+        $query = $this->db->query("SELECT u.usuario, u.rut, u.correo, p.marca, p.modelo, e.rut AS rut_empresa, e.direccion, e.giro, e.empresa, d.cantidad 
+            FROM tmp_compra AS c 
             INNER JOIN usuarios AS u ON c.id_cliente = u.id_usuario 
-            WHERE c.id_tmp_compra = '{$id_tmp_compra}'");
+            INNER JOIN empresa AS e ON u.id_empresa = e.id_empresa 
+            INNER JOIN tmp_det_compra AS d ON c.id_tmp_compra = d.id_tmp_compra 
+            INNER JOIN producto AS p ON d.id_producto = p.id_producto 
+            WHERE c.id_tmp_compra = '{$id_tmp_compra}' AND d.id_producto = '2'");
         $result = $query->result();
         $info = (array) $result[0];
         return $info;

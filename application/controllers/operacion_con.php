@@ -191,8 +191,8 @@ class Operacion_con extends CI_Controller {
     }
     public function validar_orden(){
         $id_tmp_compra = $this->uri->segment(3);
-        $this->operacion_mod->validar_orden($id_tmp_compra,'6');
-        $this->activar_reloj($id_tmp_compra);
+        $respuesta = $this->activar_reloj($id_tmp_compra);
+        $this->operacion_mod->validar_orden($id_tmp_compra,$respuesta);
         $this->ordenes();
     }
     public function invalidar_orden(){
@@ -202,23 +202,28 @@ class Operacion_con extends CI_Controller {
     }
     function activar_reloj($id_tmp_compra){
         $url = "http://www.relojgaretto.cl/sensores/agregar";
-        $info = $this->operacion_mod->info_compra($id_tmp_compra);
-        $postData = array(
-            "usuario" => $info['usuario'],
-            "rut_usuario" => str_replace(array(".","-"),"",$info['rut']),
-            "email_usuario" => $info['correo'], 
-            "clave" => $info['clave'],
-            "modelo" => "FGT45",
-            "marca" => "ZKT",
-            "cantidad" => "1");
-        $handler = curl_init();
-        curl_setopt($handler, CURLOPT_URL, $url);
-        curl_setopt($handler, CURLOPT_POST,true);
-        curl_setopt($handler, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($handler, CURLOPT_POSTFIELDS, $postData);
-        $response = curl_exec ($handler);
-        curl_close($handler);
-        #return $response;
+        $info = $this->operacion_mod->info_reloj($id_tmp_compra);
+        if(count($info) != 0){
+            $postData = array(
+                "usuario" => $info['usuario'],
+                "rut_usuario" => str_replace(array(".","-"),"",$info['rut']),
+                "email_usuario" => $info['correo'], 
+                "modelo" => $info['modelo'],
+                "marca" => $info['marca'],
+                "rut_empresa" => $info['rut_empresa'],
+                "direccion_empresa" => $info['direccion'],
+                "giro_empresa" => $info['giro'],
+                "empresa" => $info['empresa'],
+                "cantidad" => $info['cantidad']);
+            $handler = curl_init();
+            curl_setopt($handler, CURLOPT_URL, $url);
+            curl_setopt($handler, CURLOPT_POST,true);
+            curl_setopt($handler, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($handler, CURLOPT_POSTFIELDS, $postData);
+            $response = curl_exec ($handler);
+            curl_close($handler);
+            return $response;
+        }else return '0';
     }
 }
 ?>

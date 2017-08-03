@@ -14,7 +14,7 @@ class Historial_mod extends CI_Controller {
         return $variable;
     }
     function registros($usuario){
-    	$query = $this->db->query("SELECT c.id_tmp_compra, c.f_ingreso, c.h_ingreso, c.estado, u.nombre_1, u.apellido_1, u.rut, SUM(d.total) AS total 
+    	$query = $this->db->query("SELECT c.id_tmp_compra, c.f_ingreso, c.h_ingreso, c.estado, c.valida, u.nombre_1, u.apellido_1, u.rut, SUM(d.total) AS total 
     		FROM tmp_compra AS c 
     		LEFT JOIN usuarios AS u ON c.id_cliente = u.id_usuario 
     		INNER JOIN tmp_det_compra AS d ON c.id_tmp_compra = d.id_tmp_compra 

@@ -50,19 +50,23 @@ class Usuario_mod extends CI_Controller {
         $info = (array) $result[0];
         return $info;
     }
-    function valida_user($usuario,$rut){
+    function valida_user($usuario,$rut,$correo){
         $valida = 0;
         $query = $this->db->query("SELECT * FROM usuarios WHERE usuario = '{$usuario}' AND estado = '0'");
         if($query->num_rows > 0) $valida = 1;
         $query = $this->db->query("SELECT * FROM usuarios WHERE rut = '{$rut}' AND estado = '0'");
         if($query->num_rows > 0) $valida = 1;
+        $query = $this->db->query("SELECT * FROM usuarios WHERE correo = '{$correo}' AND estado = '0'");
+        if($query->num_rows > 0) $valida = 1;
         return $valida;
     }
-    function valida_edit($usuario,$rut,$id_usuario){
+    function valida_edit($usuario,$rut,$correo,$id_usuario){
         $valida = 0;
         $query = $this->db->query("SELECT * FROM usuarios WHERE usuario = '{$usuario}' AND estado = '0' AND id_usuario != '{$id_usuario}'");
         if($query->num_rows > 0) $valida = 1;
         $query = $this->db->query("SELECT * FROM usuarios WHERE rut = '{$rut}' AND estado = '0' AND id_usuario != '{$id_usuario}'");
+        if($query->num_rows > 0) $valida = 1;
+        $query = $this->db->query("SELECT * FROM usuarios WHERE correo = '{$correo}' AND estado = '0' AND id_usuario != '{$id_usuario}'");
         if($query->num_rows > 0) $valida = 1;
         return $valida;
     }
