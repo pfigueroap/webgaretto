@@ -14,6 +14,9 @@ class Historial_con extends CI_Controller {
         if(empty($data['usuario'])){
             redirect('/inicio_con/index/', 'refresh');
         }else{
+            $data['monedas'] = $this->historial_mod->variable('moneda');
+            foreach ($data['monedas'] as $moneda)
+                $data['arr_mnd'][$moneda->id_moneda] = $moneda->moneda;
             return $data;
         }
     }
@@ -54,6 +57,20 @@ class Historial_con extends CI_Controller {
         $id_tmp_detalle = $this->uri->segment(4);
         $this->historial_mod->eliminar_det_orden($id_tmp_detalle);
         $this->det_orden($id_tmp_compra);
+    }
+    public function comprobante(){
+        $data = $this->valida();
+        $id_tmp_compra = $this->uri->segment(3);
+        $data['validador'] = '0';
+        $orden = $this->historial_mod->orden($id_tmp_compra);
+        foreach ($orden as $key => $value)
+            $data[$key] = $value;
+        $data['pago'] = $data['f_pago'];
+        $data['clase'] = 'historial';
+        $data['despacho'] = $data['t_despacho'];
+        $data['compras'] = $this->historial_mod->detalle_registro($id_tmp_compra);
+        $data['page'] = 'home_comprobante';
+        $this->load->view('home',$data);
     }
 }
 ?>

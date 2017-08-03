@@ -24,6 +24,8 @@
                                     <th>Hora Operación</th>
                                     <th>Tipo Operación</th>
                                     <th>Total</th>
+                                    <th>Comprobante</th>
+                                    <th>Estado</th>
                                     <th>Acciones</th>
                                 </tr>
                             </thead>
@@ -51,11 +53,19 @@
                                     ?></td>
                                     <td><?php echo number_format($registro->total,0,",","."); ?></td>
                                     <td>
+                                        <a href="<?php echo site_url("historial_con/comprobante/".$registro->id_tmp_compra); ?>" class="btn btn-primary btn-xs"><i class="fa fa-eye"></i> Ver </a>
+                                    </td>
+                                    <td>
+                                        <?php if($registro->estado != '6'){ ?>
+                                        <a href="#" class="btn btn-warning btn-xs"><i class="fa fa-handshake-o"></i> Pendiente </a>
+                                        <?php }else{ ?>
+                                        <a href="#" class="btn btn-success btn-xs"><i class="fa fa-check"></i> Validado </a>
+                                        <?php } ?>
+                                    </td>
+                                    <td>
                                         <?php if($registro->estado != '6'){ ?>
                                         <a href="<?php echo site_url("historial_con/eliminar_orden/{$registro->id_tmp_compra}"); ?>" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> Borrar </a>
                                         <a href="<?php echo site_url("historial_con/detalle_registro/".$registro->id_tmp_compra); ?>" class="btn btn-info btn-xs"><i class="fa fa-pencil"></i> Editar </a>
-                                        <?php }else{ ?>
-                                        <a href="#" class="btn btn-success btn-xs"><i class="fa fa-check"></i> Validado </a>
                                         <?php } ?>
                                     </td>
                                 </tr>
@@ -66,9 +76,9 @@
                     <div class="col-md-12 text-right">
                         <ul class="pagination pagination-lg pager" id="myPager"></ul> 
                     </div><!-- Revisar paginado - Fallan los números -->
-                    <div class="col-md-12 text-right">
+                    <!--div class="col-md-12 text-right">
                         <a href="#" class="btn btn-primary btn-xs" style="background: #af1416;     box-shadow:none;" > <i class="fa fa-download"></i> Descargar </a>
-                    </div>
+                    </div-->
                 </div>
             </div>
         </div>

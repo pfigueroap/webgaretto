@@ -7,13 +7,24 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
+                        <?php   if($clase == 'historial' or  $clase == 'ordenes'){ ?>
+                        <h3 class="title">
+                        <?php   if($estado == '0') echo "Información de compra - Por pagar"; 
+                                elseif($estado == '1') echo "Información de compra - Transferencia Bancaria"; 
+                                elseif($estado == '2') echo "Información de compra - WebPay Rechazada"; 
+                                elseif($estado == '3') echo "Información de Venta - por Validar"; 
+                                elseif($estado == '4') echo "Información de Arriendo - por Validar";
+                                elseif($estado == '5') echo "Información de Regalo - por Validar";
+                                elseif($estado == '6') echo "Información de Transacción Validada";?>
+                        </h3>
+                        <?php }else{ ?>
                         <?php if($pago == 'transferencia'){?>
                         <h3 class="title">Información de compra - Transferencia Bancaria</h3>
                         <?php }elseif($pago == 'webpay' and $validador == '1'){ ?>
                         <h3 class="title">Información de Compra Exitosa</h3>
                         <?php }elseif($pago == 'webpay' and $validador == '0'){ ?>
                         <h3 class="title">Información de Compra Rechazada</h3>
-                        <?php } ?>
+                        <?php }} ?>
                     </div>
                     <br/>
                     <div class="table-responsive">
@@ -105,7 +116,12 @@
                         <ul class="pagination pagination-lg pager" id="myPager"></ul> 
                     </div><!-- Revisar paginado - Fallan los números -->
                     <div class="col-md-12 text-right">
-                        <a href="#" class="btn btn-primary btn-xs" style="background: #af1416;     box-shadow:none;" > <i class="fa fa-file-pdf-o"></i> Descargar Comprobante</a>
+                        <?php if($clase == 'historial'){ ?>
+                        <a href="<?php echo site_url("historial_con/index"); ?>" class="btn btn-default btn-xs" style="background: #af1416;"><i class="fa fa-reply"></i> Volver </a>
+                        <?php }elseif($clase == 'ordenes'){ ?>
+                        <a href="<?php echo site_url("operacion_con/ordenes"); ?>" class="btn btn-default btn-xs" style="background: #af1416;"><i class="fa fa-reply"></i> Volver </a>
+                        <?php } ?>
+                        <a href="<?php echo site_url("operacion_con/down_comprobante/".$id_tmp_compra); ?>" target="_blank" class="btn btn-primary btn-xs" style="background: #af1416;     box-shadow:none;" > <i class="fa fa-file-pdf-o"></i> Descargar Comprobante</a>
                     </div>
                 </div>
             </div>

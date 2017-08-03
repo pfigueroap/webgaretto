@@ -7,6 +7,12 @@ class Historial_mod extends CI_Controller {
         $this->load->library('session');
         $this->load->database();
     }
+    function variable($tabla){
+        $query = $this->db->query("SELECT * FROM ".$tabla);
+        $result = $query->result();
+        $variable = (array) $result;
+        return $variable;
+    }
     function registros($usuario){
     	$query = $this->db->query("SELECT c.id_tmp_compra, c.f_ingreso, c.h_ingreso, c.estado, u.nombre_1, u.apellido_1, u.rut, SUM(d.total) AS total 
     		FROM tmp_compra AS c 
@@ -24,7 +30,7 @@ class Historial_mod extends CI_Controller {
         return $registros;
     }
     function orden($id_tmp_compra){
-    	$query = $this->db->query("SELECT c.id_tmp_compra, c.f_ingreso, c.h_ingreso, c.estado, c.direccion, c.f_pago, c.t_despacho, u.nombre_1, u.apellido_1, u.rut, u.usuario, SUM(d.total) AS total 
+    	$query = $this->db->query("SELECT c.id_tmp_compra, c.f_ingreso, c.h_ingreso, c.estado, c.direccion, c.f_pago, c.t_despacho, c.id_compra, u.nombre_1, u.apellido_1, u.rut, u.usuario, SUM(d.total) AS total 
     		FROM tmp_compra AS c 
     		LEFT JOIN usuarios AS u ON c.id_cliente = u.id_usuario 
     		INNER JOIN tmp_det_compra AS d ON c.id_tmp_compra = d.id_tmp_compra 
@@ -41,7 +47,7 @@ class Historial_mod extends CI_Controller {
         return $direcciones;
     }
     function detalle_registro($id_tmp_compra){
-    	$query = $this->db->query("SELECT p.cod_prod, p.producto, p.modelo, p.marca, d.prc_vta, d.mnd_vta, d.cantidad, d.total, d.id_tmp_detalle  
+    	$query = $this->db->query("SELECT p.cod_prod, p.producto, p.modelo, p.marca, p.cod_bar, d.prc_vta, d.mnd_vta, d.cantidad, d.total, d.id_tmp_detalle  
     		FROM tmp_det_compra AS d 
     		INNER JOIN tmp_compra AS c ON d.id_tmp_compra = c.id_tmp_compra 
     		LEFT JOIN usuarios AS u ON c.id_cliente = u.id_usuario 

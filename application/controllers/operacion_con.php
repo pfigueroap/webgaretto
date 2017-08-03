@@ -5,6 +5,7 @@ class Operacion_con extends CI_Controller {
     function __construct(){
         parent::__construct();
         $this->load->library('session');
+        $this->load->library('mydompdf');
         $this->load->helper(array('form', 'url'));
         $this->load->model('operacion_mod');
     }
@@ -97,15 +98,48 @@ class Operacion_con extends CI_Controller {
         $data['total'] = $this->input->post('total');
         if($data['total'] != '0'){
             $data['compras'] = $this->operacion_mod->tmp_compras($data['usuario']);
-            $data['validador'] = '0';
-            #Validar WebPay en caso de $pago = 'webpay'
-            #$data['id_compra'] = '1';
+            $data['validador'] = '0'; #Validar WebPay en caso de $pago = 'webpay'
             $data['id_compra'] = $this->operacion_mod->registrar_compra($data['usuario'],$data['pago'],$data['total'],$data['compras'],$data['despacho'],$data['direccion'],$data['validador']);
             $data['page'] = 'home_comprobante';
             $this->load->view('home',$data);
         }else{
             $this->carro_compras();
         }
+    }
+    function data_comprobante($id_tmp_compra){
+        $data = $this->valida();
+        $data['id_tmp_compra'] = $id_tmp_compra; 
+        $data['validador'] = '0';
+        $orden = $this->operacion_mod->orden($id_tmp_compra);
+        foreach ($orden as $key => $value)
+            $data[$key] = $value;
+        $data['clase'] = 'ordenes';
+        $data['pago'] = $data['f_pago'];
+        $data['despacho'] = $data['t_despacho'];
+        $data['compras'] = $this->operacion_mod->detalle_registro($id_tmp_compra);
+        $data['page'] = 'home_comprobante';
+        return $data;
+    }
+    public function comprobante(){
+        $id_tmp_compra = $this->uri->segment(3);
+        $data = $this->data_comprobante($id_tmp_compra);
+        $this->load->view('home',$data);
+    }
+    public function down(){
+        $id_tmp_compra = $this->uri->segment(3);
+        $data = $this->data_comprobante($id_tmp_compra);
+        $this->load->view('home_pdf',$data);
+    }
+    public function down_comprobante(){
+        $id_tmp_compra = $this->uri->segment(3);
+        $data = $this->data_comprobante($id_tmp_compra);
+        $html = $this->load->view('home_pdf',$data,true);
+        #$html = "<html><body>Test<br></body></html>";
+        $this->mydompdf->load_html($html);
+        $this->mydompdf->render();
+        $this->mydompdf->stream("welcome.pdf", array(
+            "Attachment" => false
+        ));
     }
     public function ordenes(){
         $data = $this->valida();

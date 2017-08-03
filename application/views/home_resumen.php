@@ -23,6 +23,8 @@
                                     <th>Hora Operación</th>
                                     <th>Tipo Operación</th>
                                     <th>Total</th>
+                                    <th>Comprobante</th>
+                                    <th>Estado</th>
                                     <th>Acciones</th>
                                 </tr>
                             </thead>
@@ -44,14 +46,18 @@
                                     elseif($registro->estado == '6') echo "Validado";
                                     ?></td>
                                     <td><?php echo number_format($registro->total,0,",","."); ?></td>
+                                    <td><a href="<?php echo site_url("operacion_con/comprobante/".$registro->id_tmp_compra); ?>" class="btn btn-primary btn-xs"><i class="fa fa-eye"></i> Ver </a></td>
+                                    <td>
+                                        <?php if($registro->estado != '6'){ ?>
+                                        <a href="<?php echo site_url("operacion_con/validar_orden/".$registro->id_tmp_compra); ?>" class="btn btn-warning btn-xs"><i class="fa fa-handshake-o"></i> Validar </a>
+                                        <?php }else{ ?>
+                                        <a href="#" class="btn btn-success btn-xs"><i class="fa fa-check"></i> Validado </a>
+                                        <?php } ?>
+                                    </td>
                                     <td>
                                         <?php if($registro->estado != '6'){ ?>
                                         <a href="<?php echo site_url("operacion_con/eliminar_orden/{$registro->id_tmp_compra}"); ?>" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> Borrar </a>
                                         <a href="<?php echo site_url("operacion_con/detalle_registro/".$registro->id_tmp_compra); ?>" class="btn btn-info btn-xs"><i class="fa fa-pencil"></i> Editar </a>
-                                        <a href="<?php echo site_url("operacion_con/validar_orden/".$registro->id_tmp_compra); ?>" class="btn btn-warning btn-xs"><i class="fa fa-handshake-o"></i> Validar </a>
-                                        <?php }else{ ?>
-                                        <!--a href="<?php #echo site_url("operacion_con/invalidar_orden/".$registro->id_tmp_compra); ?>" class="btn btn-success btn-xs"><i class="fa fa-check"></i> Validado </a-->
-                                        <a href="#" class="btn btn-success btn-xs"><i class="fa fa-check"></i> Validado </a>
                                         <?php } ?>
                                     </td>
                                 </tr>
