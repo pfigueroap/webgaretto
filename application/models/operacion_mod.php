@@ -130,7 +130,8 @@ class Operacion_mod extends CI_Controller {
         $this->db->query("UPDATE tmp_compra SET valida = '{$estado}' WHERE id_tmp_compra = '{$id_tmp_compra}'");
     }
     function info_reloj($id_tmp_compra){
-        $query = $this->db->query("SELECT u.usuario, u.rut, u.correo, p.marca, p.modelo, e.rut AS rut_empresa, e.direccion, e.giro, e.empresa, d.cantidad 
+        $query = $this->db->query("SELECT u.usuario, u.rut, u.correo, u.nombre_1, u.nombre_2, u.apellido_1, u.apellido_2, 
+            p.marca, p.modelo, e.rut AS rut_empresa, e.direccion, e.giro, e.empresa, d.cantidad 
             FROM tmp_compra AS c 
             INNER JOIN usuarios AS u ON c.id_cliente = u.id_usuario 
             INNER JOIN empresa AS e ON u.id_empresa = e.id_empresa 

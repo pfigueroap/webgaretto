@@ -206,6 +206,9 @@ class Operacion_con extends CI_Controller {
         if(count($info) != 0){
             $postData = array(
                 "usuario" => $info['usuario'],
+                "nombres" => $info['nombre_1']." ".$info['nombre_2'],
+                "apellido1" => $info['apellido_1'],
+                "apellido2" => $info['apellido_2'],
                 "rut_usuario" => str_replace(array(".","-"),"",$info['rut']),
                 "email_usuario" => $info['correo'], 
                 "modelo" => $info['modelo'],

@@ -48,14 +48,14 @@
                                     <td><?php echo number_format($registro->total,0,",","."); ?></td>
                                     <td><a href="<?php echo site_url("operacion_con/comprobante/".$registro->id_tmp_compra); ?>" class="btn btn-primary btn-xs"><i class="fa fa-eye"></i> Ver </a></td>
                                     <td>
-                                        <?php if($registro->valida != '{"code":1,"msg":"OK"}'){ ?>
+                                        <?php if($registro->valida == '0'){ ?>
                                         <a href="<?php echo site_url("operacion_con/validar_orden/".$registro->id_tmp_compra); ?>" class="btn btn-warning btn-xs"><i class="fa fa-handshake-o"></i> Validar </a>
                                         <?php }else{ ?>
                                         <a href="#" class="btn btn-success btn-xs"><i class="fa fa-check"></i> Validado </a>
                                         <?php } ?>
                                     </td>
                                     <td>
-                                        <?php if($registro->valida != '{"code":1,"msg":"OK"}'){ ?>
+                                        <?php if($registro->valida == '0'){ ?>
                                         <a href="<?php echo site_url("operacion_con/eliminar_orden/{$registro->id_tmp_compra}"); ?>" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> Borrar </a>
                                         <a href="<?php echo site_url("operacion_con/detalle_registro/".$registro->id_tmp_compra); ?>" class="btn btn-info btn-xs"><i class="fa fa-pencil"></i> Editar </a>
                                         <?php } ?>
