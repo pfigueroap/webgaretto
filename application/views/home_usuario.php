@@ -24,18 +24,19 @@
                     <div class="card-header"><h3 class="title">Registrar Usuario</h3></div>
                     <?php } ?>
                     <input type="text" class="form-control" value="<?php echo $mensaje; ?>" style="text-align:center;" disabled>
-                    <div class="profile_img col-md-2" style="height: 800px; display:inline-block; text-align:center;">
-                        <div class="CardScan" style="display:inline-block; text-align:center;">
-                            <div class="CardScan-laser"></div>
-                            <div class="profile_picd">
-                                <img src="<?php echo base_url(); ?>application/images/user scan.png" alt="..." class="img-circle profile_img">
-                            </div>
-                        </div>
-                    </div>
                     <?php 
-                    if($clase == 'perfil' or $clase == 'registrar') echo form_open('inicio_con/edit_user'); 
-                    elseif($clase == 'usuario' or $clase == 'editar') echo form_open('usuario_con/mod_user/'.$info['tipo'].'/'.$clase);?>
-                    <div class="col-md-5 col-sm-12 col-xs-12 form-group">
+                    if($clase == 'perfil' or $clase == 'registrar') echo form_open_multipart('inicio_con/edit_user'); 
+                    elseif($clase == 'usuario' or $clase == 'editar') echo form_open_multipart('usuario_con/mod_user/'.$info['tipo'].'/'.$clase);?>
+                    <div class="col-md-3">
+                        <?php if($info['imagen'] == ''){?>
+                        <img id="imgProd" src="<?php echo base_url(); ?>application/images/usuarios/user.jpg" alt="Reloj control">
+                        <?php }else{ ?>
+                        <img id="imgProd" src="<?php echo base_url(); ?>application/images/usuarios/<?php echo $info['imagen'];?>" alt="Reloj control">
+                        <?php } ?>
+                        <input class="btn btn-default btn-xs" style="background: #af1416;width: 305px;" type="file" name="imagen" id="imagen" size="30" accept=".jpg" />
+                    </div>
+                    <div class="col-md-4 col-sm-12 col-xs-12 form-group">
+                        <!-- Usuario -->
                         <label class="control-label col-md-4 col-sm-3 col-xs-12" for="first-name">Usuario </label>
                         <div class="col-md-8 col-sm-6 col-xs-12">
                             <input name="usuario" type="text" onkeypress="return soloLetras(event)" class="form-control col-md-7 col-xs-12 parsley-success" required
@@ -44,67 +45,28 @@
                             <?php }elseif($clase == 'registrar'){ ?> value="<?php echo $usuario; ?>" readonly  
                             <?php }elseif($clase == 'usuario'){ ?> placeholder="Usuario" <?php } ?>>
                         </div>
-                    </div>
-                    <div class="col-md-5 col-sm-12 col-xs-12 form-group">
-                        <label class="control-label col-md-4 col-sm-3 col-xs-12" for="first-name">Correo </label>
-                        <div class="col-md-8 col-sm-6 col-xs-12">
-                            <input name="correo" type="email" class="form-control col-md-7 col-xs-12 parsley-success" required
-                            <?php if($clase == 'perfil' or $clase == 'editar'){ ?> value="<?php echo $info['correo']; ?>"
-                            <?php }elseif($clase == 'registrar'){ ?> value="<?php echo $correo; ?>" readonly 
-                            <?php }elseif($clase == 'usuario'){ ?> placeholder="Correo" <?php } ?>>
-                        </div>
-                    </div>
-                    <div class="col-md-5 col-sm-12 col-xs-12 form-group">
+                        <!-- Nombres -->
                         <label class="control-label col-md-4 col-sm-3 col-xs-12" for="first-name">Nombres </label>
                         <div class="col-md-8 col-sm-6 col-xs-12">
                             <input name="nombres" type="text" onkeypress="return soloLetras(event)" class="form-control col-md-7 col-xs-12 parsley-success" required
                             <?php if($clase == 'perfil' or $clase == 'editar'){ ?> value="<?php echo $info['nombre_1']." ".$info['nombre_2']; ?>" 
                             <?php }elseif($clase == 'usuario' or $clase == 'registrar'){ ?> placeholder="Nombres" <?php } ?>>
                         </div>
-                    </div>
-                    <div class="col-md-5 col-sm-12 col-xs-12 form-group">
-                        <label class="control-label col-md-4 col-sm-3 col-xs-12" for="first-name">Apellidos </label>
-                        <div class="col-md-8 col-sm-6 col-xs-12">
-                            <input name="apellidos" type="text" onkeypress="return soloLetras(event)" class="form-control col-md-7 col-xs-12 parsley-success" required
-                            <?php if($clase == 'perfil' or $clase == 'editar'){ ?> value="<?php echo $info['apellido_1']." ".$info['apellido_2']; ?>"
-                            <?php }elseif($clase == 'usuario' or $clase == 'registrar'){ ?> placeholder="Apellidos" <?php } ?>>
-                        </div>
-                    </div>
-                    <div class="col-md-5 col-sm-12 col-xs-12 form-group">
+                        <!-- Direccion -->
                         <label class="control-label col-md-4 col-sm-3 col-xs-12" for="first-name">Dirección </label>
                         <div class="col-md-8 col-sm-6 col-xs-12">
                             <input name="direccion" type="text" class="form-control col-md-7 col-xs-12 parsley-success" required
                             <?php if($clase == 'perfil' or $clase == 'editar' or $clase == 'registrar'){ ?> value="<?php echo $info['direccion']; ?>"
                             <?php }elseif($clase == 'usuario'){ ?> placeholder="Direccion" <?php } ?>>
                         </div>
-                    </div>
-                    <div class="col-md-5 col-sm-12 col-xs-12 form-group">
-                        <label class="control-label col-md-4 col-sm-3 col-xs-12" for="first-name">Celular </label>
-                        <div class="col-md-8 col-sm-6 col-xs-12">
-                            <input name="celular" type="text" onkeypress="return soloNumeros(event)"class="form-control col-md-7 col-xs-12 parsley-success" required
-                            <?php if($clase == 'perfil' or $clase == 'editar'){ ?> value="<?php echo $info['celular']; ?>"
-                            <?php }elseif($clase == 'usuario' or $clase == 'registrar'){ ?> placeholder="Celular" <?php } ?>>
-                        </div>
-                    </div>
-                    <div class="col-md-5 col-sm-12 col-xs-12 form-group">
+                        <!-- Rut -->
                         <label class="control-label col-md-4 col-sm-3 col-xs-12" for="first-name">Rut </label>
                         <div class="col-md-8 col-sm-6 col-xs-12">
                             <input name="rut" type="text" onkeypress="return soloRut(event)" class="form-control col-md-7 col-xs-12 parsley-success" required
                             <?php if($clase == 'perfil' or $clase == 'editar'){ ?> value="<?php echo $info['rut']; ?>"
                             <?php }elseif($clase == 'usuario' or $clase == 'registrar'){ ?> placeholder="Rut" <?php } ?>>
                         </div>
-                    </div>
-                    <div class="col-md-5 col-sm-12 col-xs-12 form-group">
-                        <label class="control-label col-md-4 col-sm-3 col-xs-12" for="first-name">Empresa </label>
-                        <div class="col-md-8 col-sm-6 col-xs-12">
-                            <select class="form-control col-md-7 col-xs-12 parsley-success" name="id_empresa">
-                                <?php foreach ($empresas as $empresa) {?>
-                                <option value="<?php echo $empresa->id_empresa;?>" <?php if($empresa->id_empresa == $info['id_empresa']) echo "selected";?>><?php echo $empresa->empresa;?></option>
-                                <?php }?>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-5 col-sm-12 col-xs-12 form-group">
+                        <!-- Nacionalidad -->
                         <label class="control-label col-md-4 col-sm-3 col-xs-12" for="first-name">Nacionalidad </label>
                         <div class="col-md-8 col-sm-6 col-xs-12">
                             <select class="form-control col-md-7 col-xs-12 parsley-success" name="id_nacion">
@@ -113,17 +75,32 @@
                                 <?php }?>
                             </select>
                         </div>
+                        <!--  -->
                     </div>
-                    <div class="col-md-5 col-sm-12 col-xs-12 form-group">
-                        <label class="control-label col-md-4 col-sm-3 col-xs-12" for="first-name">Tipo Usuario </label>
+                    <div class="col-md-4 col-sm-12 col-xs-12 form-group">
+                        <!-- Correo -->
+                        <label class="control-label col-md-4 col-sm-3 col-xs-12" for="first-name">Correo </label>
                         <div class="col-md-8 col-sm-6 col-xs-12">
-                            <select class="form-control col-md-7 col-xs-12 parsley-success" name="tipo" disabled="true">
-                                <option value="1" <?php if($info['tipo'] == '1') echo "selected";?>>Administrador</option>
-                                <option value="2" <?php if($info['tipo'] == '2') echo "selected";?>>Cliente</option>
-                            </select>
+                            <input name="correo" type="email" class="form-control col-md-7 col-xs-12 parsley-success" required
+                            <?php if($clase == 'perfil' or $clase == 'editar'){ ?> value="<?php echo $info['correo']; ?>"
+                            <?php }elseif($clase == 'registrar'){ ?> value="<?php echo $correo; ?>" readonly 
+                            <?php }elseif($clase == 'usuario'){ ?> placeholder="Correo" <?php } ?>>
                         </div>
-                    </div>
-                    <div class="col-md-5 col-sm-12 col-xs-12 form-group">
+                        <!-- Apellidos -->
+                        <label class="control-label col-md-4 col-sm-3 col-xs-12" for="first-name">Apellidos </label>
+                        <div class="col-md-8 col-sm-6 col-xs-12">
+                            <input name="apellidos" type="text" onkeypress="return soloLetras(event)" class="form-control col-md-7 col-xs-12 parsley-success" required
+                            <?php if($clase == 'perfil' or $clase == 'editar'){ ?> value="<?php echo $info['apellido_1']." ".$info['apellido_2']; ?>"
+                            <?php }elseif($clase == 'usuario' or $clase == 'registrar'){ ?> placeholder="Apellidos" <?php } ?>>
+                        </div>
+                        <!-- Celular -->
+                        <label class="control-label col-md-4 col-sm-3 col-xs-12" for="first-name">Celular </label>
+                        <div class="col-md-8 col-sm-6 col-xs-12">
+                            <input name="celular" type="text" onkeypress="return soloNumeros(event)"class="form-control col-md-7 col-xs-12 parsley-success" required
+                            <?php if($clase == 'perfil' or $clase == 'editar'){ ?> value="<?php echo $info['celular']; ?>"
+                            <?php }elseif($clase == 'usuario' or $clase == 'registrar'){ ?> placeholder="Celular" <?php } ?>>
+                        </div>
+                        <!-- Sexo -->
                         <label class="control-label col-md-4 col-sm-3 col-xs-12" for="first-name">Genero </label>
                         <div class="col-md-8 col-sm-6 col-xs-12">
                             <select class="form-control col-md-7 col-xs-12 parsley-success" name="genero">
@@ -131,15 +108,70 @@
                                 <option value="Femenino" <?php if($info['genero'] == "Femenino") echo "selected";?>>Femenino</option>
                             </select>
                         </div>
-                    </div>
-                    <div class="col-md-5 col-sm-12 col-xs-12 form-group">
+                        <!-- Tipo de Usuario -->
+                        <label class="control-label col-md-4 col-sm-3 col-xs-12" for="first-name">Tipo Usuario </label>
+                        <div class="col-md-8 col-sm-6 col-xs-12">
+                            <select class="form-control col-md-7 col-xs-12 parsley-success" name="tipo" disabled="true">
+                                <option value="1" <?php if($info['tipo'] == '1') echo "selected";?>>Administrador</option>
+                                <option value="2" <?php if($info['tipo'] == '2' or $clase == 'registrar') echo "selected";?> >Cliente</option>
+                            </select>
+                        </div>
+                        <!-- Id Usuario -->
                         <label class="control-label col-md-4 col-sm-3 col-xs-12" for="first-name">ID Usuario </label>
                         <div class="col-md-8 col-sm-6 col-xs-12">
-                            <input name="id_usuario" type="text" class="form-control col-md-7 col-xs-12 parsley-success" value="<?php echo $info['id_usuario']; ?>" readonly>
+                            <input name="id_usuario" type="text" class="form-control col-md-7 col-xs-12 parsley-success"
+                            <?php if($clase == 'registrar'){ ?> 
+                            value="<?php echo $id_usuario; ?>" 
+                            <?php }else{ ?>
+                            value="<?php echo $info['id_usuario']; ?>" 
+                            <?php } ?> 
+                            readonly>
                         </div>
                     </div>
-                    <div class="col-md-4 col-sm-4 col-xs-12">
-                        <div class="col-md-6 col-sm-12 col-xs-6"></div>
+                    <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                        <!-- Empresa -->
+                        <table class="table table-hover">
+                            <thead>
+                                <tr><th style="text-align: center; width:100px;">Seleccion</th><th>Empresa</th></tr>
+                            </thead>
+                            <tbody id="myTable">
+                                <tr>
+                                    <td style="text-align: center; width:100px;">
+                                        <input name="s_empresa" value="existe" type="radio" style="height:20px; width:20px; vertical-align: middle;" required checked="True">
+                                    </td>
+                                    <td>
+                                        <select class="form-control col-md-7 col-xs-12 parsley-success" name="id_empresa">
+                                        <?php foreach ($empresas as $empresa) {?>
+                                            <option value="<?php echo $empresa->id_empresa;?>" <?php if($empresa->id_empresa == $info['id_empresa']) echo "selected";?>><?php echo $empresa->empresa;?></option>
+                                        <?php }?>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: center; width:100px;">
+                                        <input name="s_empresa" value="nueva" type="radio" style="height:20px; width:20px; vertical-align: middle;" required>
+                                    </td>
+                                    <td>
+                        <label class="control-label col-md-1 col-sm-3 col-xs-12" for="first-name">Nombre </label>
+                        <div class="col-md-2 col-sm-6 col-xs-12">
+                            <input name="e_name" type="text" class="form-control col-md-7 col-xs-12 parsley-success" placeholder="Nombre">
+                        </div>
+                        <label class="control-label col-md-1 col-sm-3 col-xs-12" for="first-name">Rut </label>
+                        <div class="col-md-2 col-sm-6 col-xs-12">
+                            <input name="e_rut" type="text" onkeypress="return soloRut(event)" class="form-control col-md-7 col-xs-12 parsley-success" placeholder="Rut">
+                        </div>
+                        <label class="control-label col-md-1 col-sm-3 col-xs-12" for="first-name">Direccion </label>
+                        <div class="col-md-2 col-sm-6 col-xs-12">
+                            <input name="e_dir" type="text" class="form-control col-md-7 col-xs-12 parsley-success" placeholder="Direccion">
+                        </div>
+                        <label class="control-label col-md-1 col-sm-3 col-xs-12" for="first-name">Giro </label>
+                        <div class="col-md-2 col-sm-6 col-xs-12">
+                            <input name="e_giro" type="text" class="form-control col-md-7 col-xs-12 parsley-success" placeholder="Giro">
+                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                     <div class="col-md-12 text-right">
                         <?php if($clase == 'perfil'){ ?>

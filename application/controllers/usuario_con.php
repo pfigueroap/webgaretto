@@ -54,12 +54,23 @@ class Usuario_con extends CI_Controller {
         $data['mensaje'] = $mensaje;
         $this->load->view('home',$data);
     }
-    public function mod_user(){
+    function cargar_imagen(){
+        $config['upload_path'] = 'application/images/usuarios/';
+        $config['allowed_types'] = 'jpg';
+        $config['max_size'] = 0;
+        $this->upload->initialize($config);
+        if ($this->upload->do_upload('imagen')) $datos = $this->upload->data();
+        return $datos['file_name'];
+    }
+    function mod_user(){
         $data = $this->valida();
         $info['tipo'] = $this->uri->segment(3);
+        $imagen = $this->cargar_imagen();
+        if($imagen != '')
+            $info['imagen'] = $imagen;
         $clase = $this->uri->segment(4);
         if($clase == 'editar') $id_usuario = $this->input->post('id_usuario');
-        $post = array('correo','celular','rut','id_empresa','id_nacion','genero','usuario','direccion');
+        $post = array('correo','celular','rut','id_nacion','genero','usuario','direccion');
         foreach ($post as $value)
             $info[$value] = $this->input->post($value);
         if($clase == 'usuario'){
@@ -69,6 +80,14 @@ class Usuario_con extends CI_Controller {
         }
         $info = $this->split($info,'nombre',$this->input->post('nombres'));
         $info = $this->split($info,'apellido',$this->input->post('apellidos'));
+        $s_empresa = $this->input->post('s_empresa');
+        if($s_empresa == 'existe') $info['id_empresa'] = $this->input->post('id_empresa');
+        elseif($s_empresa == 'nueva'){
+            $empresa = array('e_name','e_rut','e_dir','e_giro');
+            foreach ($empresa as $value) 
+                $in[$value] = $this->input->post($value);
+            $info['id_empresa'] = $this->usuario_mod->empresa($in['e_name'],$in['e_rut'],$in['e_dir'],$in['e_giro']);
+        }
         if($clase == 'usuario') $valida = $this->usuario_mod->valida_user($info['usuario'],$info['rut'],$info['correo']);
         elseif($clase == 'editar') $valida = $this->usuario_mod->valida_edit($info['usuario'],$info['rut'],$info['correo'],$id_usuario);
         if($valida == 1){

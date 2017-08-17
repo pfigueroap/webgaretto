@@ -63,6 +63,18 @@
                                 </tr>
                                 <?php } ?>
                             </tbody>
+                            <tbody>
+                                <tr>
+                                    <td><input onkeyup="doSearch('searchTerm0','0')" id="searchTerm0" type="search" class="form-control input-sm" placeholder="Buscar Cliente" aria-controls="datatable-responsive" style="width:100%"></td>
+                                    <td><input onkeyup="doSearch('searchTerm1','1')" id="searchTerm1" type="search" class="form-control input-sm" placeholder="Buscar Rut" aria-controls="datatable-responsive" style="width:100%"></td>
+                                    <td><input onkeyup="doSearch('searchTerm2','2')" id="searchTerm2" type="search" class="form-control input-sm" placeholder="Buscar ID" aria-controls="datatable-responsive" style="width:100%"></td>
+                                    <td><input onkeyup="doSearch('searchTerm3','3')" id="searchTerm3" type="search" class="form-control input-sm" placeholder="Buscar Fecha" aria-controls="datatable-responsive" style="width:100%"></td>
+                                    <td><input onkeyup="doSearch('searchTerm4','4')" id="searchTerm4" type="search" class="form-control input-sm" placeholder="Buscar Hora" aria-controls="datatable-responsive" style="width:100%"></td>
+                                    <td><input onkeyup="doSearch('searchTerm5','5')" id="searchTerm5" type="search" class="form-control input-sm" placeholder="Buscar Tipo" aria-controls="datatable-responsive" style="width:100%"></td>
+                                    <td><input onkeyup="doSearch('searchTerm6','6')" id="searchTerm6" type="search" class="form-control input-sm" placeholder="Buscar Total" aria-controls="datatable-responsive" style="width:100%"></td>
+                                    <td></td><td></td><td></td>
+                                </tr>
+                            </tbody>
                         </table>
                     </div>
                     <div class="col-md-12 text-right">

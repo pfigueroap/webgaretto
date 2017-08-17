@@ -18,7 +18,7 @@ class Historial_mod extends CI_Controller {
     		FROM tmp_compra AS c 
     		LEFT JOIN usuarios AS u ON c.id_cliente = u.id_usuario 
     		INNER JOIN tmp_det_compra AS d ON c.id_tmp_compra = d.id_tmp_compra 
-    		WHERE c.usuario = '{$usuario}' GROUP BY c.id_tmp_compra ORDER BY c.f_ingreso DESC, c.h_ingreso DESC");
+    		WHERE u.usuario = '{$usuario}' GROUP BY c.id_tmp_compra ORDER BY c.f_ingreso DESC, c.h_ingreso DESC");
     	$result = $query->result();
         $registros = (array) $result;
         return $registros;

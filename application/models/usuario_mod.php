@@ -70,5 +70,17 @@ class Usuario_mod extends CI_Controller {
         if($query->num_rows > 0) $valida = 1;
         return $valida;
     }
+    function empresa($e_name,$e_rut,$e_dir,$e_giro){
+        $query = $this->db->query("SELECT * FROM empresa WHERE rut = '{$e_rut}'");
+        if($query->num_rows > 0){
+            $result = $query->result();
+            $id_empresa = $result[0]->id_empresa;
+        }else{
+            $this->db->query("INSERT INTO empresa (empresa,direccion,rut,giro) 
+                VALUES ('{$e_name}','{$e_dir}','{$e_rut}','{$e_giro}')");
+            $id_empresa = $this->db->insert_id();
+        }
+        return $id_empresa;
+    }
 }
 ?>

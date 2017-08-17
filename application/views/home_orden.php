@@ -114,6 +114,7 @@
                 if($clase == 'historial') echo form_open('historial_con/actualizar_orden/'.$orden['id_tmp_compra']);
                 else echo form_open('operacion_con/actualizar_orden/'.$orden['id_tmp_compra']); 
                 ?>
+                <?php if($orden['estado'] != '5'){?>
                 <div class="row">
                     <div class="col-lg-6 col-md-12">
                     <div class="card">
@@ -193,6 +194,7 @@
                     </table>
                 </div>
                 </form>
+                <?php }?>
             </div>
         </div>
     </div>

@@ -21,7 +21,7 @@ class Historial_con extends CI_Controller {
             return $data;
         }
     }
-    public function index(){
+    function index(){
         $data = $this->valida();
         if(!empty($data)){
             $data['registros'] = $this->historial_mod->registros($data['usuario']);
@@ -30,7 +30,7 @@ class Historial_con extends CI_Controller {
             $this->load->view('home',$data);
         }
     }
-    public function detalle_registro(){
+    function detalle_registro(){
         $this->det_orden($this->uri->segment(3));
     }
     function det_orden($id_tmp_compra){
@@ -43,15 +43,15 @@ class Historial_con extends CI_Controller {
         $data['page'] = 'home_orden';
         $this->load->view('home',$data);
     }
-    public function eliminar_orden(){
+    function eliminar_orden(){
         $id_tmp_compra = $this->uri->segment(3);
         $this->historial_mod->eliminar_orden($id_tmp_compra);
         $this->index();
     }
-    public function actualizar_orden(){
+    function actualizar_orden(){
         $this->index();
     }
-    public function eliminar_det_orden(){
+    function eliminar_det_orden(){
         $id_tmp_compra = $this->uri->segment(3);
         $id_tmp_detalle = $this->uri->segment(4);
         $this->historial_mod->eliminar_det_orden($id_tmp_detalle);
@@ -71,12 +71,12 @@ class Historial_con extends CI_Controller {
         $data['page'] = 'home_comprobante';
         return $data;
     }
-    public function comprobante(){
+    function comprobante(){
         $id_tmp_compra = $this->uri->segment(3);
         $data = $this->data_comprobante($id_tmp_compra);
         $this->load->view('home',$data);
     }
-    public function down_comprobante(){
+    function down_comprobante(){
         $id_tmp_compra = $this->uri->segment(3);
         $data = $this->data_comprobante($id_tmp_compra);
         $html = $this->load->view('home_pdf',$data,true);

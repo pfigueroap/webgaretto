@@ -6,6 +6,7 @@ class Operacion_con extends CI_Controller {
         parent::__construct();
         $this->load->library('session');
         $this->load->library('mydompdf');
+        $this->load->library('email');
         $this->load->helper(array('form', 'url'));
         $this->load->model('operacion_mod');
     }
@@ -21,7 +22,7 @@ class Operacion_con extends CI_Controller {
             return $data;
         }
     }
-    public function index(){
+    function index(){
         $operacion = $this->uri->segment(3);
         $this->index_run($operacion);
     }
@@ -59,7 +60,7 @@ class Operacion_con extends CI_Controller {
         }
         return $datos;
     }
-    public function crear_compra(){
+    function crear_compra(){
         $data = $this->valida();
         $compras = $this->formulario();
         if(count($compras) > 0){
@@ -68,7 +69,7 @@ class Operacion_con extends CI_Controller {
             $this->carro_compras();
         }else $this->index_run('1');
     }
-    public function carro_compras(){
+    function carro_compras(){
         $data = $this->valida();
         $data['compras'] = $this->operacion_mod->tmp_compras($data['usuario']);
         foreach ($data['compras'] as $compra)
@@ -77,18 +78,18 @@ class Operacion_con extends CI_Controller {
         $data['page'] = 'home_compras_resumen';
         $this->load->view('home',$data);
     }
-    public function eliminar_detalle(){
+    function eliminar_detalle(){
         $id_tmp_detalle = $this->uri->segment(3);
         $usuario = $this->session->userdata('usuario');
         $this->operacion_mod->eliminar_detalle($id_tmp_detalle,$usuario);
         $this->carro_compras();
     }
-    public function vaciar_carrito(){
+    function vaciar_carrito(){
         $usuario = $this->session->userdata('usuario');
         $this->operacion_mod->vaciar_carrito($usuario);
         $this->carro_compras();
     }
-    public function comprar(){
+    function comprar(){
         $data = $this->valida();
         $data['despacho'] = $this->input->post('t_desp');
         if($data['despacho'] == 'otro') $data['direccion'] = $this->input->post('dir');
@@ -100,6 +101,11 @@ class Operacion_con extends CI_Controller {
             $data['compras'] = $this->operacion_mod->tmp_compras($data['usuario']);
             $data['validador'] = '0'; #Validar WebPay en caso de $pago = 'webpay'
             $data['id_compra'] = $this->operacion_mod->registrar_compra($data['usuario'],$data['pago'],$data['total'],$data['compras'],$data['despacho'],$data['direccion'],$data['validador']);
+            $correos = $this->operacion_mod->correo_adm();
+            $asunto = "Compra Productos de ".$data['usuario'];
+            $mensaje = "Se ha adquirido un nuevo producto en el sistema, bajo el id: ".$data['id_compra'];
+            foreach ($correos as $info)
+                $this->enviar_email('contacto@webgaretto.cl',$data['usuario'],$info->correo,$asunto,$mensaje);
             $data['page'] = 'home_comprobante';
             $this->load->view('home',$data);
         }else{
@@ -120,17 +126,17 @@ class Operacion_con extends CI_Controller {
         $data['page'] = 'home_comprobante';
         return $data;
     }
-    public function comprobante(){
+    function comprobante(){
         $id_tmp_compra = $this->uri->segment(3);
         $data = $this->data_comprobante($id_tmp_compra);
         $this->load->view('home',$data);
     }
-    public function down(){
+    function down(){
         $id_tmp_compra = $this->uri->segment(3);
         $data = $this->data_comprobante($id_tmp_compra);
         $this->load->view('home_pdf',$data);
     }
-    public function down_comprobante(){
+    function down_comprobante(){
         $id_tmp_compra = $this->uri->segment(3);
         $data = $this->data_comprobante($id_tmp_compra);
         $html = $this->load->view('home_pdf',$data,true);
@@ -138,13 +144,13 @@ class Operacion_con extends CI_Controller {
         $this->mydompdf->render();
         $this->mydompdf->stream("comprobante.pdf", array("Attachment" => false));
     }
-    public function ordenes(){
+    function ordenes(){
         $data = $this->valida();
         $data['registros'] = $this->operacion_mod->registros();
         $data['page'] = 'home_resumen';
         $this->load->view('home',$data);
     }
-    public function detalle_registro(){
+    function detalle_registro(){
         $this->det_orden($this->uri->segment(3));
     }
     function det_orden($id_tmp_compra){
@@ -155,18 +161,18 @@ class Operacion_con extends CI_Controller {
         $data['page'] = 'home_orden';
         $this->load->view('home',$data);
     }
-    public function eliminar_orden(){
+    function eliminar_orden(){
         $id_tmp_compra = $this->uri->segment(3);
         $this->operacion_mod->eliminar_orden($id_tmp_compra);
         $this->ordenes();
     }
-    public function eliminar_det_orden(){
+    function eliminar_det_orden(){
         $id_tmp_compra = $this->uri->segment(3);
         $id_tmp_detalle = $this->uri->segment(4);
         $this->operacion_mod->eliminar_det_orden($id_tmp_detalle);
         $this->det_orden($id_tmp_compra);
     }
-    public function actualizar_orden(){
+    function actualizar_orden(){
         $id_tmp_compra = $this->uri->segment(3);
         $despacho = $this->input->post('t_desp');
         $pago = $this->input->post('t_pago');
@@ -175,8 +181,16 @@ class Operacion_con extends CI_Controller {
         $this->operacion_mod->actualizar_orden($id_tmp_compra,$despacho,$direccion,$pago);
         $this->det_orden($id_tmp_compra);
     }
-    public function crear_orden(){
+    function crear_orden(){
         $tipo = $this->uri->segment(3);
+        $asunto = array(
+            'venta' => 'Solicitud de compra',
+            'arriendo' => 'Solicitud de arriendo',
+            'regalo' => 'Regalo de Garetto');
+        $mensaje = array(
+            'venta' => 'Se ha generado en nuestro sistema Garetto una nueva solicitud de adquisición de productos, por favor valide la compra en el sistema, para enviar los productos solicitados.',
+            'arriendo' => 'Se ha generado en nuestro sistema Garetto una nueva solicitud de arriendo de productos, por favor valide la compra en el sistema, para enviar los productos solicitados.',
+            'regalo' => 'Se ha generado en nuestro sistema Garetto un regalo para usted, para mayor información y pasos a seguir, por favor ingrese a nuestro sistema web.');
         if($tipo == 'venta') $estado = '3';
         elseif($tipo == 'arriendo') $estado = '4';
         elseif($tipo == 'regalo') $estado = '5';
@@ -184,18 +198,32 @@ class Operacion_con extends CI_Controller {
         if(count($ventas) > 0){
             $id_cliente = $this->input->post('id_cliente');
             $id_tmp_compra = $this->operacion_mod->crear_registro($ventas,$estado,$id_cliente);
+            $correo = $this->operacion_mod->correo($id_cliente);
+            $this->enviar_email('contacto@webgaretto.cl',"Equipo Garetto",$correo,$asunto[$tipo],$mensaje[$tipo]);
             $this->det_orden($id_tmp_compra);
         }elseif($tipo == 'venta') $this->index_run('2');
         elseif($tipo == 'arriendo') $this->index_run('3');
         elseif($tipo == 'regalo') $this->index_run('4');
     }
-    public function validar_orden(){
+    function enviar_email($email_org,$nombre,$email_des,$asunto,$mensaje){
+        $config['mailtype'] = 'html';
+        $this->email->initialize($config);
+        $this->email->from($email_org,$nombre);
+        $this->email->to($email_des);
+        $this->email->subject($asunto);
+        $data['mensaje'] = $mensaje;
+        $data['asunto'] = $asunto;
+        $data['nombre'] = $nombre;
+        $this->email->message($this->load->view('email',$data,true));
+        return $this->email->send();
+    }
+    function validar_orden(){
         $id_tmp_compra = $this->uri->segment(3);
         $respuesta = $this->activar_reloj($id_tmp_compra);
         $this->operacion_mod->validar_orden($id_tmp_compra,$respuesta);
         $this->ordenes();
     }
-    public function invalidar_orden(){
+    function invalidar_orden(){
         $id_tmp_compra = $this->uri->segment(3);
         $this->operacion_mod->validar_orden($id_tmp_compra,'0');
         $this->ordenes();

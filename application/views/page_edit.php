@@ -173,30 +173,16 @@
                     </div>
                 </div>
                 <div class="row">
+                    <?php foreach ($productos as $producto) { ?>
                     <div class="col-md-3">
-                        <a class="portfolio-item" style="background-image: url(<?php echo base_url(); ?>application/images/impresora.jpg);" href="#">
+                        <a class="portfolio-item" style="background-image: url(<?php echo base_url(); ?>application/images/productos/<?php echo $producto->imagen;?>);" href="#">
                             <div class="details">
-                                <h4>Impresora Térmica</h4>
-                                <span>$79.990</span>
+                                <h4><?php echo $producto->producto;?></h4>
+                                <span>$<?php echo number_format($producto->prc_vta,0,",",".");?> CLP</span>
                             </div>
                         </a>
                     </div>
-                    <div class="col-md-3">
-                        <a class="portfolio-item" style="background-image: url(<?php echo base_url(); ?>application/images/reloj_control.jpg);" href="#" >
-                            <div class="details">
-                                <h4>Reloj Control</h4>
-                                <span>$199.990</span>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-md-3">
-                        <a class="portfolio-item" style="background-image: url(<?php echo base_url(); ?>application/images/totem.jpg);" href="#">
-                            <div class="details">
-                                <h4>Totem Biometrico</h4>
-                                <span>$299.990</span>
-                            </div>
-                        </a>
-                    </div>
+                    <?php }?>
                 </div>
             </div>
         </section>

@@ -31,13 +31,28 @@
 <!-- [3][4][6][7][8][9] -->
 <script src="<?php echo base_url(); ?>application/js/switchery.min.js"></script>
 
-<!-- [9] Informes -->
+<?php if($page == 'home_gest_prod' or $page == 'home_usuario'){?>
+<script type="text/javascript">$(document).ready(function(){
+    $("#imagen").change(function(){
+        var input=this;
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#imgProd').attr('src', e.target.result);
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        }
+        
+    })
+});</script>
+<?php } ?>
 <?php if($page == 'home_informe'){?>
 <script src="<?php echo base_url(); ?>application/js/dragula.min.js"></script>
 <script src="<?php echo base_url(); ?>application/js/index.js"></script>
 <?php }?>
 
-<!-- [1] Home -->
 <?php if($page == 'home_cont'){?>
 <script type="text/javascript">
 	$(document).ready(function(){
@@ -47,8 +62,7 @@
 </script>
 <?php }?>
 
-<!-- [2] Usuario -->
-<?php if(in_array($page, array('home_user','home_historial','home_producto','home_compras'))){?>
+<?php if(in_array($page, array('home_user','home_historial','home_producto','home_compras','home_resumen'))){?>
 <script src="<?php echo base_url(); ?>application/js/buscar.js"></script>
 <?php }elseif ($page == 'home_usuario') {?>
 <script>

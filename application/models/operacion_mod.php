@@ -142,5 +142,15 @@ class Operacion_mod extends CI_Controller {
         $info = (array) $result[0];
         return $info;
     }
+    function correo($id_usuario){
+        $query = $this->db->query("SELECT * FROM usuarios WHERE id_usuario = '{$id_usuario}'");
+        $result = $query->result();
+        return $result[0]->correo;
+    }
+    function correo_adm(){
+        $query = $this->db->query("SELECT correo FROM usuarios WHERE tipo = '1' AND estado = '0'");
+        $result = $query->result();
+        return $result;
+    }
 }
 ?>
