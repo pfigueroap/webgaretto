@@ -237,7 +237,8 @@ class Operacion_con extends CI_Controller {
     }
     function validar_orden(){
         $id_tmp_compra = $this->uri->segment(3);
-        $respuesta = $this->activar_reloj($id_tmp_compra);
+        #$respuesta = $this->activar_reloj($id_tmp_compra);
+        $respuesta = '1';
         $this->operacion_mod->validar_orden($id_tmp_compra,$respuesta);
         $this->ordenes();
     }
