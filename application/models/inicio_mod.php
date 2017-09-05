@@ -1,6 +1,8 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 error_reporting(E_ALL ^ E_NOTICE ^ E_DEPRECATED);
 
+#require_once('../libraries/libwebpay/webpay.php');
+
 class Inicio_mod extends CI_Controller {
     function __construct() {
         parent::__construct();
@@ -99,6 +101,74 @@ class Inicio_mod extends CI_Controller {
         $query = $this->db->query("SELECT * FROM usuarios WHERE correo = '{$correo}' AND estado = '0' AND id_usuario != '{$id_usuario}'");
         if($query->num_rows > 0) $valida = 1;
         return $valida;
+    }
+    function webpay(){
+        require_once(APPPATH.'libraries/libwebpay/webpay.php');
+        require_once(APPPATH.'certificates/cert-normal.php');
+        $config = new Configuration();
+        $config->setEnvironment($certificate['environment']);
+        $config->setCommerceCode($certificate['commerce_code']);
+        $config->setPrivateKey($certificate['private_key']);
+        $config->setPublicCert($certificate['public_cert']);
+        $config->setWebpayCert($certificate['webpay_cert']);
+        $webpay = new Webpay($config);
+        return $webpay;
+    }
+    function registrar_compra($cabecera,$contenido){
+        $this->db->query("INSERT INTO compra_web (".join(',',$cabecera).") VALUES (".join(',',$contenido).")");
+        $id_compra = $this->db->insert_id();
+        return $id_compra;
+    }
+    function pago($monto,$orden,$url_retorno,$url_final){
+        $comercio = '597020000040';
+        $request = array(
+            "amount"    => $monto,
+            "buyOrder"  => $orden,
+            "sessionId" => $comercio,
+            "urlReturn" => $url_retorno,
+            "urlFinal"  => $url_final,
+        );
+        $webpay = $this->webpay();
+        $result = $webpay->getNormalTransaction()->initTransaction($monto,$orden,$comercio, $url_retorno, $url_final);
+        redirect($result->url.'?token_ws='.$result->token);
+        #var_dump($result);
+        #echo $result->url.'?token_ws='.$result->token;
+    }
+    function retorno($token){
+        $webpay = $this->webpay();
+        $result = $webpay->getNormalTransaction()->getTransactionResult($token);
+        #echo "<PRE>";
+        #var_dump($result);
+        $this->save_retorno($token,$result);
+        redirect($result->urlRedirection.'?token_ws='.$token);
+    }
+    function save_retorno($token,$result){
+        $accountingDate = $result->accountingDate;
+        $buyOrder = $result->buyOrder;
+        $cardNumber = $result->cardDetail->cardNumber;
+        $cardExpirationDate = $result->cardDetail->cardExpirationDate;
+        $authorizationCode = $result->detailOutput->authorizationCode;
+        $paymentTypeCode = $result->detailOutput->paymentTypeCode;
+        $responseCode = $result->detailOutput->responseCode;
+        $sharesNumber = $result->detailOutput->sharesNumber;
+        $amount = $result->detailOutput->amount;
+        $commerceCode = $result->detailOutput->commerceCode;
+        $responseDescription = $result->detailOutput->responseDescription;
+        $sessionId = $result->sessionId;
+        $transactionDate = $result->transactionDate;
+        $urlRedirection = $result->urlRedirection;
+        $VCI = $result->VCI;
+        $this->db->query("INSERT INTO transbank (token,accountingDate,buyOrder,cardNumber,cardExpirationDate,authorizationCode,paymentTypeCode,responseCode,sharesNumber,amount,commerceCode,responseDescription,sessionId,transactionDate,urlRedirection,VCI) VALUES ('{$token}','{$accountingDate}','{$buyOrder}','{$cardNumber}','{$cardExpirationDate}','{$authorizationCode}','{$paymentTypeCode}','{$responseCode}','{$sharesNumber}','{$amount}','{$commerceCode}','{$responseDescription}','{$sessionId}','{$transactionDate}','{$urlRedirection}','{$VCI}')");
+        $id_tbk = $this->db->insert_id();
+        $this->db->query("UPDATE compra_web SET id_tbk = '{$id_tbk}' WHERE id_web = '{$buyOrder}'");
+    }
+    function comprobante($token){
+        $query = $this->db->query("SELECT * FROM transbank AS tbk
+            INNER JOIN compra_web AS web ON tbk.id_tbk = web.id_tbk 
+            WHERE tbk.token = '{$token}'");
+        $result = $query->result();
+        $comprobante = (array) $result[0];
+        return $comprobante;
     }
 }
 ?>

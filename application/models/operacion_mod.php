@@ -40,12 +40,12 @@ class Operacion_mod extends CI_Controller {
     function eliminar_detalle($id_tmp_detalle,$usuario){
     	$this->db->query("DELETE FROM tmp_det_compra WHERE id_tmp_detalle = '{$id_tmp_detalle}' AND usuario = '{$usuario}' AND estado = '0'");
     }
-    function direcciones($usuario){
-    	$query = $this->db->query("SELECT u.direccion AS dir_personal, e.direccion AS dir_laboral FROM usuarios AS u
+    function info($usuario){
+    	$query = $this->db->query("SELECT u.direccion AS dir_personal, e.direccion AS dir_laboral, e.empresa, e.rut FROM usuarios AS u
     		INNER JOIN empresa AS e ON u.id_empresa = e.id_empresa WHERE u.usuario = '{$usuario}'");
         $result = $query->result();
-        $direcciones = (array) $result[0];
-        return $direcciones;
+        $info = (array) $result[0];
+        return $info;
     }
     function vaciar_carrito($usuario){
     	$this->db->query("DELETE FROM tmp_det_compra WHERE usuario = '{$usuario}'");
@@ -56,9 +56,10 @@ class Operacion_mod extends CI_Controller {
     	$direccion = $query->result()[0]->direccion;
     	return $direccion;
     }
-    function registrar_compra($usuario,$pago,$total,$compras,$despacho,$direccion,$validador){
-    	$this->db->query("INSERT INTO compra (tipo_pago,usuario,f_compra,h_compra,validador,despacho,direccion,total) VALUES 
-    		('{$pago}','{$usuario}',CURDATE(),CURTIME(),'{$validador}','{$despacho}','{$direccion}','{$total}')");
+    function registrar_compra($usuario,$pago,$total,$compras,$despacho,$direccion,$factura,$empresa,$rut,$validador){
+    	$this->db->query("INSERT INTO compra 
+            (tipo_pago,usuario,f_compra,h_compra,validador,despacho,direccion,factura,empresa,rut,total) VALUES 
+    		('{$pago}','{$usuario}',CURDATE(),CURTIME(),'{$validador}','{$despacho}','{$direccion}','{$factura}','{$empresa}','{$rut}','{$total}')");
     	$id_compra = $this->db->insert_id();
     	if($pago == 'transferencia') $estado = '1'; #Transferencia por validar
     	elseif($pago == 'webpay' and $validador == '0') $estado = '0'; #De vuelta al carro de compras

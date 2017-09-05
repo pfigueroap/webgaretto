@@ -74,7 +74,7 @@ class Operacion_con extends CI_Controller {
         $data['compras'] = $this->operacion_mod->tmp_compras($data['usuario']);
         foreach ($data['compras'] as $compra)
             $data['total'] += $compra->total;
-        $data['direcciones'] = $this->operacion_mod->direcciones($data['usuario']);
+        $data['info'] = $this->operacion_mod->info($data['usuario']);
         $data['page'] = 'home_compras_resumen';
         $this->load->view('home',$data);
     }
@@ -91,21 +91,39 @@ class Operacion_con extends CI_Controller {
     }
     function comprar(){
         $data = $this->valida();
+        $info = $this->operacion_mod->info($data['usuario']);
+        #Despacho
         $data['despacho'] = $this->input->post('t_desp');
         if($data['despacho'] == 'otro') $data['direccion'] = $this->input->post('dir');
-        elseif($data['despacho'] == 'laboral' or $data['despacho'] == 'personal') $data['direccion'] = $this->operacion_mod->direccion($data['usuario'],$data['despacho']);
+        elseif($data['despacho'] == 'laboral') $data['direccion'] = $info['dir_laboral'];
+        elseif($data['despacho'] == 'personal') $data['direccion'] = $info['dir_personal'];
         elseif($data['despacho'] == 'retiro') $data['direccion'] = 'Nueva York 47, Santiago';
+        #Factura
+        $data['factura'] = $this->input->post('t_fact');
+        if($data['factura'] == 'otro'){
+            $data['name_fact'] = $this->input->post('name_fact');
+            $data['rut_fact'] = $this->input->post('rut_fact');
+        }elseif($data['factura'] == 'empresa'){
+            $data['name_fact'] = $info['empresa'];
+            $data['rut_fact'] = $info['rut'];
+        }elseif($data['factura'] == 'boleta'){
+            $data['name_fact'] = '';
+            $data['rut_fact'] = '';
+        }
+        #Pago
         $data['pago'] = $this->input->post('t_pago');
         $data['total'] = $this->input->post('total');
         if($data['total'] != '0'){
             $data['compras'] = $this->operacion_mod->tmp_compras($data['usuario']);
             $data['validador'] = '0'; #Validar WebPay en caso de $pago = 'webpay'
-            $data['id_compra'] = $this->operacion_mod->registrar_compra($data['usuario'],$data['pago'],$data['total'],$data['compras'],$data['despacho'],$data['direccion'],$data['validador']);
-            $correos = $this->operacion_mod->correo_adm();
-            $asunto = "Compra Productos de ".$data['usuario'];
-            $mensaje = "Se ha adquirido un nuevo producto en el sistema, bajo el id: ".$data['id_compra'];
-            foreach ($correos as $info)
-                $this->enviar_email('contacto@webgaretto.cl',$data['usuario'],$info->correo,$asunto,$mensaje);
+            if($data['pago'] == 'transferencia'){
+                $data['id_compra'] = $this->operacion_mod->registrar_compra($data['usuario'],$data['pago'],$data['total'],$data['compras'],$data['despacho'],$data['direccion'],$data['factura'],$data['name_fact'],$data['rut_fact'],$data['validador']);
+                $correos = $this->operacion_mod->correo_adm();
+                $asunto = "Compra Productos de ".$data['usuario'];
+                $mensaje = "Se ha adquirido un nuevo producto en el sistema, bajo el id: ".$data['id_compra'];
+                foreach ($correos as $info)
+                    $this->enviar_email('contacto@webgaretto.cl',$data['usuario'],$info->correo,$asunto,$mensaje);
+            }
             $data['page'] = 'home_comprobante';
             $this->load->view('home',$data);
         }else{
@@ -156,7 +174,7 @@ class Operacion_con extends CI_Controller {
     function det_orden($id_tmp_compra){
         $data = $this->valida();
         $data['orden'] = $this->operacion_mod->orden($id_tmp_compra);
-        $data['direcciones'] = $this->operacion_mod->direcciones($data['orden']['usuario']);
+        $data['info'] = $this->operacion_mod->info($data['orden']['usuario']);
         $data['registros'] = $this->operacion_mod->detalle_registro($id_tmp_compra);
         $data['page'] = 'home_orden';
         $this->load->view('home',$data);

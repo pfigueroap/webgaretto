@@ -35,7 +35,7 @@
     <body>
         <div id="preloader"></div>
         <!--==========================
-          Hero Section
+          Portada
         ============================-->
         <section id="hero">
             <div class="hero-container">
@@ -53,7 +53,7 @@
             </div>
         </section>
         <!--==========================
-          Header Section
+          Barra Navegación
         ============================-->
         <header id="header">
             <div class="container">
@@ -76,7 +76,7 @@
             </div>
         </header><!-- #header -->
         <!--==========================
-          About Section
+          Nosotros
         ============================-->
         <section id="about">
             <div class="container wow fadeInUp">
@@ -100,7 +100,7 @@
             </div>
         </section>
         <!--==========================
-          Services Section
+          Servicios
         ============================-->
         <section id="services">
             <div class="container wow fadeInUp">
@@ -133,7 +133,7 @@
             </div>
         </section>
         <!--==========================
-          Porfolio Section
+          Productos
         ============================-->
         <section id="portfolio">
             <div class="container wow fadeInUp">
@@ -158,6 +158,9 @@
                 </div>
             </div>
         </section>
+        <!--==========================
+          Contacto
+        ============================-->
         <section id="contact">
             <div class="container wow fadeInUp">
                 <div class="row">

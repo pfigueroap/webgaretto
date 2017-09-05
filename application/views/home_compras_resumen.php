@@ -55,73 +55,120 @@
                 </div>
                 <div class="row">
                     <div class="col-lg-6 col-md-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <h4 class="title">Despacho de productos</h4>
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="title">Facturación</h4>
+                            </div>
+                            <br/>
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th style="text-align: center; width:100px;">Seleccion</th>
+                                            <th>Tipo Documento</th><th>Empresa</th><th>Rut</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="myTable">
+                                        <tr>
+                                            <td style="text-align: center; width:100px;height:64px;"><input name="t_fact" value="boleta" type="radio" style="height:20px; width:20px; vertical-align: middle;" required></td>
+                                            <td>Boleta</td><td></td><td></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="text-align: center; width:100px;height:64px;"><input name="t_fact" value="empresa" type="radio" style="height:20px; width:20px; vertical-align: middle;" required></td>
+                                            <td>Factura Empresa</td>
+                                            <td><?php echo $info['empresa'];?></td><td><?php echo $info['rut'];?></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="text-align: center; width:100px;height:64px;"><input name="t_fact" value="otro" type="radio" style="height:20px; width:20px; vertical-align: middle;" required></td>
+                                            <td>Factura</td>
+                                            <td><input name="name_fact" id="name_fact" type="text" style="width:150px;border: none;border-bottom: 1px solid;" placeholder="Empresa"></td>
+                                            <td><input name="rut_fact" id="rut_fact" type="text" style="width:150px;border: none;border-bottom: 1px solid;" placeholder="Rut"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
-                        <br/>
-                        <div class="table-responsive">
-                            <table class="table table-hover">
-                                <thead>
-                                    <tr>
-                                        <th style="text-align: center; width:100px;">Seleccion</th><th>Tipo despacho</th><th>Dirección</th><th>Total</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="myTable">
-                                    <tr>
-                                        <td style="text-align: center; width:100px;"><input name="t_desp" value="laboral" type="radio" style="height:20px; width:20px; vertical-align: middle;" required></td>
-                                        <td>Dirección Laboral</td><td><?php echo $direcciones['dir_laboral'];?></td><td></td>
-                                    </tr>
-                                    <tr>
-                                        <td style="text-align: center; width:100px;"><input name="t_desp" value="personal" type="radio" style="height:20px; width:20px; vertical-align: middle;" required></td>
-                                        <td>Dirección Personal</td><td><?php echo $direcciones['dir_personal'];?></td><td></td>
-                                    </tr>
-                                    <tr>
-                                        <td style="text-align: center; width:100px;"><input name="t_desp" value="otro" type="radio" style="height:20px; width:20px; vertical-align: middle;" required></td>
-                                        <td>Otra Dirección</td>
-                                        <td><input name="dir" id="dir" type="text" style="width:230px;border: none;border-bottom: 1px solid;" placeholder="Dirección"></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td style="text-align: center; width:100px;"><input name="t_desp" value="retiro" type="radio" style="height:20px; width:20px; vertical-align: middle;" required></td>
-                                        <td>Retiro en Local</td><td>Nueva York 47, Santiago</td><td>0 CLP</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div></div>
+                    </div>
                     <div class="col-lg-6 col-md-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <h4 class="title">Medio de Pago</h4>
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="title">Despacho de productos</h4>
+                            </div>
+                            <br/>
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th style="text-align: center; width:100px;">Seleccion</th><th>Tipo despacho</th><th>Dirección</th><th>Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="myTable">
+                                        <tr>
+                                            <td style="text-align: center; width:100px;"><input name="t_desp" value="laboral" type="radio" style="height:20px; width:20px; vertical-align: middle;" required></td>
+                                            <td>Dirección Laboral</td><td><?php echo $info['dir_laboral'];?></td><td></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="text-align: center; width:100px;"><input name="t_desp" value="personal" type="radio" style="height:20px; width:20px; vertical-align: middle;" required></td>
+                                            <td>Dirección Personal</td><td><?php echo $info['dir_personal'];?></td><td></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="text-align: center; width:100px;"><input name="t_desp" value="otro" type="radio" style="height:20px; width:20px; vertical-align: middle;" required></td>
+                                            <td>Otra Dirección</td>
+                                            <td><input name="dir" id="dir" type="text" style="width:230px;border: none;border-bottom: 1px solid;" placeholder="Dirección"></td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="text-align: center; width:100px;"><input name="t_desp" value="retiro" type="radio" style="height:20px; width:20px; vertical-align: middle;" required></td>
+                                            <td>Retiro en Local</td><td>Nueva York 47, Santiago</td><td>0 CLP</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
-                        <br/>
-                        <div class="table-responsive">
-                            <table class="table table-hover">
-                                <thead>
-                                    <tr><th style="text-align: center; width:100px;">Seleccion</th><th>Tipo Pago</th><th></th></tr>
-                                </thead>
-                                <tbody id="myTable">
-                                    <tr><td style="text-align: center; width:100px;"><input name="t_pago" value="webpay" type="radio" style="height:20px; width:20px; vertical-align: middle;" required></td><td>Tarjeta Crédito/Débito - WebPay</td>
-                                        <td><img src="<?php echo base_url(); ?>application/images/webpay.png" style="max-width: 150px; max-height: 300px" /></td></tr>
-                                    <tr><td style="text-align: center; width:100px;"><input name="t_pago" value="transferencia" type="radio" style="height:20px; width:20px; vertical-align: middle;" required></td><td>Transferencia Bancaria</td>
-                                        <td><img src="<?php echo base_url(); ?>application/images/transferencia.png" style="max-width: 150px; max-height: 300px" /></td></tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div></div>
+                    </div>
                 </div>
-                <div class="col-md-12 text-right">
-                    <table align="right">
-                        <tr>
-                            <td>
-                                <input name="total" id="total" type="text" style="background: white;text-align:center;width:150px;height:60px;font-size: 15pt;" readonly value="<?php echo number_format($total,0,',','.'); ?>">
-                            </td>
-                            <td>
-                                <button class="btn btn-primary btn-xs" style="font-size: 15pt;width: 105%;height:60px;margin-right: 200px;margin-bottom: 10px;background: #af1416;box-shadow:none;"> <i class="fa fa-shopping-cart" style="font-size: 20pt;"></i> &nbsp&nbsp&nbsp Comprar </button>
-                            </td>
-                        </tr>
-                    </table>
+                <div class="row">
+                    <div class="col-lg-6 col-md-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="title">Medio de Pago</h4>
+                            </div>
+                            <br/>
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <tbody id="myTable">
+                                        <tr>
+                                            <td style="text-align: center; width:100px;">
+                                                <input name="t_pago" value="webpay" type="radio" style="height:20px; width:20px; vertical-align: middle;" required>
+                                            </td>
+                                            <td>
+                                                <img src="<?php echo base_url(); ?>application/images/webpay.png" style="max-width: 150px; max-height: 300px" />
+                                            </td>
+                                            <td style="text-align: center; width:100px;">
+                                                <input name="t_pago" value="transferencia" type="radio" style="height:20px; width:20px; vertical-align: middle;" required>
+                                            </td>
+                                            <td>
+                                                <img src="<?php echo base_url(); ?>application/images/transferencia.png" style="max-width: 150px; max-height: 300px" />
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-12">
+                        <br><br><br><br>
+                        <table align="center">
+                            <tr>
+                                <td>
+                                    <input name="total" id="total" type="text" style="background: white;text-align:center;width:150px;height:60px;font-size: 15pt;" readonly value="<?php echo number_format($total,0,',','.'); ?>">
+                                </td>
+                                <td>
+                                    <button class="btn btn-primary btn-xs" style="font-size: 15pt;width: 105%;height:60px;margin-right: 200px;margin-bottom: 10px;background: #af1416;box-shadow:none;"> <i class="fa fa-shopping-cart" style="font-size: 20pt;"></i> &nbsp&nbsp&nbsp Comprar </button>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
                 </form>
             </div>

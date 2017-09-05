@@ -45,8 +45,6 @@
                     <ul class="nav-menu">
                         <li><a href="<?php echo site_url("inicio_con/page"); ?>">Inicio</a></li>
                         <li class="menu-active"><a href="#about"><?php echo $producto['producto']; ?></a></li>
-                        <li><a href="#portfolio"><?php echo $sec3_tit; ?></a></li>
-                        <li><a href="#contact"><?php echo $sec4_tit; ?></a></li>
                         <li><a href="<?php echo site_url("inicio_con/ingreso"); ?>">
                         <?php if($usuario != '') echo "Hola ".$usuario;
                         else echo "Ingresar"; ?></a></li>
@@ -70,112 +68,65 @@
             <div class="container about-container wow fadeInUp" style="background-image: url(<?php echo base_url(); ?>application/images/productos/<?php echo $producto['imagen'];?>);">
                 <div class="row">
                     <div class="col-md-6 col-md-push-6 about-content">
-                        <h2 class="about-title">Descripción</h2>
-                        <p class="about-text"><?php echo $producto['descripcion']; ?></p>
-                        <h1 class="about-title">Destalles</h1>
+                        <?php echo form_open('inicio_con/tbk'); ?>
+                        <h2 class="about-title">Datos del Comprador</h2>
                         <p class="about-text">
-                        Código Producto: <?php echo $producto['cod_prod']; ?>  <br>
-                        Código Barras: <?php echo $producto['cod_bar']; ?>  <br>
-                        Modelo: <?php echo $producto['modelo']; ?>  <br>
-                        Marca: <?php echo $producto['marca']; ?>  <br>
+                            <table>
+                                <tr><td style="width:150px">Nombre</td><td style="width:20px">:</td>
+                                <td><input type="text" name="nombre" style="width:200px" required></td></tr>
+                                <tr><td>Rut</td><td>:</td>
+                                <td><input type="text" name="rut" style="width:200px" required></td></tr>
+                                <tr><td>Email</td><td>:</td>
+                                <td><input type="email" name="correo" style="width:200px" required></td></tr>
+                                <tr><td>Dirección despacho</td><td>:</td>
+                                <td><input type="text" name="direccion" style="width:200px" required></td></tr>
+                            </table>
+                        </p>
+                        <h1 class="about-title">Datos de Facturación</h1>
+                        <p class="about-text">
+                            <table>
+                                <tr>
+                                    <td style="text-align: center; width:50px;">
+                                        <input type = "radio" name = "tipo_fac" value = "boleta" required>
+                                    </td>
+                                    <td style="width:100px">Boleta</td>
+                                    <td style="text-align: center; width:50px;">
+                                        <input type = "radio" name = "tipo_fac" value = "factura" required>
+                                    </td>
+                                    <td style="width:100px">Factura</td>
+                                </tr>
+                            </table>
+                        </p>
+                        <p class="about-text">En caso de Factura, datos de la empresa:</p>
+                        <p class="about-text">
+                            <table>
+                                <tr><td style="width:150px">Nombre</td><td style="width:20px">:</td>
+                                <td><input type="text" name="empresa" style="width:200px"></td></tr>
+                                <tr><td>Rut</td><td>:</td>
+                                <td><input type="text" name="e_rut" style="width:200px"></td></tr>
+                                <tr><td>Giro</td><td>:</td>
+                                <td><input type="text" name="e_giro" style="width:200px"></td></tr>
+                                <tr><td>Dirección</td><td>:</td>
+                                <td><input type="text" name="e_dir" style="width:200px"></td></tr>
+                            </table>
                         </p>
                         <div class="well carousel-search hidden-sm">
-                        <h1 class="about-title" style="text-align: center;">Precio de Venta</h1>
-                        <div class="section-title-divider"></div>
                             <div class="btn-group">
-                                <a href="<?php echo site_url("inicio_con/comprar/".$producto['id_producto']); ?>" type="button" id="btnAdquirir" class="btn btn-lg btn-success"><i class="fa fa-shopping-basket"></i>&nbsp;&nbsp;&nbsp;Adquirir</a>
+                                <button class="btn btn-lg btn-success"><i class="fa fa-credit-card"></i>&nbsp;&nbsp;&nbsp;Comprar</button>
                             </div>
                             <div class="btn-group">
                                 <h3 class="about-text">&nbsp;&nbsp;&nbsp;$<?php echo number_format($producto['prc_vta'],0,",","."); ?> CLP</h3>
                             </div>
+                            <div class="btn-group">
+                                <img src="<?php echo base_url(); ?>application/images/webpay.png" style="max-width: 150px; max-height: 300px" />
+                            </div>
                         </div>
+                        <input name="id_producto" type="hidden" value="<?php echo $producto['id_producto'];?>">
+                        </form>
                     </div>
                 </div>
             </div>
         </section>
-<!--==========================
-  Porfolio Section
-============================-->
-        <section id="portfolio">
-            <div class="container wow fadeInUp">
-                <div class="row">
-                    <div class="col-md-12">
-                        <h3 class="section-title"><?php echo $sec3_tit; ?></h3>
-                        <div class="section-title-divider"></div>
-                        <p class="section-description"><?php echo $sec3_desc; ?></p>
-                    </div>
-                </div>
-                <div class="row">
-                    <?php foreach ($productos as $producto) { ?>
-                    <div class="col-md-3">
-                        <a class="portfolio-item" style="background-image: url(<?php echo base_url(); ?>application/images/productos/<?php echo $producto->imagen;?>);" href="<?php echo site_url("inicio_con/descripcion/".$producto->id_producto); ?>">
-                            <div class="details">
-                                <h4><?php echo $producto->producto;?></h4>
-                                <span>$<?php echo number_format($producto->prc_vta,0,",",".");?> CLP</span>
-                            </div>
-                        </a>
-                    </div>
-                    <?php }?>
-                </div>
-            </div>
-        </section>
-<!--==========================
-  Contact Section
-============================--> 
-        <section id="contact">
-            <div class="container wow fadeInUp">
-                <div class="row">
-                    <div class="col-md-12">
-                        <h3 class="section-title"><?php echo $sec4_tit; ?></h3>
-                        <div class="section-title-divider"></div>
-                        <p class="section-description"><?php echo $sec4_desc; ?></p>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-3 col-md-push-2">
-                        <div class="info">
-                            <div>
-                                <i class="fa fa-map-marker"></i>
-                                <p><?php echo $sec4_direc; ?><br><?php echo $sec4_comuna; ?></p>
-                            </div>
-                            <div>
-                                <i class="fa fa-envelope"></i>
-                                <p><?php echo $sec4_email; ?></p>
-                            </div>
-                            <div>
-                                <i class="fa fa-phone"></i>
-                                <p><?php echo $sec4_tel; ?></p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-5 col-md-push-2">
-                        <div class="form">
-                            <div id="sendmessage">Su mensaje ha sido enviado, muchas gracias!</div>
-                            <div id="errormessage"></div>
-                            <?php echo form_open('inicio_con/contacto'); ?>
-                                <div class="form-group">
-                                    <input type="text" name="nombre" class="form-control" id="name" placeholder="Su Nombre" data-rule="minlen:4" data-msg="Ingrese al menos 4 letras" required/>
-                                </div>
-                                <div class="form-group">
-                                    <input type="email" class="form-control" name="email" id="email" placeholder="Su Email" data-rule="email" data-msg="Por favor, ingrese un email valido" required/>
-                                    <div class="validation"></div>
-                                </div>
-                                <div class="form-group">
-                                    <input type="text" class="form-control" name="asunto" id="subject" placeholder="Asunto" data-rule="minlen:4" data-msg="Por favor, ingrese al menos 8 caracteres" required/>
-                                    <div class="validation"></div>
-                                </div>
-                                <div class="form-group">
-                                    <textarea class="form-control" name="mensaje" rows="5" data-rule="required" data-msg="Por favor, escribenos algo!" placeholder="Mensaje" required></textarea>
-                                    <div class="validation"></div>
-                                </div>
-                                <div class="text-center"><button type="submit">Enviar Mensaje</button></div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>  
-  
 <!--==========================
   Footer
 ============================--> 

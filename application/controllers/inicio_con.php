@@ -41,6 +41,45 @@ class Inicio_con extends CI_Controller {
         $data['tipo'] = $this->session->userdata('tipo');
         $this->load->view('descripcion',$data);
     }
+    function comprar(){
+        $id_producto = $this->uri->segment(3);
+        $data['producto'] = $this->inicio_mod->producto($id_producto);
+        $data['usuario'] = $this->session->userdata('usuario');
+        $data['tipo'] = $this->session->userdata('tipo');
+        $this->load->view('comprar',$data);
+    }
+    function tbk(){
+        $cabecera = array('nombre','id_producto','rut','correo','direccion','tipo_fac');
+        $contenido = array();
+        foreach ($cabecera as $post)
+            array_push($contenido, "'".$this->input->post($post)."'");
+        if($this->input->post('tipo_fac') == "'factura'"){
+            foreach(array('empresa','e_rut','e_giro','e_dir') as $post){
+                array_push($cabecera, $post);
+                array_push($contenido, "'".$this->input->post($post)."'");
+            }
+        }
+        $id_compra = $this->inicio_mod->registrar_compra($cabecera,$contenido);
+        $producto = $this->inicio_mod->producto($this->input->post('id_producto'));
+        $this->inicio_mod->pago($producto['prc_vta'],$id_compra,site_url("inicio_con/tbk_retorno"),site_url("inicio_con/tbk_final/".$producto['id_producto']));
+    }
+    function tbk_retorno(){
+        $token = $this->input->post('token_ws');
+        $this->inicio_mod->retorno($token);
+    }
+    function tbk_final(){
+        $id_producto = $this->uri->segment(3);
+        $data['producto'] = $this->inicio_mod->producto($id_producto);
+        $data['usuario'] = $this->session->userdata('usuario');
+        $data['tipo'] = $this->session->userdata('tipo');
+        $token = $this->input->post('token_ws');
+        if(empty($token)) $data['compra'] = 'fallida';
+        else{ 
+            $data['comprobante'] = $this->inicio_mod->comprobante($token);
+            $data['compra'] = 'exito';
+        }
+        $this->load->view('comprobante_web',$data);
+    }
     function web(){
         $data = $this->inicio_mod->web();
         $data['productos'] = $this->inicio_mod->productos();
@@ -225,15 +264,9 @@ class Inicio_con extends CI_Controller {
             "modelo" => "FGT45",
             "marca" => "ZKT",
             "cantidad" => "1");  
-        /*Convierte el array en el formato adecuado para cURL*/  
-        #$elements = array();
-        #foreach ($postData as $name=>$value) {  
-        #   $elements[] = "{$name}=".urlencode($value);  
-        #}  
         $handler = curl_init();  
         curl_setopt($handler, CURLOPT_URL, $url);  
         curl_setopt($handler, CURLOPT_POST,true);  
-        #curl_setopt($handler, CURLOPT_POSTFIELDS, $elements);
         curl_setopt($handler, CURLOPT_POSTFIELDS, $postData);
         $response = curl_exec ($handler);  
         curl_close($handler);
