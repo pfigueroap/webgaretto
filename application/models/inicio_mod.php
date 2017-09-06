@@ -131,14 +131,10 @@ class Inicio_mod extends CI_Controller {
         $webpay = $this->webpay();
         $result = $webpay->getNormalTransaction()->initTransaction($monto,$orden,$comercio, $url_retorno, $url_final);
         redirect($result->url.'?token_ws='.$result->token);
-        #var_dump($result);
-        #echo $result->url.'?token_ws='.$result->token;
     }
     function retorno($token){
         $webpay = $this->webpay();
         $result = $webpay->getNormalTransaction()->getTransactionResult($token);
-        #echo "<PRE>";
-        #var_dump($result);
         $this->save_retorno($token,$result);
         redirect($result->urlRedirection.'?token_ws='.$token);
     }
@@ -169,6 +165,16 @@ class Inicio_mod extends CI_Controller {
         $result = $query->result();
         $comprobante = (array) $result[0];
         return $comprobante;
+    }
+    function registros(){
+        $query = $this->db->query("SELECT * FROM compra_web AS web 
+            INNER JOIN producto AS prod ON web.id_producto = prod.id_producto 
+            LEFT JOIN transbank AS tbk ON web.id_tbk = tbk.id_tbk 
+            WHERE web.id_tbk > '0' AND tbk.responseCode = '0' 
+            ORDER BY web.f_ingreso DESC, web.h_ingreso DESC ");
+        $result = $query->result();
+        $registros = (array) $result;
+        return $registros;
     }
 }
 ?>

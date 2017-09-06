@@ -7,24 +7,17 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <?php   if($clase == 'historial' or  $clase == 'ordenes'){ ?>
                         <h3 class="title">
-                        <?php   if($estado == '0') echo "Información de compra - Por pagar"; 
-                                elseif($estado == '1') echo "Información de compra - Transferencia Bancaria"; 
-                                elseif($estado == '2') echo "Información de compra - WebPay Rechazada"; 
-                                elseif($estado == '3') echo "Información de Venta - por Validar"; 
-                                elseif($estado == '4') echo "Información de Arriendo - por Validar";
-                                elseif($estado == '5') echo "Información de Regalo - por Validar";
-                                elseif($estado == '6') echo "Información de Transacción Validada";?>
-                        </h3>
-                        <?php }else{ ?>
-                        <?php if($pago == 'transferencia'){?>
-                        <h3 class="title">Información de compra - Transferencia Bancaria</h3>
-                        <?php }elseif($pago == 'webpay' and $validador == '1'){ ?>
-                        <h3 class="title">Información de Compra Exitosa</h3>
-                        <?php }elseif($pago == 'webpay' and $validador == '0'){ ?>
-                        <h3 class="title">Información de Compra Rechazada</h3>
-                        <?php }} ?>
+                    <?php   if($estado == '0' and $f_pago == 'webpay') echo "Información de compra - Webpay Rechazada";
+                            if($estado == '0' and $f_pago != 'webpay') echo "Información de compra - Por Pagar";
+                            elseif($estado == '1') echo "Información de compra - Transferencia Bancaria"; 
+                            elseif($estado == '2' and $valida == '0') echo "Información de compra - WebPay Rechazada"; 
+                            elseif($estado == '2' and $valida == '1') echo "Información de compra - WebPay Aprobada"; 
+                            elseif($estado == '3') echo "Información de Venta - por Validar"; 
+                            elseif($estado == '4') echo "Información de Arriendo - por Validar";
+                            elseif($estado == '5') echo "Información de Regalo - por Validar";
+                            elseif($estado == '6') echo "Información de Transacción Validada"; ?>
+                    </h3>
                     </div>
                     <div class="table-responsive">
                         <table class="table table-hover">
@@ -38,7 +31,7 @@
                                 <tr>
                                     <td><?php echo $id_compra;?></td>
                                     <td><?php echo $usuario;?></td>
-                                    <td><?php echo $total;?></td>
+                                    <td><?php echo number_format($total,0,",",".");?></td>
                                     <td>CLP</td>
                                 </tr>
                                 <tr>
@@ -53,9 +46,23 @@
                                     <td><?php echo $despacho;?></td>
                                     <td><?php echo $direccion;?></td>
                                 </tr>
-                                <?php if($pago == 'webpay' and $validador == '0'){ ?>
+                                <?php if($id_tmp_compra != '0'){ ?>
+                                <tr>
+                                    <th>Fecha  -  Hora Compra</th>
+                                    <th>Facturación</th>
+                                    <th>Empresa</th>
+                                    <th>Rut</th>
+                                </tr>
+                                <tr>
+                                    <td><?php echo $orden_compra['f_compra'].' - '.$orden_compra['h_compra'];?></td>
+                                    <td><?php echo $orden_compra['factura'];?></td>
+                                    <td><?php echo $orden_compra['empresa'];?></td>
+                                    <td><?php echo $orden_compra['rut'];?></td>
+                                </tr>
+                                <?php } ?>
+                                <?php if($pago == 'webpay' and $valida == '0'){ ?>
                                 <tr><th colspan="4" style="background: LightGray;">La compra a sido declinada, por favor validar con su banco el origen del problema.</th></tr>
-                                <?php }elseif($pago == 'transferencia'){?>
+                                <?php }elseif($pago == 'transferencia' and $valida == '0'){?>
                                 <tr><th colspan="4" style="background: LightGray;">Está compra aún no se encuentra validada, una vez realizada la tansferencia a la cuenta señala a continuación, informando el ID de compra en el asunto, se procederá al despacho del producto.</th></tr>
                                 <tr>
                                     <th>Banco/Tipo de Cuenta</th>

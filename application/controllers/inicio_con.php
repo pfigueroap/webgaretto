@@ -59,6 +59,10 @@ class Inicio_con extends CI_Controller {
                 array_push($contenido, "'".$this->input->post($post)."'");
             }
         }
+        array_push($cabecera, 'f_ingreso');
+        array_push($contenido, "'".date("Y-m-d")."'");
+        array_push($cabecera, 'h_ingreso');
+        array_push($contenido, "'".date("H:i:s")."'");
         $id_compra = $this->inicio_mod->registrar_compra($cabecera,$contenido);
         $producto = $this->inicio_mod->producto($this->input->post('id_producto'));
         $this->inicio_mod->pago($producto['prc_vta'],$id_compra,site_url("inicio_con/tbk_retorno"),site_url("inicio_con/tbk_final/".$producto['id_producto']));
@@ -69,10 +73,13 @@ class Inicio_con extends CI_Controller {
     }
     function tbk_final(){
         $id_producto = $this->uri->segment(3);
+        $token = $this->input->post('token_ws');
+        $this->comprobante($id_producto,$token);
+    }
+    function comprobante($id_producto,$token){
         $data['producto'] = $this->inicio_mod->producto($id_producto);
         $data['usuario'] = $this->session->userdata('usuario');
         $data['tipo'] = $this->session->userdata('tipo');
-        $token = $this->input->post('token_ws');
         if(empty($token)) $data['compra'] = 'fallida';
         else{ 
             $data['comprobante'] = $this->inicio_mod->comprobante($token);
@@ -271,6 +278,17 @@ class Inicio_con extends CI_Controller {
         $response = curl_exec ($handler);  
         curl_close($handler);
         echo $response;
+    }
+    function compras_web(){
+        $data = $this->valida();
+        $data['registros'] = $this->inicio_mod->registros();
+        $data['page'] = 'home_pagos_web';
+        $this->load->view('home',$data);
+    }
+    function comprobante_web(){
+        $id_producto = $this->uri->segment(3);
+        $token = $this->uri->segment(4);
+        $this->comprobante($id_producto,$token);
     }
 }
 ?>

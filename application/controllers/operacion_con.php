@@ -112,31 +112,54 @@ class Operacion_con extends CI_Controller {
         }
         #Pago
         $data['pago'] = $this->input->post('t_pago');
-        $data['total'] = $this->input->post('total');
+        $data['total'] = str_replace(".","",$this->input->post('total'));
         if($data['total'] != '0'){
             $data['compras'] = $this->operacion_mod->tmp_compras($data['usuario']);
-            $data['validador'] = '0'; #Validar WebPay en caso de $pago = 'webpay'
-            if($data['pago'] == 'transferencia'){
-                $data['id_compra'] = $this->operacion_mod->registrar_compra($data['usuario'],$data['pago'],$data['total'],$data['compras'],$data['despacho'],$data['direccion'],$data['factura'],$data['name_fact'],$data['rut_fact'],$data['validador']);
+            $id_tmp_compra = $data['compras'][0]->id_tmp_compra;
+            if($data['compras'][0]->id_compra != '0'){
+                $data['id_compra'] = $data['compras'][0]->id_compra;
+                $this->operacion_mod->actualizar_compra($data['id_compra'],$data['pago'],$data['total'],$data['compras'],$data['despacho'],$data['direccion'],$data['factura'],$data['name_fact'],$data['rut_fact']);
+            }else{
+                $data['id_compra'] = $this->operacion_mod->registrar_compra($data['usuario'],$data['pago'],$data['total'],$data['compras'],$data['despacho'],$data['direccion'],$data['factura'],$data['name_fact'],$data['rut_fact']);
+            }
+            if($data['pago'] == 'webpay'){
+                $this->operacion_mod->pago($data['total'],$data['id_compra'],site_url("operacion_con/tbk_retorno"),site_url("operacion_con/comprobante/".$id_tmp_compra));
+            }elseif ($data['pago'] == 'transferencia') {
                 $correos = $this->operacion_mod->correo_adm();
                 $asunto = "Compra Productos de ".$data['usuario'];
                 $mensaje = "Se ha adquirido un nuevo producto en el sistema, bajo el id: ".$data['id_compra'];
                 foreach ($correos as $info)
                     $this->enviar_email('contacto@webgaretto.cl',$data['usuario'],$info->correo,$asunto,$mensaje);
+                redirect('/operacion_con/tbk_final/'.$id_tmp_compra, 'refresh');
             }
-            $data['page'] = 'home_comprobante';
-            $this->load->view('home',$data);
         }else{
             $this->carro_compras();
         }
     }
+    function tbk_retorno(){
+        $token = $this->input->post('token_ws');
+        $this->operacion_mod->retorno($token);
+    }
+    function tbk_final(){
+        $id_tmp_compra = $this->uri->segment(3);
+        $data = $this->data_comprobante($id_tmp_compra);
+        if(!empty($this->input->post('token_ws'))){
+            $correos = $this->operacion_mod->correo_adm();
+            $asunto = "Compra Productos de ".$data['usuario'];
+            $mensaje = "Se ha adquirido un nuevo producto en el sistema, bajo el id: ".$data['id_compra'];
+            foreach ($correos as $info)
+                $this->enviar_email('contacto@webgaretto.cl',$data['usuario'],$info->correo,$asunto,$mensaje);
+        }
+        $this->load->view('home',$data);
+    }
     function data_comprobante($id_tmp_compra){
         $data = $this->valida();
         $data['id_tmp_compra'] = $id_tmp_compra; 
-        $data['validador'] = '0';
         $orden = $this->operacion_mod->orden($id_tmp_compra);
         foreach ($orden as $key => $value)
             $data[$key] = $value;
+        if($data['id_compra'] != '0')
+            $data['orden_compra'] = $this->operacion_mod->orden_compra($data['id_compra']);
         $data['clase'] = 'ordenes';
         $data['pago'] = $data['f_pago'];
         $data['despacho'] = $data['t_despacho'];
