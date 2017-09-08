@@ -20,19 +20,28 @@ class Operacion_mod extends CI_Controller {
         return $productos;
     }
     function crear_registro($registros,$estado,$id_cliente){
-    	# $estado [compra temporal: 0], [transferencia por validar: 1], [webpay pagado: 2], [venta temporal: 3], [arriendo: 4], [regalo: 5], [validado: 6]
-    	$this->db->query("INSERT INTO tmp_compra (usuario,f_ingreso,h_ingreso,estado,id_cliente) VALUES ('{$registros[0]['usuario']}','{$registros[0]['f_ingreso']}','{$registros[0]['h_ingreso']}','{$estado}','{$id_cliente}')");
+    	# $estado [compra temporal: 0], [transferencia por validar: 1], [webpay pagado: 2], [venta temporal: 3], [arriendo: 4], [regalo: 5]
+        if($estado == '5') $valida = '1'; #Validación Regalo
+        else $valida = '0';
+    	$this->db->query("INSERT INTO tmp_compra (usuario,f_ingreso,h_ingreso,estado,id_cliente,valida) 
+            VALUES ('{$registros[0]['usuario']}','{$registros[0]['f_ingreso']}','{$registros[0]['h_ingreso']}','{$estado}','{$id_cliente}','{$valida}')");
     	$id_tmp_compra = $this->db->insert_id();
     	foreach ($registros as $r) {
-    		$this->db->query("INSERT INTO tmp_det_compra (id_tmp_compra,id_producto,prc_vta,mnd_vta,cantidad,total,usuario,f_ingreso,h_ingreso,estado) 
-    			VALUES ('{$id_tmp_compra}','{$r['id_producto']}','{$r['prc_vta']}','{$r['mnd_vta']}','{$r['cantidad']}','{$r['total']}','{$r['usuario']}','{$r['f_ingreso']}','{$r['h_ingreso']}','{$estado}')");
+    		$this->db->query("INSERT INTO tmp_det_compra (id_tmp_compra,id_producto,prc_vta,mnd_vta,cantidad,total,usuario,f_ingreso,h_ingreso,estado,valida) 
+    			VALUES ('{$id_tmp_compra}','{$r['id_producto']}','{$r['prc_vta']}','{$r['mnd_vta']}','{$r['cantidad']}','{$r['total']}','{$r['usuario']}','{$r['f_ingreso']}','{$r['h_ingreso']}','{$estado}','{$valida}')");
     	}
     	return $id_tmp_compra;
     }
-    function tmp_compras($usuario){
-    	$query = $this->db->query("SELECT p.cod_prod, p.producto, p.cod_bar, p.modelo, p.marca, t.id_tmp_compra, t.id_tmp_detalle, t.prc_vta, t.mnd_vta, t.cantidad, t.total, t.id_compra FROM tmp_det_compra AS t
-    		INNER JOIN producto AS p ON t.id_producto = p.id_producto
-    		WHERE t.estado = '0' AND t.usuario = '{$usuario}' AND t.estado = '0'");
+    function tmp_compras($usuario,$tipo){
+        if($tipo == 'carro'){
+            $query = $this->db->query("SELECT p.cod_prod, p.producto, p.cod_bar, p.modelo, p.marca, t.id_tmp_compra, t.id_tmp_detalle, t.prc_vta, t.mnd_vta, t.cantidad, t.total, t.id_compra FROM tmp_det_compra AS t 
+                INNER JOIN producto AS p ON t.id_producto = p.id_producto 
+                WHERE t.estado = '0' AND t.usuario = '{$usuario}' AND t.estado = '0'");
+        }else{
+            $query = $this->db->query("SELECT p.cod_prod, p.producto, p.cod_bar, p.modelo, p.marca, t.id_tmp_compra, t.id_tmp_detalle, t.prc_vta, t.mnd_vta, t.cantidad, t.total, t.id_compra FROM tmp_det_compra AS t 
+                INNER JOIN producto AS p ON t.id_producto = p.id_producto 
+                WHERE t.id_tmp_compra = '{$tipo}'");
+        } 
         $result = $query->result();
         $compras = (array) $result;
         return $compras;
@@ -47,8 +56,11 @@ class Operacion_mod extends CI_Controller {
         $info = (array) $result[0];
         return $info;
     }
-    function vaciar_carrito($usuario){
-    	$this->db->query("DELETE FROM tmp_det_compra WHERE usuario = '{$usuario}'");
+    function vaciar_carrito($usuario,$id_tmp_compra){
+    	$this->db->query("DELETE FROM tmp_det_compra 
+            WHERE usuario = '{$usuario}' AND id_tmp_compra = '{$id_tmp_compra}'");
+        $this->db->query("DELETE FROM tmp_compra 
+            WHERE usuario = '{$usuario}' AND id_tmp_compra = '{$id_tmp_compra}'");
     }
     function direccion($usuario,$despacho){
     	if($despacho == 'laboral') $query = $this->db->query("SELECT e.direccion FROM usuarios AS u INNER JOIN empresa AS e ON u.id_empresa = e.id_empresa WHERE u.usuario = '{$usuario}'");
@@ -73,7 +85,7 @@ class Operacion_mod extends CI_Controller {
         return $registros;
     }
     function orden($id_tmp_compra){
-    	$query = $this->db->query("SELECT c.id_tmp_compra, c.valida, c.f_ingreso, c.h_ingreso, c.estado, c.direccion, c.f_pago, c.t_despacho, c.id_compra, u.nombre_1, u.apellido_1, u.rut, u.usuario, SUM(d.total) AS total 
+    	$query = $this->db->query("SELECT c.id_tmp_compra, c.valida, c.f_ingreso, c.h_ingreso, c.estado, c.direccion, c.f_pago, c.t_despacho, c.id_compra, c.f_pago, c.t_factura, c.empresa, c.rut as e_rut, u.nombre_1, u.apellido_1, u.rut, u.usuario, SUM(d.total) AS total 
     		FROM tmp_compra AS c 
     		INNER JOIN usuarios AS u ON c.id_cliente = u.id_usuario 
     		INNER JOIN tmp_det_compra AS d ON c.id_tmp_compra = d.id_tmp_compra 
@@ -106,8 +118,9 @@ class Operacion_mod extends CI_Controller {
     function eliminar_det_orden($id_tmp_detalle){
     	$this->db->query("DELETE FROM tmp_det_compra WHERE id_tmp_detalle = '{$id_tmp_detalle}'");
     }
-    function actualizar_orden($id_tmp_compra,$despacho, $direccion,$pago){
-    	$this->db->query("UPDATE tmp_compra SET t_despacho = '{$despacho}', direccion = '{$direccion}', f_pago = '{$pago}' WHERE id_tmp_compra = '{$id_tmp_compra}'");
+    function actualizar_orden($id_tmp_compra,$despacho, $direccion,$pago,$factura,$name,$rut){
+    	$this->db->query("UPDATE tmp_compra SET t_despacho = '{$despacho}', direccion = '{$direccion}', f_pago = '{$pago}', t_factura = '{$factura}', empresa = '{$name}', rut = '{$rut}' 
+            WHERE id_tmp_compra = '{$id_tmp_compra}'");
     }
     function id_usuario($usuario){
         $query = $this->db->query("SELECT id_usuario FROM usuarios WHERE usuario = '{$usuario}'"); 
@@ -191,15 +204,15 @@ class Operacion_mod extends CI_Controller {
         $VCI = $result->VCI;
         $this->db->query("INSERT INTO transbank (token,accountingDate,buyOrder,cardNumber,cardExpirationDate,authorizationCode,paymentTypeCode,responseCode,sharesNumber,amount,commerceCode,responseDescription,sessionId,transactionDate,urlRedirection,VCI) VALUES ('{$token}','{$accountingDate}','{$buyOrder}','{$cardNumber}','{$cardExpirationDate}','{$authorizationCode}','{$paymentTypeCode}','{$responseCode}','{$sharesNumber}','{$amount}','{$commerceCode}','{$responseDescription}','{$sessionId}','{$transactionDate}','{$urlRedirection}','{$VCI}')");
         $id_tbk = $this->db->insert_id();
-        $validador = $responseCode+1;
+        $validador = $responseCode+1; #Validación de Compra
         $this->db->query("UPDATE compra SET id_tbk = '{$id_tbk}', validador = '{$validador}' 
             WHERE id_compra = '{$buyOrder}'");
-        if($validador == '0') $estado = '0';
-        elseif ($validador == '1') $estado = '2';
-        $this->db->query("UPDATE tmp_det_compra SET estado = '{$estado}', valida = '{$validador}' 
-            WHERE id_compra = '{$buyOrder}'");
-        $this->db->query("UPDATE tmp_compra SET estado = '{$estado}', valida = '{$validador}' 
-            WHERE id_compra = '{$buyOrder}'");
+        if($validador == '1'){
+            $this->db->query("UPDATE tmp_det_compra SET estado = '2', valida = '1' 
+                WHERE id_compra = '{$buyOrder}'");
+            $this->db->query("UPDATE tmp_compra SET estado = '2', valida = '1' 
+                WHERE id_compra = '{$buyOrder}'");
+        }
     }
     function comprobante($token){
         $query = $this->db->query("SELECT * FROM transbank AS tbk
@@ -209,29 +222,31 @@ class Operacion_mod extends CI_Controller {
         $comprobante = (array) $result[0];
         return $comprobante;
     }
-    function actualiza_tmp_compra($id_compra,$pago,$compras,$despacho,$direccion){
-        if($pago == 'transferencia') $estado = '1'; #Transferencia por validar
-        elseif($pago == 'webpay') $estado = '0'; #Se valida despues
+    function actualiza_tmp_compra($id_compra,$pago,$compras,$despacho,$direccion,$tipo){
         foreach ($compras as $compra){
             $id_tmp_compra = $compra->id_tmp_compra;
-            $this->db->query("UPDATE tmp_det_compra SET id_compra = '{$id_compra}', estado = '{$estado}' 
+            $this->db->query("UPDATE tmp_det_compra SET id_compra = '{$id_compra}' 
                 WHERE id_tmp_detalle = '{$compra->id_tmp_detalle}'");
         }
-        $this->db->query("UPDATE tmp_compra SET direccion = '{$direccion}', estado = '{$estado}', f_pago = '{$pago}', t_despacho = '{$despacho}', id_compra = '{$id_compra}' 
+        $this->db->query("UPDATE tmp_compra SET direccion = '{$direccion}', f_pago = '{$pago}', t_despacho = '{$despacho}', id_compra = '{$id_compra}' 
             WHERE id_tmp_compra = '{$id_tmp_compra}'");
+        if($pago == 'transferencia'){ #Transferencia por validar
+            $this->db->query("UPDATE tmp_det_compra SET estado = '1' WHERE id_compra = '{$id_compra}'");
+            $this->db->query("UPDATE tmp_compra SET estado = '1' WHERE id_compra = '{$id_compra}'");
+        }
     }
-    function registrar_compra($usuario,$pago,$total,$compras,$despacho,$direccion,$factura,$empresa,$rut){
+    function registrar_compra($usuario,$pago,$total,$compras,$despacho,$direccion,$factura,$empresa,$rut,$tipo){
         $this->db->query("INSERT INTO compra 
             (tipo_pago,usuario,f_compra,h_compra,despacho,direccion,factura,empresa,rut,total) VALUES 
             ('{$pago}','{$usuario}',CURDATE(),CURTIME(),'{$despacho}','{$direccion}','{$factura}','{$empresa}','{$rut}','{$total}')");
         $id_compra = $this->db->insert_id();
-        $this->actualiza_tmp_compra($id_compra,$pago,$compras,$despacho,$direccion);
+        $this->actualiza_tmp_compra($id_compra,$pago,$compras,$despacho,$direccion,$tipo);
         return $id_compra;
     }
-    function actualizar_compra($id_compra,$pago,$total,$compras,$despacho,$direccion,$factura,$empresa,$rut){
+    function actualizar_compra($id_compra,$pago,$total,$compras,$despacho,$direccion,$factura,$empresa,$rut,$tipo){
         $this->db->query("UPDATE compra SET tipo_pago = '{$pago}', despacho = '{$despacho}', direccion = '{$direccion}', factura = '{$factura}', empresa = '{$empresa}', rut = '{$rut}', total = '{$total}' 
             WHERE id_compra = '{$id_compra}'");        
-        $this->actualiza_tmp_compra($id_compra,$pago,$compras,$despacho,$direccion);
+        $this->actualiza_tmp_compra($id_compra,$pago,$compras,$despacho,$direccion,$tipo);
     }
 }
 ?>

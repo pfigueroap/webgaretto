@@ -69,9 +69,10 @@ class Operacion_con extends CI_Controller {
             $this->carro_compras();
         }else $this->index_run('1');
     }
+    #Carro de Compras
     function carro_compras(){
         $data = $this->valida();
-        $data['compras'] = $this->operacion_mod->tmp_compras($data['usuario']);
+        $data['compras'] = $this->operacion_mod->tmp_compras($data['usuario'],'carro');
         foreach ($data['compras'] as $compra)
             $data['total'] += $compra->total;
         $data['info'] = $this->operacion_mod->info($data['usuario']);
@@ -85,11 +86,13 @@ class Operacion_con extends CI_Controller {
         $this->carro_compras();
     }
     function vaciar_carrito(){
+        $id_tmp_compra = $this->uri->segment(3);
         $usuario = $this->session->userdata('usuario');
-        $this->operacion_mod->vaciar_carrito($usuario);
+        $this->operacion_mod->vaciar_carrito($usuario,$id_tmp_compra);
         $this->carro_compras();
     }
     function comprar(){
+        $tipo = $this->uri->segment(3);
         $data = $this->valida();
         $info = $this->operacion_mod->info($data['usuario']);
         #Despacho
@@ -114,13 +117,13 @@ class Operacion_con extends CI_Controller {
         $data['pago'] = $this->input->post('t_pago');
         $data['total'] = str_replace(".","",$this->input->post('total'));
         if($data['total'] != '0'){
-            $data['compras'] = $this->operacion_mod->tmp_compras($data['usuario']);
+            $data['compras'] = $this->operacion_mod->tmp_compras($data['usuario'],$tipo);
             $id_tmp_compra = $data['compras'][0]->id_tmp_compra;
             if($data['compras'][0]->id_compra != '0'){
                 $data['id_compra'] = $data['compras'][0]->id_compra;
-                $this->operacion_mod->actualizar_compra($data['id_compra'],$data['pago'],$data['total'],$data['compras'],$data['despacho'],$data['direccion'],$data['factura'],$data['name_fact'],$data['rut_fact']);
+                $this->operacion_mod->actualizar_compra($data['id_compra'],$data['pago'],$data['total'],$data['compras'],$data['despacho'],$data['direccion'],$data['factura'],$data['name_fact'],$data['rut_fact'],$tipo);
             }else{
-                $data['id_compra'] = $this->operacion_mod->registrar_compra($data['usuario'],$data['pago'],$data['total'],$data['compras'],$data['despacho'],$data['direccion'],$data['factura'],$data['name_fact'],$data['rut_fact']);
+                $data['id_compra'] = $this->operacion_mod->registrar_compra($data['usuario'],$data['pago'],$data['total'],$data['compras'],$data['despacho'],$data['direccion'],$data['factura'],$data['name_fact'],$data['rut_fact'],$tipo);
             }
             if($data['pago'] == 'webpay'){
                 $this->operacion_mod->pago($data['total'],$data['id_compra'],site_url("operacion_con/tbk_retorno"),site_url("operacion_con/comprobante/".$id_tmp_compra));
@@ -136,6 +139,7 @@ class Operacion_con extends CI_Controller {
             $this->carro_compras();
         }
     }
+    #Respuestas Transbank
     function tbk_retorno(){
         $token = $this->input->post('token_ws');
         $this->operacion_mod->retorno($token);
@@ -152,6 +156,7 @@ class Operacion_con extends CI_Controller {
         }
         $this->load->view('home',$data);
     }
+    #Comprobante
     function data_comprobante($id_tmp_compra){
         $data = $this->valida();
         $data['id_tmp_compra'] = $id_tmp_compra; 
@@ -160,7 +165,6 @@ class Operacion_con extends CI_Controller {
             $data[$key] = $value;
         if($data['id_compra'] != '0')
             $data['orden_compra'] = $this->operacion_mod->orden_compra($data['id_compra']);
-        $data['clase'] = 'ordenes';
         $data['pago'] = $data['f_pago'];
         $data['despacho'] = $data['t_despacho'];
         $data['compras'] = $this->operacion_mod->detalle_registro($id_tmp_compra);
@@ -170,6 +174,7 @@ class Operacion_con extends CI_Controller {
     function comprobante(){
         $id_tmp_compra = $this->uri->segment(3);
         $data = $this->data_comprobante($id_tmp_compra);
+        $data['clase'] = $this->uri->segment(4);
         $this->load->view('home',$data);
     }
     function down(){
@@ -185,43 +190,64 @@ class Operacion_con extends CI_Controller {
         $this->mydompdf->render();
         $this->mydompdf->stream("comprobante.pdf", array("Attachment" => false));
     }
+    #Ordenes
     function ordenes(){
         $data = $this->valida();
         $data['registros'] = $this->operacion_mod->registros();
         $data['page'] = 'home_resumen';
         $this->load->view('home',$data);
     }
-    function detalle_registro(){
-        $this->det_orden($this->uri->segment(3));
+    #Paga Historial
+    function pagar_historial(){
+        $id_tmp_compra = $this->uri->segment(3);
+        $estado = $this->uri->segment(4);
+        $this->det_orden($id_tmp_compra,'historial',$estado);
     }
-    function det_orden($id_tmp_compra){
+    #Operaciones de ordenes e historial
+    function det_orden($id_tmp_compra,$clase,$estado){
         $data = $this->valida();
+        $data['estado'] = $estado;
         $data['orden'] = $this->operacion_mod->orden($id_tmp_compra);
         $data['info'] = $this->operacion_mod->info($data['orden']['usuario']);
         $data['registros'] = $this->operacion_mod->detalle_registro($id_tmp_compra);
         $data['page'] = 'home_orden';
+        $data['clase'] = $clase;
         $this->load->view('home',$data);
+    }
+    function detalle_registro(){
+        $this->det_orden($this->uri->segment(3),$this->uri->segment(4),'0');
     }
     function eliminar_orden(){
         $id_tmp_compra = $this->uri->segment(3);
+        $clase = $this->uri->segment(4);
         $this->operacion_mod->eliminar_orden($id_tmp_compra);
-        $this->ordenes();
+        if($clase == 'ordenes') $this->ordenes();
+        elseif($clase == 'historial') redirect('/historial_con/index/', 'refresh');
     }
     function eliminar_det_orden(){
-        $id_tmp_compra = $this->uri->segment(3);
-        $id_tmp_detalle = $this->uri->segment(4);
+        $clase = $this->uri->segment(3);
+        $id_tmp_compra = $this->uri->segment(4);
+        $id_tmp_detalle = $this->uri->segment(5);
         $this->operacion_mod->eliminar_det_orden($id_tmp_detalle);
-        $this->det_orden($id_tmp_compra);
+        $this->det_orden($id_tmp_compra,$clase,'0');
     }
     function actualizar_orden(){
         $id_tmp_compra = $this->uri->segment(3);
+        $clase = $this->uri->segment(4);
+        $direccion = '';$name = '';$rut = '';
         $despacho = $this->input->post('t_desp');
+        if($despacho == 'otro')
+            $direccion = $this->input->post('dir');
+        $factura = $this->input->post('t_fact');
+        if($factura == 'otro'){
+            $name = $this->input->post('name_fact');
+            $rut = $this->input->post('rut_fact');
+        }
         $pago = $this->input->post('t_pago');
-        if($despacho == 'otro') $direccion = $this->input->post('dir');
-        else $direccion = '';
-        $this->operacion_mod->actualizar_orden($id_tmp_compra,$despacho,$direccion,$pago);
-        $this->det_orden($id_tmp_compra);
+        $this->operacion_mod->actualizar_orden($id_tmp_compra,$despacho,$direccion,$pago,$factura,$name,$rut);
+        $this->det_orden($id_tmp_compra,$clase,'0');
     }
+    #Crear orden
     function crear_orden(){
         $tipo = $this->uri->segment(3);
         $asunto = array(
@@ -241,7 +267,7 @@ class Operacion_con extends CI_Controller {
             $id_tmp_compra = $this->operacion_mod->crear_registro($ventas,$estado,$id_cliente);
             $correo = $this->operacion_mod->correo($id_cliente);
             $this->enviar_email('contacto@webgaretto.cl',"Equipo Garetto",$correo,$asunto[$tipo],$mensaje[$tipo]);
-            $this->det_orden($id_tmp_compra);
+            $this->det_orden($id_tmp_compra,'ordenes','0');
         }elseif($tipo == 'venta') $this->index_run('2');
         elseif($tipo == 'arriendo') $this->index_run('3');
         elseif($tipo == 'regalo') $this->index_run('4');
@@ -258,16 +284,12 @@ class Operacion_con extends CI_Controller {
         $this->email->message($this->load->view('email',$data,true));
         return $this->email->send();
     }
+    #Validar Orden
     function validar_orden(){
         $id_tmp_compra = $this->uri->segment(3);
         #$respuesta = $this->activar_reloj($id_tmp_compra);
         $respuesta = '1';
         $this->operacion_mod->validar_orden($id_tmp_compra,$respuesta);
-        $this->ordenes();
-    }
-    function invalidar_orden(){
-        $id_tmp_compra = $this->uri->segment(3);
-        $this->operacion_mod->validar_orden($id_tmp_compra,'0');
         $this->ordenes();
     }
     function activar_reloj($id_tmp_compra){

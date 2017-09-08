@@ -5,7 +5,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
-                <?php echo form_open('operacion_con/comprar'); ?>
+                <?php echo form_open('operacion_con/comprar/carro'); ?>
                 <div class="card">
                     <div class="card-header">
                         <h3 class="title">Resumen de compra</h3>
@@ -50,7 +50,7 @@
                     </div><!-- Revisar paginado - Fallan los números -->
                     <div class="col-md-12 text-right">
                         <a href="<?php echo site_url("operacion_con/index/1"); ?>" class="btn btn-default btn-xs" style="background: #af1416;"><i class="fa fa-reply"></i> Volver a Compras </a>
-                        <a href="<?php echo site_url("operacion_con/vaciar_carrito"); ?>" class="btn btn-default btn-xs" style="background: #af1416;"><i class="fa fa-trash-o"></i> Vaciar Carrito </a>
+                        <a href="<?php echo site_url("operacion_con/vaciar_carrito/".$compra->id_tmp_compra); ?>" class="btn btn-default btn-xs" style="background: #af1416;"><i class="fa fa-trash-o"></i> Vaciar Carrito </a>
                     </div>
                 </div>
                 <div class="row">

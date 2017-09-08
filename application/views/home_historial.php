@@ -53,12 +53,14 @@
                                     ?></td>
                                     <td><?php echo number_format($registro->total,0,",","."); ?></td>
                                     <td>
-                                        <a href="<?php echo site_url("historial_con/comprobante/".$registro->id_tmp_compra); ?>" class="btn btn-primary btn-xs"><i class="fa fa-eye"></i> Ver </a>
+                                        <a href="<?php echo site_url("operacion_con/comprobante/".$registro->id_tmp_compra."/historial"); ?>" class="btn btn-primary btn-xs"><i class="fa fa-eye"></i> Ver </a>
                                     </td>
                                     <td>
                                         <?php if($registro->valida == '0') { ?>
                                         <?php if($registro->estado == '3' or $registro->estado == '4') { ?>
-                                        <a href="#" class="btn btn-sucess btn-xs"><i class="fa fa-credit-card-alt"></i> Pagar </a>
+                                        <a href="<?php echo site_url("operacion_con/pagar_historial/".$registro->id_tmp_compra."/".$registro->estado); ?>" class="btn btn-success btn-xs"><i class="fa fa-credit-card-alt"></i> Pagar </a>
+                                        <?php }elseif($registro->estado == '0'){ ?>
+                                        <a href="<?php echo site_url("operacion_con/carro_compras"); ?>" class="btn btn-success btn-xs"><i class="fa fa-credit-card-alt"></i> Pagar </a>
                                         <?php }else{ ?>
                                         <a href="#" class="btn btn-warning btn-xs"><i class="fa fa-handshake-o"></i> Pendiente </a>
                                         <?php }}else{ ?>
@@ -67,8 +69,8 @@
                                     </td>
                                     <td>
                                         <?php if($registro->valida == '0'){ ?>
-                                        <a href="<?php echo site_url("historial_con/eliminar_orden/{$registro->id_tmp_compra}"); ?>" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> Borrar </a>
-                                        <a href="<?php echo site_url("historial_con/detalle_registro/".$registro->id_tmp_compra); ?>" class="btn btn-info btn-xs"><i class="fa fa-pencil"></i> Editar </a>
+                                        <a href="<?php echo site_url("operacion_con/eliminar_orden/{$registro->id_tmp_compra}/historial"); ?>" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> Borrar </a>
+                                        <a href="<?php echo site_url("operacion_con/detalle_registro/{$registro->id_tmp_compra}/historial"); ?>" class="btn btn-info btn-xs"><i class="fa fa-pencil"></i> Editar </a>
                                         <?php } ?>
                                     </td>
                                 </tr>
