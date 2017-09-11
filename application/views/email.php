@@ -18,7 +18,7 @@
 							<td style="padding: 40px; font-family: sans-serif; font-size: 15px;line-height: 20px; color: #555555;">
 								<p style="text-indent: 50px; text-align: left;"><?php echo $asunto; ?>:</p>
 								<br>
-								<p style="text-indent: 50px; text-align: justify;"><?php echo $mensaje; ?></p>
+								<p style="text-indent: 50px; text-align: justify;width: 800px;"><?php echo $mensaje; ?></p>
 								<br>
 								<p style="text-indent: 50px; text-align: left;">Atte. <?php echo $nombre; ?></p>
 							</td>

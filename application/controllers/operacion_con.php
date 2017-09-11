@@ -281,6 +281,7 @@ class Operacion_con extends CI_Controller {
         $data['mensaje'] = $mensaje;
         $data['asunto'] = $asunto;
         $data['nombre'] = $nombre;
+        #$this->load->view('email',$data);
         $this->email->message($this->load->view('email',$data,true));
         return $this->email->send();
     }
