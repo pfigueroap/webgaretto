@@ -285,12 +285,39 @@ class Operacion_con extends CI_Controller {
         return $this->email->send();
     }
     #Validar Orden
-    function validar_orden(){
+    function genera_validacion(){
         $id_tmp_compra = $this->uri->segment(3);
-        #$respuesta = $this->activar_reloj($id_tmp_compra);
-        $respuesta = '1';
-        $this->operacion_mod->validar_orden($id_tmp_compra,$respuesta);
+        $valida = '2'; #Validación Financiera
+        $clave = $this->operacion_mod->genera_validacion($id_tmp_compra,$valida);
+        $correo = 'pablo.figueroa@bigdataprog.com';
+        $asunto = 'Validación Transferencia orden'.$id_tmp_compra;
+        $mensaje = 'Se ha solicitado validar una transferencia de la orden '.$id_tmp_compra.'. La información de la compra, como a su vez la validación la puede realizar en la siguiente dirección: '.site_url("operacion_con/validar_orden/orden/{$id_tmp_compra}/{$clave}");
+        $this->enviar_email('contacto@webgaretto.cl',"Equipo Garetto",$correo,$asunto,$mensaje);
+        #echo $mensaje;
         $this->ordenes();
+    }
+    function validar_orden(){
+        $tipo = $this->uri->segment(3);
+        $id_tmp_compra = $this->uri->segment(4);
+        $clave = $this->uri->segment(5);
+        $validacion = $this->operacion_mod->valida_clave($id_tmp_compra,$clave);
+        if($validacion == '1'){
+            if($tipo == 'valida') $this->operacion_mod->validar_orden($id_tmp_compra,$validacion);
+            $data = $this->data_comprobante($id_tmp_compra);
+            $data['clave'] = $clave;
+            $this->load->view('validacion',$data);
+        }else redirect('/inicio_con/index/', 'refresh');
+        #$respuesta = $this->activar_reloj($id_tmp_compra);
+    }
+    function activar_orden(){
+        $id_tmp_compra = $this->uri->segment(3);
+        $clave = $this->uri->segment(4);
+        $validacion = $this->operacion_mod->valida_clave($id_tmp_compra,$clave);
+        if($validacion == '1'){
+            $data = $this->data_comprobante($id_tmp_compra);
+            $data['clave'] = $clave;
+            $this->load->view('validacion',$data);
+        }else redirect('/inicio_con/index/', 'refresh');
     }
     function activar_reloj($id_tmp_compra){
         $url = "http://www.relojgaretto.cl/sensores/agregar";

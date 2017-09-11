@@ -85,7 +85,7 @@ class Operacion_mod extends CI_Controller {
         return $registros;
     }
     function orden($id_tmp_compra){
-    	$query = $this->db->query("SELECT c.id_tmp_compra, c.valida, c.f_ingreso, c.h_ingreso, c.estado, c.direccion, c.f_pago, c.t_despacho, c.id_compra, c.f_pago, c.t_factura, c.empresa, c.rut as e_rut, u.nombre_1, u.apellido_1, u.rut, u.usuario, SUM(d.total) AS total 
+    	$query = $this->db->query("SELECT c.id_tmp_compra, c.valida, c.f_ingreso, c.h_ingreso, c.estado, c.direccion, c.f_pago, c.t_despacho, c.id_compra, c.f_pago, c.t_factura, c.empresa, c.rut as e_rut, u.nombre_1, u.apellido_1, u.rut, u.usuario AS user, SUM(d.total) AS total 
     		FROM tmp_compra AS c 
     		INNER JOIN usuarios AS u ON c.id_cliente = u.id_usuario 
     		INNER JOIN tmp_det_compra AS d ON c.id_tmp_compra = d.id_tmp_compra 
@@ -128,9 +128,29 @@ class Operacion_mod extends CI_Controller {
         $usuario = (array) $result[0];
         return $usuario["id_usuario"];
     }
+    function genera_validacion($id_tmp_compra,$estado){
+        $clave = $this->tmp_clave(30);
+        $this->db->query("UPDATE tmp_compra SET clave = SHA1('{$clave}') WHERE id_tmp_compra = '{$id_tmp_compra}'");
+        $this->validar_orden($id_tmp_compra,$estado);
+        return $clave;
+    }
+    function valida_clave($id_tmp_compra,$clave){
+        $query = $this->db->query("SELECT * FROM tmp_compra WHERE clave = SHA1('{$clave}') AND id_tmp_compra = '{$id_tmp_compra}'");
+        if($query->num_rows == 1) return '1';
+        else return '0';
+    }
     function validar_orden($id_tmp_compra,$estado){
-        $this->db->query("UPDATE tmp_det_compra SET valida = '{$estado}' WHERE id_tmp_compra = '{$id_tmp_compra}' AND id_producto = '2'");
+        $this->db->query("UPDATE tmp_det_compra SET valida = '{$estado}' WHERE id_tmp_compra = '{$id_tmp_compra}'");
         $this->db->query("UPDATE tmp_compra SET valida = '{$estado}' WHERE id_tmp_compra = '{$id_tmp_compra}'");
+    }
+    function tmp_clave($length) {
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
+        return $randomString;
     }
     function info_reloj($id_tmp_compra){
         $query = $this->db->query("SELECT u.usuario, u.rut, u.correo, u.nombre_1, u.nombre_2, u.apellido_1, u.apellido_2, 

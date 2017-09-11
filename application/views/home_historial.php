@@ -63,8 +63,10 @@
                                         <a href="<?php echo site_url("operacion_con/carro_compras"); ?>" class="btn btn-success btn-xs"><i class="fa fa-credit-card-alt"></i> Pagar </a>
                                         <?php }else{ ?>
                                         <a href="#" class="btn btn-warning btn-xs"><i class="fa fa-handshake-o"></i> Pendiente </a>
-                                        <?php }}else{ ?>
+                                        <?php }}elseif($registro->valida == '1') { ?>
                                         <a href="#" class="btn btn-success btn-xs"><i class="fa fa-check"></i> Validado </a>
+                                        <?php }elseif($registro->valida == '2') { ?>
+                                        <a href="#" class="btn btn-warning btn-xs"><i class="fa fa-handshake-o"></i> Pendiente </a>
                                         <?php } ?>
                                     </td>
                                     <td>

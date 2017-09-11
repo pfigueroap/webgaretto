@@ -30,7 +30,7 @@
                                 </tr>
                                 <tr>
                                     <td><?php echo $id_compra;?></td>
-                                    <td><?php echo $usuario;?></td>
+                                    <td><?php echo $user;?></td>
                                     <td><?php echo number_format($total,0,",",".");?></td>
                                     <td>CLP</td>
                                 </tr>

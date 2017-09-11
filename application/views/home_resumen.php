@@ -49,11 +49,13 @@
                                     <td>
                                         <?php if($registro->valida == '0'){ ?>
                                         <?php if($registro->estado == '1'){ ?>
-                                        <a href="<?php echo site_url("operacion_con/validar_orden/".$registro->id_tmp_compra); ?>" class="btn btn-warning btn-xs"><i class="fa fa-handshake-o"></i> Validar </a>
+                                        <a href="<?php echo site_url("operacion_con/genera_validacion/".$registro->id_tmp_compra); ?>" class="btn btn-warning btn-xs"><i class="fa fa-handshake-o"></i> Validar </a>
                                         <?php }else{ ?>
                                         <a href="#" class="btn btn-basic btn-xs"><i class="fa fa-spinner"></i> Pendiente </a>
-                                        <?php }}else{ ?>
+                                        <?php }}elseif($registro->valida == '1'){ ?>
                                         <a href="#" class="btn btn-success btn-xs"><i class="fa fa-check"></i> Validado </a>
+                                        <?php }elseif($registro->valida == '2'){ ?>
+                                        <a href="#" class="btn btn-basic btn-xs"><i class="fa fa-spinner"></i> Finanzas </a>
                                         <?php } ?>
                                     </td>
                                     <td>
