@@ -41,8 +41,8 @@
                                         </thead>
                                         <thead>
                                             <tr>
-                                                <td><div class="form-group"><div><input name="cantidad" type="number" class="form-control input-sm" placeholder="Cantidad de productos" required></div></div></td>
-                                                <td><div class="form-group"><div><input name="prc_compra" type="number" class="form-control input-sm" placeholder="Precio de compra" required></div></div></td>
+                                                <td><div class="form-group"><div><input name="cantidad" type="number" min="0" class="form-control input-sm" placeholder="Cantidad de productos" required></div></div></td>
+                                                <td><div class="form-group"><div><input name="prc_compra" type="number" min="0" class="form-control input-sm" placeholder="Precio de compra" required></div></div></td>
                                                 <td><div class="form-group"><div><select class="form-control input-sm" name="id_moneda">
                                                     <?php foreach ($monedas as $mnd) {?>
                                                     <option value="<?php echo $mnd->id_moneda;?>"><?php echo $mnd->moneda;?></option>

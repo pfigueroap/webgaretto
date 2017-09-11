@@ -30,6 +30,7 @@ class Operacion_con extends CI_Controller {
         $data = $this->valida();
         if(!empty($data)){
             $data['productos'] = $this->operacion_mod->productos();
+            $data['stock'] = $this->operacion_mod->stock();
             $data['clientes'] = $this->operacion_mod->clientes();
             if($operacion == '1') $data['page'] = 'home_compras';
             elseif($operacion == '2') $data['page'] = 'home_ventas';

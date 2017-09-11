@@ -19,6 +19,23 @@ class Operacion_mod extends CI_Controller {
         $productos = (array) $result;
         return $productos;
     }
+    function stock(){
+        $query = $this->db->query("SELECT p.id_producto, IFNULL(SUM(s.cantidad),0) as cant_prod, IFNULL(SUM(w.cantidad),0) as cant_web, IFNULL(SUM(t.responseCode*w.cantidad),0) as resp_code, IFNULL(SUM(d.cantidad),0) as cant_plat 
+            FROM producto AS p 
+            LEFT JOIN prod_stock AS s ON p.id_producto = s.id_producto 
+            LEFT JOIN compra_web AS w ON p.id_producto = w.id_producto 
+            LEFT JOIN transbank AS t ON w.id_tbk = t.id_tbk 
+            LEFT JOIN tmp_det_compra AS d ON p.id_producto = d.id_producto AND d.valida = '1' 
+            WHERE p.estado = '0' 
+            GROUP BY p.id_producto");
+        $result = $query->result();
+        $productos = (array) $result;
+        $stock = array();
+        foreach ($productos as $producto)
+            $stock[$producto->id_producto] = $producto->cant_prod - ($producto->cant_web + $producto->resp_code) - $producto->cant_plat;
+        return $stock;
+
+    }
     function crear_registro($registros,$estado,$id_cliente){
     	# $estado [compra temporal: 0], [transferencia por validar: 1], [webpay pagado: 2], [venta temporal: 3], [arriendo: 4], [regalo: 5]
         if($estado == '5') $valida = '1'; #Validación Regalo
