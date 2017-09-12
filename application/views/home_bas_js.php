@@ -129,7 +129,8 @@ function validarchk(id){
 var chk = document.getElementById('chk'+id);
 var cnt = document.getElementById('cnt'+id);
 var tot = document.getElementById('tot'+id);
-if(chk.checked){
+var stk = document.getElementById('stk'+id).innerHTML;
+if(chk.checked && stk > 0){
     cnt.disabled='';
 }else{
     cnt.value='0';

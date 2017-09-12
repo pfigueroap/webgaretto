@@ -65,7 +65,7 @@
                                     <td><?php echo $producto->cod_bar; ?></td>
                                     <td id="<?php echo 'prc'.$producto->id_producto; ?>"><?php echo number_format($producto->prc_vta,0,",","."); ?></td>
                                     <td><?php echo $arr_mnd[$producto->mnd_vta]; ?></td>
-                                    <td><?php echo $stock[$producto->id_producto]; ?></td>
+                                    <td id="<?php echo 'stk'.$producto->id_producto; ?>"><?php echo $stock[$producto->id_producto]; ?></td>
                                     <td><div class="form-group"><div><input onChange="sumcnt(<?php echo "'".$producto->id_producto."'"; ?>);" onKeyup="sumcnt(<?php echo "'".$producto->id_producto."'"; ?>);" onClick="sumcnt(<?php echo "'".$producto->id_producto."'"; ?>);" name="<?php echo 'cnt'.$producto->id_producto; ?>" id="<?php echo 'cnt'.$producto->id_producto; ?>" type="number" min="0" class="form-control input-sm" disabled="disabled" value="0"></div></div></td>
                                     <td><div class="form-group"><div><input name="<?php echo 'tot'.$producto->id_producto; ?>" id="<?php echo 'tot'.$producto->id_producto; ?>" type="number" class="form-control input-sm" readonly value="0"></div></div></td>
                                 </tr>

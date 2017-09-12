@@ -74,20 +74,34 @@
                         <p class="about-text"><?php echo $producto['descripcion']; ?></p>
                         <h1 class="about-title">Destalles</h1>
                         <p class="about-text">
-                        Código Producto: <?php echo $producto['cod_prod']; ?>  <br>
-                        Código Barras: <?php echo $producto['cod_bar']; ?>  <br>
-                        Modelo: <?php echo $producto['modelo']; ?>  <br>
-                        Marca: <?php echo $producto['marca']; ?>  <br>
+                        <table class="table table-hover">
+                            <tr><th style="width:200px">Stock</th><td style="width:20px">:</td><td style="width:250px">
+                            <?php echo number_format($stock[$producto['id_producto']],0,",",".");?></td></tr>
+                            <tr><th>Código Producto</th><td>:</td><td><?php echo $producto['cod_prod']; ?></td></tr>
+                            <tr><th>Código Barras</th><td>:</td><td><?php echo $producto['cod_bar']; ?></td></tr>
+                            <tr><th>Modelo</th><td>:</td><td><?php echo $producto['modelo']; ?></td></tr>
+                            <tr><th>Marca</th><td>:</td><td><?php echo $producto['marca']; ?></td></tr>
+                            <tr><th>Precio</th><td>:</td><td>
+                            <?php echo number_format($producto['prc_vta'],0,",","."); ?> CLP</td></tr>
+                        </table>
                         </p>
                         <div class="well carousel-search hidden-sm">
-                        <h1 class="about-title" style="text-align: center;">Precio de Venta</h1>
+                        <h1 class="about-title" style="text-align: center;">Adquirir Productos</h1>
                         <div class="section-title-divider"></div>
+                            <?php echo form_open('inicio_con/comprar/'.$producto['id_producto']); ?>
+                            <?php if($stock[$producto['id_producto']] > 0){?>
                             <div class="btn-group">
-                                <a href="<?php echo site_url("inicio_con/comprar/".$producto['id_producto']); ?>" type="button" id="btnAdquirir" class="btn btn-lg btn-success"><i class="fa fa-shopping-basket"></i>&nbsp;&nbsp;&nbsp;Adquirir</a>
+                            Cantidad:&nbsp;
+                                <input type="number" name="cantidad" min="0" max="<?php echo $stock[$producto['id_producto']]; ?>" style="width:50px;height: 40px;" value="1" required>&nbsp;
                             </div>
                             <div class="btn-group">
-                                <h3 class="about-text">&nbsp;&nbsp;&nbsp;$<?php echo number_format($producto['prc_vta'],0,",","."); ?> CLP</h3>
+                                <button class="btn btn-lg btn-success"><i class="fa fa-shopping-cart"></i>&nbsp;&nbsp;Adquirir</button>
                             </div>
+                            <?php } ?>
+                            <div class="btn-group">
+                                <h4 class="about-text">&nbsp;&nbsp;&nbsp;$<?php echo number_format($producto['prc_vta'],0,",","."); ?> CLP x Unidad</h4>
+                            </div>
+                            </form>
                         </div>
                     </div>
                 </div>

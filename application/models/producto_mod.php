@@ -47,5 +47,17 @@ class Producto_mod extends CI_Controller {
     function eliminar_stock($id_prod_stock){
         $this->db->query("DELETE FROM prod_stock WHERE id_prod_stock = '{$id_prod_stock}'");
     }
+    function stock_productos(){
+        $query = $this->db->query("SELECT p.id_producto, IFNULL(SUM(s.cantidad),0) as cant_prod, 
+            IFNULL((SELECT IFNULL(SUM(w.cantidad),0) FROM compra_web AS w LEFT JOIN transbank AS t ON w.id_tbk = t.id_tbk WHERE w.id_producto = p.id_producto AND t.responseCode = '0' GROUP BY w.id_producto),0) as cant_web, 
+            IFNULL((SELECT IFNULL(SUM(d.cantidad),0) FROM tmp_det_compra AS d WHERE d.id_producto = p.id_producto AND d.valida = '1' GROUP BY d.id_producto),0) as cant_plat
+            FROM producto AS p LEFT JOIN prod_stock AS s ON p.id_producto = s.id_producto 
+            WHERE p.estado = '0' GROUP BY p.id_producto");
+        $result = $query->result();$productos = (array) $result;
+        $stock = array();
+        foreach ($productos as $producto)
+            $stock[$producto->id_producto] = $producto->cant_prod - $producto->cant_web - $producto->cant_plat;
+        return $stock;
+    }
 }
 ?>

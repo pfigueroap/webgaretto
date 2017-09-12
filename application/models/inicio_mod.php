@@ -1,8 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 error_reporting(E_ALL ^ E_NOTICE ^ E_DEPRECATED);
 
-#require_once('../libraries/libwebpay/webpay.php');
-
 class Inicio_mod extends CI_Controller {
     function __construct() {
         parent::__construct();
@@ -175,6 +173,33 @@ class Inicio_mod extends CI_Controller {
         $result = $query->result();
         $registros = (array) $result;
         return $registros;
+    }
+    function stock(){
+        $query = $this->db->query("SELECT p.id_producto, IFNULL(SUM(s.cantidad),0) as cant_prod, 
+            IFNULL((SELECT IFNULL(SUM(w.cantidad),0) FROM compra_web AS w LEFT JOIN transbank AS t ON w.id_tbk = t.id_tbk WHERE w.id_producto = p.id_producto AND t.responseCode = '0' GROUP BY w.id_producto),0) as cant_web, 
+            IFNULL((SELECT IFNULL(SUM(d.cantidad),0) FROM tmp_det_compra AS d WHERE d.id_producto = p.id_producto AND d.valida = '1' GROUP BY d.id_producto),0) as cant_plat
+            FROM producto AS p LEFT JOIN prod_stock AS s ON p.id_producto = s.id_producto 
+            WHERE p.estado = '0' GROUP BY p.id_producto");
+        $result = $query->result();$productos = (array) $result;
+        $stock = array();
+        foreach ($productos as $producto)
+            $stock[$producto->id_producto] = $producto->cant_prod - $producto->cant_web - $producto->cant_plat;
+        return $stock;
+    }
+    function conf_correo($correo,$usuario){
+        $this->db->query("INSERT INTO correo_valida (correo_validacion,fecha,hora,usuario) 
+            VALUES ('{$correo}',CURDATE(),CURTIME(),'{$usuario}')");
+    }
+    function correo_valida(){
+        $query = $this->db->query("SELECT correo_validacion FROM correo_valida ORDER BY id_config DESC LIMIT 1");
+        $result = $query->result();
+        $correo = $result[0]->correo_validacion;
+        return $correo;
+    }
+    function correo_adm(){
+        $query = $this->db->query("SELECT correo FROM usuarios WHERE tipo = '1' AND estado = '0'");
+        $result = $query->result();
+        return $result;
     }
 }
 ?>

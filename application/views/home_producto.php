@@ -34,7 +34,7 @@
                                     <td><?php echo $producto->marca; ?></td>
                                     <td><?php echo $producto->cod_bar; ?></td>
                                     <td><?php echo number_format($producto->prc_vta,0,",",".")." ".$arr_mnd[$producto->mnd_vta]; ?></td>
-                                    <td><?php echo number_format($producto->cantidad,0,",","."); ?></td>
+                                    <td><?php echo number_format($stock[$producto->id_producto],0,",","."); ?></td>
                                     <td>
                                         <a href="<?php echo site_url("producto_con/gest_prod/editar/{$producto->id_producto}"); ?>" class="btn btn-info btn-xs"><i class="fa fa-pencil"></i> Editar </a>
                                         <a href="<?php echo site_url("producto_con/eliminar/producto/{$producto->id_producto}"); ?>" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> Borrar </a>

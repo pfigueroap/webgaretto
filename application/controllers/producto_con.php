@@ -26,6 +26,8 @@ class Producto_con extends CI_Controller {
             $data['productos'] = $this->producto_mod->productos();
             $data['clase'] = 'producto';
             $data['page'] = 'home_producto';
+            $data['stock'] = $this->producto_mod->stock_productos();
+            #var_dump($data);
             $this->load->view('home',$data);
         }
     }

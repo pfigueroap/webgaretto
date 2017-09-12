@@ -291,11 +291,10 @@ class Operacion_con extends CI_Controller {
         $id_tmp_compra = $this->uri->segment(3);
         $valida = '2'; #Validación Financiera
         $clave = $this->operacion_mod->genera_validacion($id_tmp_compra,$valida);
-        $correo = 'pablo.figueroa@bigdataprog.com';
+        $correo = $this->operacion_mod->correo_valida();
         $asunto = 'Validación Transferencia orden nº'.$id_tmp_compra;
         $mensaje = 'Se ha solicitado validar una transferencia de la orden nº'.$id_tmp_compra.'. La información de la compra, como a su vez la validación la puede realizar en la siguiente dirección:<br><br>'.site_url("operacion_con/validar_orden/orden/{$id_tmp_compra}/{$clave}");
         $this->enviar_email('contacto@webgaretto.cl',"Equipo Garetto",$correo,$asunto,$mensaje);
-        #echo $mensaje;
         $this->ordenes();
     }
     function validar_orden(){
@@ -306,10 +305,10 @@ class Operacion_con extends CI_Controller {
         if($validacion == '1'){
             if($tipo == 'valida') $this->operacion_mod->validar_orden($id_tmp_compra,$validacion);
             $data = $this->data_comprobante($id_tmp_compra);
+            #$respuesta = $this->activar_reloj($id_tmp_compra);
             $data['clave'] = $clave;
             $this->load->view('validacion',$data);
         }else redirect('/inicio_con/index/', 'refresh');
-        #$respuesta = $this->activar_reloj($id_tmp_compra);
     }
     function activar_orden(){
         $id_tmp_compra = $this->uri->segment(3);

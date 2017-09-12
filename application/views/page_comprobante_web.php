@@ -68,61 +68,40 @@
             <div class="container about-container wow fadeInUp" style="background-image: url(<?php echo base_url(); ?>application/images/productos/<?php echo $producto['imagen'];?>);">
                 <div class="row">
                     <div class="col-md-6 col-md-push-6 about-content">
-                        <?php echo form_open('inicio_con/tbk'); ?>
-                        <h2 class="about-title">Datos del Comprador</h2>
+                        <?php if($compra == 'fallida'){?>
+                        <h2 class="about-title">Compra Fallida</h2>
                         <p class="about-text">
-                            <table>
-                                <tr><td style="width:150px">Nombre</td><td style="width:20px">:</td>
-                                <td><input type="text" name="nombre" style="width:200px" required></td></tr>
-                                <tr><td>Rut</td><td>:</td>
-                                <td><input type="text" name="rut" style="width:200px" required></td></tr>
-                                <tr><td>Email</td><td>:</td>
-                                <td><input type="email" name="correo" style="width:200px" required></td></tr>
-                                <tr><td>Dirección despacho</td><td>:</td>
-                                <td><input type="text" name="direccion" style="width:200px" required></td></tr>
-                            </table>
+                        Ha ocurrido un problema con el proceso de compras, por favor intente nuevamente.
                         </p>
-                        <h1 class="about-title">Datos de Facturación</h1>
+                        <img src="<?php echo base_url(); ?>application/images/webpay.png" style="max-width: 600px; max-height: 400px" />
                         <p class="about-text">
-                            <table>
-                                <tr>
-                                    <td style="text-align: center; width:50px;">
-                                        <input type = "radio" name = "tipo_fac" value = "boleta" required>
-                                    </td>
-                                    <td style="width:100px">Boleta</td>
-                                    <td style="text-align: center; width:50px;">
-                                        <input type = "radio" name = "tipo_fac" value = "factura" required>
-                                    </td>
-                                    <td style="width:100px">Factura</td>
-                                </tr>
-                            </table>
+                            <textarea class="about-text" rows="5" data-rule="required" style="background:inherit;border:inherit;width: 500px;height: 200px;" readonly></textarea>
                         </p>
-                        <p class="about-text">En caso de Factura, datos de la empresa:</p>
+                        <?php }elseif($compra == 'exito'){ ?>
+                        <h2 class="about-title">Comprobante</h2>
                         <p class="about-text">
-                            <table>
-                                <tr><td style="width:150px">Nombre</td><td style="width:20px">:</td>
-                                <td><input type="text" name="empresa" style="width:200px"></td></tr>
-                                <tr><td>Rut</td><td>:</td>
-                                <td><input type="text" name="e_rut" style="width:200px"></td></tr>
-                                <tr><td>Giro</td><td>:</td>
-                                <td><input type="text" name="e_giro" style="width:200px"></td></tr>
-                                <tr><td>Dirección</td><td>:</td>
-                                <td><input type="text" name="e_dir" style="width:200px"></td></tr>
-                            </table>
+                        La compra se ha realizado exitosamente, en breve recibirá un correo con los datos de la compra.
+                        <table class="table table-hover">
+                            <tr><td style="width:200px">Producto</td><td style="width:20px">:</td>
+                            <td style="width:150px"><?php echo $producto['producto'];?></td></tr>
+                            <tr><td>Producto</td><td>:</td><td><?php echo $comprobante['cantidad'];?></td></tr>
+                            <tr><td>Monto</td><td>:</td>
+                            <td><?php echo number_format($comprobante['amount'],0,",",".");?> CLP</td></tr>
+                            <tr><td>Orden de compra</td><td>:</td><td><?php echo $comprobante['id_web'];?></td></tr>
+                            <tr><td>Fecha y hora transacción</td><td>:</td>
+                                <td><?php echo $comprobante['transactionDate'];?></td></tr>
+                            <tr><td>Nombre Comprador</td><td>:</td><td><?php echo $comprobante['nombre'];?></td></tr>
+                            <tr><td>Rut Comprador</td><td>:</td><td><?php echo $comprobante['rut'];?></td></tr>
+                            <tr><td>Email comprador</td><td>:</td><td><?php echo $comprobante['correo'];?></td></tr>
+                            <tr><td>Dirección despacho</td><td>:</td>
+                                <td><?php echo $comprobante['direccion'];?></td></tr>
+                            <tr><td>Tipo de facturación</td><td>:</td>
+                                <td><?php echo $comprobante['tipo_fac'];?></td></tr>
+                        </table>
                         </p>
-                        <div class="well carousel-search hidden-sm">
-                            <div class="btn-group">
-                                <button class="btn btn-lg btn-success"><i class="fa fa-credit-card"></i>&nbsp;&nbsp;&nbsp;Comprar</button>
-                            </div>
-                            <div class="btn-group">
-                                <h3 class="about-text">&nbsp;&nbsp;&nbsp;$<?php echo number_format($producto['prc_vta'],0,",","."); ?> CLP</h3>
-                            </div>
-                            <div class="btn-group">
-                                <img src="<?php echo base_url(); ?>application/images/webpay.png" style="max-width: 150px; max-height: 300px" />
-                            </div>
-                        </div>
-                        <input name="id_producto" type="hidden" value="<?php echo $producto['id_producto'];?>">
-                        </form>
+                        <img src="<?php echo base_url(); ?>application/images/webpay_exito.jpg" style="max-width: 600px; max-height: 400px" />
+                        <?php }?>
+                        <!--h1 class="about-title">Datos de Facturación</h1-->
                     </div>
                 </div>
             </div>

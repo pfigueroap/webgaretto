@@ -20,21 +20,16 @@ class Operacion_mod extends CI_Controller {
         return $productos;
     }
     function stock(){
-        $query = $this->db->query("SELECT p.id_producto, IFNULL(SUM(s.cantidad),0) as cant_prod, IFNULL(SUM(w.cantidad),0) as cant_web, IFNULL(SUM(t.responseCode*w.cantidad),0) as resp_code, IFNULL(SUM(d.cantidad),0) as cant_plat 
-            FROM producto AS p 
-            LEFT JOIN prod_stock AS s ON p.id_producto = s.id_producto 
-            LEFT JOIN compra_web AS w ON p.id_producto = w.id_producto 
-            LEFT JOIN transbank AS t ON w.id_tbk = t.id_tbk 
-            LEFT JOIN tmp_det_compra AS d ON p.id_producto = d.id_producto AND d.valida = '1' 
-            WHERE p.estado = '0' 
-            GROUP BY p.id_producto");
-        $result = $query->result();
-        $productos = (array) $result;
+        $query = $this->db->query("SELECT p.id_producto, IFNULL(SUM(s.cantidad),0) as cant_prod, 
+            IFNULL((SELECT IFNULL(SUM(w.cantidad),0) FROM compra_web AS w LEFT JOIN transbank AS t ON w.id_tbk = t.id_tbk WHERE w.id_producto = p.id_producto AND t.responseCode = '0' GROUP BY w.id_producto),0) as cant_web, 
+            IFNULL((SELECT IFNULL(SUM(d.cantidad),0) FROM tmp_det_compra AS d WHERE d.id_producto = p.id_producto AND d.valida = '1' GROUP BY d.id_producto),0) as cant_plat
+            FROM producto AS p LEFT JOIN prod_stock AS s ON p.id_producto = s.id_producto 
+            WHERE p.estado = '0' GROUP BY p.id_producto");
+        $result = $query->result();$productos = (array) $result;
         $stock = array();
         foreach ($productos as $producto)
-            $stock[$producto->id_producto] = $producto->cant_prod - ($producto->cant_web + $producto->resp_code) - $producto->cant_plat;
+            $stock[$producto->id_producto] = $producto->cant_prod - $producto->cant_web - $producto->cant_plat;
         return $stock;
-
     }
     function crear_registro($registros,$estado,$id_cliente){
     	# $estado [compra temporal: 0], [transferencia por validar: 1], [webpay pagado: 2], [venta temporal: 3], [arriendo: 4], [regalo: 5]
@@ -159,6 +154,12 @@ class Operacion_mod extends CI_Controller {
     function validar_orden($id_tmp_compra,$estado){
         $this->db->query("UPDATE tmp_det_compra SET valida = '{$estado}' WHERE id_tmp_compra = '{$id_tmp_compra}'");
         $this->db->query("UPDATE tmp_compra SET valida = '{$estado}' WHERE id_tmp_compra = '{$id_tmp_compra}'");
+    }
+    function correo_valida(){
+        $query = $this->db->query("SELECT correo_validacion FROM correo_valida ORDER BY id_config DESC LIMIT 1");
+        $result = $query->result();
+        $correo = $result[0]->correo_validacion;
+        return $correo;
     }
     function tmp_clave($length) {
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';

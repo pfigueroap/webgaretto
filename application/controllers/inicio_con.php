@@ -37,19 +37,24 @@ class Inicio_con extends CI_Controller {
         $data = $this->inicio_mod->web();
         $data['producto'] = $this->inicio_mod->producto($id_producto);
         $data['productos'] = $this->inicio_mod->productos();
+        $data['stock'] = $this->inicio_mod->stock();
         $data['usuario'] = $this->session->userdata('usuario');
         $data['tipo'] = $this->session->userdata('tipo');
-        $this->load->view('descripcion',$data);
+        $this->load->view('page_descripcion',$data);
     }
     function comprar(){
         $id_producto = $this->uri->segment(3);
-        $data['producto'] = $this->inicio_mod->producto($id_producto);
-        $data['usuario'] = $this->session->userdata('usuario');
-        $data['tipo'] = $this->session->userdata('tipo');
-        $this->load->view('comprar',$data);
+        $data['cantidad'] = $this->input->post('cantidad');
+        $data['stock'] = $this->inicio_mod->stock();
+        if($data['cantidad'] > 0 and $data['cantidad'] < $data['stock'][$id_producto]){
+            $data['producto'] = $this->inicio_mod->producto($id_producto);
+            $data['usuario'] = $this->session->userdata('usuario');
+            $data['tipo'] = $this->session->userdata('tipo');
+            $this->load->view('page_comprar',$data);
+        }else redirect('/inicio_con/descripcion/'.$id_producto, 'refresh');
     }
     function tbk(){
-        $cabecera = array('nombre','id_producto','rut','correo','direccion','tipo_fac');
+        $cabecera = array('nombre','cantidad','id_producto','rut','correo','direccion','tipo_fac');
         $contenido = array();
         foreach ($cabecera as $post)
             array_push($contenido, "'".$this->input->post($post)."'");
@@ -65,7 +70,7 @@ class Inicio_con extends CI_Controller {
         array_push($contenido, "'".date("H:i:s")."'");
         $id_compra = $this->inicio_mod->registrar_compra($cabecera,$contenido);
         $producto = $this->inicio_mod->producto($this->input->post('id_producto'));
-        $this->inicio_mod->pago($producto['prc_vta'],$id_compra,site_url("inicio_con/tbk_retorno"),site_url("inicio_con/tbk_final/".$producto['id_producto']));
+        $this->inicio_mod->pago($producto['prc_vta']*$this->input->post('cantidad'),$id_compra,site_url("inicio_con/tbk_retorno"),site_url("inicio_con/tbk_final/".$producto['id_producto']));
     }
     function tbk_retorno(){
         $token = $this->input->post('token_ws');
@@ -74,7 +79,24 @@ class Inicio_con extends CI_Controller {
     function tbk_final(){
         $id_producto = $this->uri->segment(3);
         $token = $this->input->post('token_ws');
+        $this->tbk_correo($id_producto,$token);
         $this->comprobante($id_producto,$token);
+    }
+    function tbk_correo($id_producto,$token){
+        #Comprabar Tx Exitosa
+        $info = $this->inicio_mod->comprobante($token);
+        if($info['responseCode'] == '0'){
+            #Correo Administradores
+            $correos = $this->inicio_mod->correo_adm();
+            $asunto = "Compra Productos Web de ".$info['nombre'];
+            $mensaje = "Se ha adquirido un nuevo producto en el sistema, bajo el id: ".$info['id_web'];
+            foreach ($correos as $email)
+                $this->enviar_email('contacto@webgaretto.cl',"Equipo Garetto",$email->correo,$asunto,$mensaje);
+            #Correo de Comprobante
+            $asunto = "Compra Productos Web Garetto";
+            $mensaje = "Se ha adquirido un nuevo producto en el sistema, bajo el id nº".$info['id_web'].", puede visualizar el comprobante en:<br><br>".site_url("inicio_con/comprobante_web/{$id_producto}/{$token}");
+            $this->enviar_email('contacto@webgaretto.cl',"Equipo Garetto",$info['correo'],$asunto,$mensaje);
+        }
     }
     function comprobante($id_producto,$token){
         $data['producto'] = $this->inicio_mod->producto($id_producto);
@@ -85,7 +107,7 @@ class Inicio_con extends CI_Controller {
             $data['comprobante'] = $this->inicio_mod->comprobante($token);
             $data['compra'] = 'exito';
         }
-        $this->load->view('comprobante_web',$data);
+        $this->load->view('page_comprobante_web',$data);
     }
     function web(){
         $data = $this->inicio_mod->web();
@@ -171,8 +193,14 @@ class Inicio_con extends CI_Controller {
     function configuracion(){
         $data = $this->valida();
         $data['page'] = 'home_configuracion';
+        $data['correo'] = $this->inicio_mod->correo_valida();
         if($data['tipo'] == '1') $this->load->view('home',$data);
         else $this->index();
+    }
+    function conf_correo(){
+        $correo = $this->input->post('correo');
+        $this->inicio_mod->conf_correo($correo,$this->session->userdata('usuario'));
+        $this->configuracion();
     }
     function salir(){
         $this->session->sess_destroy();
