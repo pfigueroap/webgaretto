@@ -84,7 +84,7 @@
                         <table class="table table-hover">
                             <tr><td style="width:200px">Producto</td><td style="width:20px">:</td>
                             <td style="width:150px"><?php echo $producto['producto'];?></td></tr>
-                            <tr><td>Producto</td><td>:</td><td><?php echo $comprobante['cantidad'];?></td></tr>
+                            <tr><td>Cantidad</td><td>:</td><td><?php echo $comprobante['cantidad'];?></td></tr>
                             <tr><td>Monto</td><td>:</td>
                             <td><?php echo number_format($comprobante['amount'],0,",",".");?> CLP</td></tr>
                             <tr><td>Orden de compra</td><td>:</td><td><?php echo $comprobante['id_web'];?></td></tr>
