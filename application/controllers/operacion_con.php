@@ -343,7 +343,7 @@ class Operacion_con extends CI_Controller {
                 "email_usuario" => $info['correo'], 
                 "modelo" => $info['modelo'],
                 "marca" => $info['marca'],
-                "rut_empresa" => $info['rut_empresa'],
+                "rut_empresa" => str_replace(array(".","-"),"",$info['rut_empresa']),
                 "direccion_empresa" => $info['direccion'],
                 "giro_empresa" => $info['giro'],
                 "empresa" => $info['empresa'],
