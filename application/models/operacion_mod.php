@@ -312,6 +312,9 @@ class Operacion_mod extends CI_Controller {
     function activar_reloj($id_tmp_compra){
         $url = "http://www.relojgaretto.cl/sensores/agregar";
         $info = $this->operacion_mod->info_reloj($id_tmp_compra);
+        echo "<PRE>";
+        echo "<br>Entro<br>";
+        var_dump($info);
         if(count($info) != 0){
             #echo "<PRE>";
             $postData = array(
