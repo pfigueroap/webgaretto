@@ -333,7 +333,7 @@ class Operacion_mod extends CI_Controller {
             curl_setopt($handler, CURLOPT_POSTFIELDS, $postData);
             $response = curl_exec ($handler);
             #echo "Respuesta:";
-            var_dump($response);
+            #var_dump($response);
             curl_close($handler);
             return $response;
         }else return '0';
