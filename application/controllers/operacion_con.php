@@ -149,6 +149,7 @@ class Operacion_con extends CI_Controller {
         $id_tmp_compra = $this->uri->segment(3);
         $data = $this->data_comprobante($id_tmp_compra);
         if(!empty($this->input->post('token_ws'))){
+            $this->activar_reloj($id_tmp_compra);
             $correos = $this->operacion_mod->correo_adm();
             $asunto = "Compra Productos de ".$data['usuario'];
             $mensaje = "Se ha adquirido un nuevo producto en el sistema, bajo el id: ".$data['id_compra'];
