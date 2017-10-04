@@ -333,7 +333,7 @@ class Operacion_con extends CI_Controller {
         $url = "http://www.relojgaretto.cl/sensores/agregar";
         $info = $this->operacion_mod->info_reloj($id_tmp_compra);
         if(count($info) != 0){
-            echo "<PRE>";
+            #echo "<PRE>";
             $postData = array(
                 "usuario" => $info['usuario'],
                 "nombres" => $info['nombre_1']." ".$info['nombre_2'],
@@ -356,7 +356,7 @@ class Operacion_con extends CI_Controller {
             curl_setopt($handler, CURLOPT_POSTFIELDS, $postData);
             $response = curl_exec ($handler);
             #echo "Respuesta:";
-            #var_dump($response);
+            var_dump($response);
             curl_close($handler);
             return $response;
         }else return '0';
