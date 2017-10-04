@@ -251,10 +251,13 @@ class Operacion_mod extends CI_Controller {
             $this->db->query("UPDATE tmp_compra SET estado = '2', valida = '1' 
                 WHERE id_compra = '{$buyOrder}'");
             echo "<PRE>";
-            echo "Entro Validacion";
+            echo "Entro Validacion<br>";
             $id_tmp_compra = $this->id_tmp_compra($result->buyOrder);
+            echo "<br>Id-Compra: ".$result->buyOrder."<br>Id-Tmp-Compra: ";
             var_dump($id_tmp_compra);
-            $this->activar_reloj($id_tmp_compra);
+            $resultado = $this->activar_reloj($id_tmp_compra);
+            echo "<br>resultado: ";
+            var_dump($resultado);
         }
     }
     function id_tmp_compra($id_compra){
@@ -311,7 +314,7 @@ class Operacion_mod extends CI_Controller {
     }
     function activar_reloj($id_tmp_compra){
         $url = "http://www.relojgaretto.cl/sensores/agregar";
-        $info = $this->operacion_mod->info_reloj($id_tmp_compra);
+        $info = $this->info_reloj($id_tmp_compra);
         echo "<PRE>";
         echo "<br>Entro<br>";
         var_dump($info);
