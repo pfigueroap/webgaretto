@@ -310,9 +310,11 @@ class Operacion_con extends CI_Controller {
         $clave = $this->uri->segment(5);
         $validacion = $this->operacion_mod->valida_clave($id_tmp_compra,$clave);
         if($validacion == '1'){
-            if($tipo == 'valida') $this->operacion_mod->validar_orden($id_tmp_compra,$validacion);
+            if($tipo == 'valida'){
+                $this->operacion_mod->validar_orden($id_tmp_compra,$validacion);
+                $respuesta = $this->activar_reloj($id_tmp_compra);
+            }
             $data = $this->data_comprobante($id_tmp_compra);
-            $respuesta = $this->activar_reloj($id_tmp_compra);
             $data['clave'] = $clave;
             $this->load->view('validacion',$data);
         }else redirect('/inicio_con/index/', 'refresh');
@@ -331,6 +333,7 @@ class Operacion_con extends CI_Controller {
         $url = "http://www.relojgaretto.cl/sensores/agregar";
         $info = $this->operacion_mod->info_reloj($id_tmp_compra);
         if(count($info) != 0){
+            echo "<PRE>";
             $postData = array(
                 "usuario" => $info['usuario'],
                 "nombres" => $info['nombre_1']." ".$info['nombre_2'],
@@ -345,12 +348,15 @@ class Operacion_con extends CI_Controller {
                 "giro_empresa" => $info['giro'],
                 "empresa" => $info['empresa'],
                 "cantidad" => $info['cantidad']);
+            #var_dump($postData);
             $handler = curl_init();
             curl_setopt($handler, CURLOPT_URL, $url);
             curl_setopt($handler, CURLOPT_POST,true);
             curl_setopt($handler, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($handler, CURLOPT_POSTFIELDS, $postData);
             $response = curl_exec ($handler);
+            #echo "Respuesta:";
+            #var_dump($response);
             curl_close($handler);
             return $response;
         }else return '0';

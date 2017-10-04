@@ -178,7 +178,7 @@ class Operacion_mod extends CI_Controller {
             INNER JOIN empresa AS e ON u.id_empresa = e.id_empresa 
             INNER JOIN tmp_det_compra AS d ON c.id_tmp_compra = d.id_tmp_compra 
             INNER JOIN producto AS p ON d.id_producto = p.id_producto 
-            WHERE c.id_tmp_compra = '{$id_tmp_compra}' AND d.id_producto = '2'");
+            WHERE c.id_tmp_compra = '{$id_tmp_compra}' AND d.id_producto = '1'");
         $result = $query->result();
         $info = (array) $result[0];
         return $info;
