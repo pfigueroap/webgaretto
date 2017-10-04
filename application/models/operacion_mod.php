@@ -222,7 +222,7 @@ class Operacion_mod extends CI_Controller {
         $webpay = $this->webpay();
         $result = $webpay->getNormalTransaction()->getTransactionResult($token);
         $this->save_retorno($token,$result);
-        #redirect($result->urlRedirection.'?token_ws='.$token);
+        redirect($result->urlRedirection.'?token_ws='.$token);
     }
     function save_retorno($token,$result){
         $accountingDate = $result->accountingDate;
@@ -250,14 +250,8 @@ class Operacion_mod extends CI_Controller {
                 WHERE id_compra = '{$buyOrder}'");
             $this->db->query("UPDATE tmp_compra SET estado = '2', valida = '1' 
                 WHERE id_compra = '{$buyOrder}'");
-            echo "<PRE>";
-            echo "Entro Validacion<br>";
             $id_tmp_compra = $this->id_tmp_compra($result->buyOrder);
-            echo "<br>Id-Compra: ".$result->buyOrder."<br>Id-Tmp-Compra: ";
-            var_dump($id_tmp_compra);
-            $resultado = $this->activar_reloj($id_tmp_compra);
-            echo "<br>resultado: ";
-            var_dump($resultado);
+            $this->activar_reloj($id_tmp_compra);
         }
     }
     function id_tmp_compra($id_compra){
@@ -315,9 +309,6 @@ class Operacion_mod extends CI_Controller {
     function activar_reloj($id_tmp_compra){
         $url = "http://www.relojgaretto.cl/sensores/agregar";
         $info = $this->info_reloj($id_tmp_compra);
-        echo "<PRE>";
-        echo "<br>Entro<br>";
-        var_dump($info);
         if(count($info) != 0){
             #echo "<PRE>";
             $postData = array(
@@ -334,14 +325,14 @@ class Operacion_mod extends CI_Controller {
                 "giro_empresa" => $info['giro'],
                 "empresa" => $info['empresa'],
                 "cantidad" => $info['cantidad']);
-            var_dump($postData);
+            #var_dump($postData);
             $handler = curl_init();
             curl_setopt($handler, CURLOPT_URL, $url);
             curl_setopt($handler, CURLOPT_POST,true);
             curl_setopt($handler, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($handler, CURLOPT_POSTFIELDS, $postData);
             $response = curl_exec ($handler);
-            echo "Respuesta:";
+            #echo "Respuesta:";
             var_dump($response);
             curl_close($handler);
             return $response;
