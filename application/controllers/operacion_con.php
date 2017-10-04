@@ -144,12 +144,13 @@ class Operacion_con extends CI_Controller {
     function tbk_retorno(){
         $token = $this->input->post('token_ws');
         $this->operacion_mod->retorno($token);
+
     }
     function tbk_final(){
         $id_tmp_compra = $this->uri->segment(3);
-        $data = $this->data_comprobante($id_tmp_compra);
+        $data = $this->data_comprobante($id_tmp_compra);        
         if(!empty($this->input->post('token_ws'))){
-            $this->activar_reloj($id_tmp_compra);
+            echo "entro";
             $correos = $this->operacion_mod->correo_adm();
             $asunto = "Compra Productos de ".$data['usuario'];
             $mensaje = "Se ha adquirido un nuevo producto en el sistema, bajo el id: ".$data['id_compra'];
@@ -313,7 +314,7 @@ class Operacion_con extends CI_Controller {
         if($validacion == '1'){
             if($tipo == 'valida'){
                 $this->operacion_mod->validar_orden($id_tmp_compra,$validacion);
-                $respuesta = $this->activar_reloj($id_tmp_compra);
+                $respuesta = $this->operacion_mod->activar_reloj($id_tmp_compra);
             }
             $data = $this->data_comprobante($id_tmp_compra);
             $data['clave'] = $clave;
@@ -329,38 +330,6 @@ class Operacion_con extends CI_Controller {
             $data['clave'] = $clave;
             $this->load->view('validacion',$data);
         }else redirect('/inicio_con/index/', 'refresh');
-    }
-    function activar_reloj($id_tmp_compra){
-        $url = "http://www.relojgaretto.cl/sensores/agregar";
-        $info = $this->operacion_mod->info_reloj($id_tmp_compra);
-        if(count($info) != 0){
-            #echo "<PRE>";
-            $postData = array(
-                "usuario" => $info['usuario'],
-                "nombres" => $info['nombre_1']." ".$info['nombre_2'],
-                "apellido1" => $info['apellido_1'],
-                "apellido2" => $info['apellido_2'],
-                "rut_usuario" => str_replace(array(".","-"),"",$info['rut']),
-                "email_usuario" => $info['correo'], 
-                "modelo" => $info['modelo'],
-                "marca" => $info['marca'],
-                "rut_empresa" => str_replace(array(".","-"),"",$info['rut_empresa']),
-                "direccion_empresa" => $info['direccion'],
-                "giro_empresa" => $info['giro'],
-                "empresa" => $info['empresa'],
-                "cantidad" => $info['cantidad']);
-            #var_dump($postData);
-            $handler = curl_init();
-            curl_setopt($handler, CURLOPT_URL, $url);
-            curl_setopt($handler, CURLOPT_POST,true);
-            curl_setopt($handler, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($handler, CURLOPT_POSTFIELDS, $postData);
-            $response = curl_exec ($handler);
-            #echo "Respuesta:";
-            var_dump($response);
-            curl_close($handler);
-            return $response;
-        }else return '0';
     }
     #Arriendo
     function arriendos(){

@@ -222,7 +222,7 @@ class Operacion_mod extends CI_Controller {
         $webpay = $this->webpay();
         $result = $webpay->getNormalTransaction()->getTransactionResult($token);
         $this->save_retorno($token,$result);
-        redirect($result->urlRedirection.'?token_ws='.$token);
+        #redirect($result->urlRedirection.'?token_ws='.$token);
     }
     function save_retorno($token,$result){
         $accountingDate = $result->accountingDate;
@@ -250,7 +250,17 @@ class Operacion_mod extends CI_Controller {
                 WHERE id_compra = '{$buyOrder}'");
             $this->db->query("UPDATE tmp_compra SET estado = '2', valida = '1' 
                 WHERE id_compra = '{$buyOrder}'");
+            echo "<PRE>";
+            echo "Entro Validacion";
+            $id_tmp_compra = $this->id_tmp_compra($result->buyOrder);
+            var_dump($id_tmp_compra);
+            $this->activar_reloj($id_tmp_compra);
         }
+    }
+    function id_tmp_compra($id_compra){
+        $query = $this->db->query("SELECT * FROM tmp_compra WHERE id_compra = '{$id_compra}'");
+        $result = $query->result();
+        return $result[0]->id_tmp_compra;
     }
     function comprobante($token){
         $query = $this->db->query("SELECT * FROM transbank AS tbk
@@ -298,6 +308,38 @@ class Operacion_mod extends CI_Controller {
         $result = $query->result();
         $arriendos = (array) $result;
         return $arriendos;
+    }
+    function activar_reloj($id_tmp_compra){
+        $url = "http://www.relojgaretto.cl/sensores/agregar";
+        $info = $this->operacion_mod->info_reloj($id_tmp_compra);
+        if(count($info) != 0){
+            #echo "<PRE>";
+            $postData = array(
+                "usuario" => $info['usuario'],
+                "nombres" => $info['nombre_1']." ".$info['nombre_2'],
+                "apellido1" => $info['apellido_1'],
+                "apellido2" => $info['apellido_2'],
+                "rut_usuario" => str_replace(array(".","-"),"",$info['rut']),
+                "email_usuario" => $info['correo'], 
+                "modelo" => $info['modelo'],
+                "marca" => $info['marca'],
+                "rut_empresa" => str_replace(array(".","-"),"",$info['rut_empresa']),
+                "direccion_empresa" => $info['direccion'],
+                "giro_empresa" => $info['giro'],
+                "empresa" => $info['empresa'],
+                "cantidad" => $info['cantidad']);
+            var_dump($postData);
+            $handler = curl_init();
+            curl_setopt($handler, CURLOPT_URL, $url);
+            curl_setopt($handler, CURLOPT_POST,true);
+            curl_setopt($handler, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($handler, CURLOPT_POSTFIELDS, $postData);
+            $response = curl_exec ($handler);
+            echo "Respuesta:";
+            var_dump($response);
+            curl_close($handler);
+            return $response;
+        }else return '0';
     }
 }
 ?>
