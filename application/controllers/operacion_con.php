@@ -260,13 +260,18 @@ class Operacion_con extends CI_Controller {
             'arriendo' => 'Se ha generado en nuestro sistema Garetto una nueva solicitud de arriendo de productos, por favor valide la compra en el sistema, para enviar los productos solicitados.',
             'regalo' => 'Se ha generado en nuestro sistema Garetto un regalo para usted, para mayor información y pasos a seguir, por favor ingrese a nuestro sistema web.');
         if($tipo == 'venta') $estado = '3';
-        elseif($tipo == 'arriendo') $estado = '4';
-        elseif($tipo == 'regalo') $estado = '5';
+        elseif($tipo == 'arriendo'){
+            $estado = '4';
+            $posts = array('f_inicio','per_gracia','costo_mensual','id_moneda');
+            foreach ($posts as $post)
+                $arriendo[$post] = $this->input->post($post);
+        }elseif($tipo == 'regalo') $estado = '5';
         $ventas = $this->formulario();
         if(count($ventas) > 0){
             $id_cliente = $this->input->post('id_cliente');
             $id_tmp_compra = $this->operacion_mod->crear_registro($ventas,$estado,$id_cliente);
             $correo = $this->operacion_mod->correo($id_cliente);
+            if($tipo == 'arriendo') $this->operacion_mod->registra_arriendo($id_cliente,$id_tmp_compra,$arriendo);
             $this->enviar_email('contacto@webgaretto.cl',"Equipo Garetto",$correo,$asunto[$tipo],$mensaje[$tipo]);
             $this->det_orden($id_tmp_compra,'ordenes','0');
         }elseif($tipo == 'venta') $this->index_run('2');
@@ -295,6 +300,8 @@ class Operacion_con extends CI_Controller {
         $asunto = 'Validación Transferencia orden nº'.$id_tmp_compra;
         $mensaje = 'Se ha solicitado validar una transferencia de la orden nº'.$id_tmp_compra.'. La información de la compra, como a su vez la validación la puede realizar en la siguiente dirección:<br><br>'.site_url("operacion_con/validar_orden/orden/{$id_tmp_compra}/{$clave}");
         $this->enviar_email('contacto@webgaretto.cl',"Equipo Garetto",$correo,$asunto,$mensaje);
+        #echo "<PRE>";
+        #echo $mensaje;
         $this->ordenes();
     }
     function validar_orden(){
@@ -305,7 +312,7 @@ class Operacion_con extends CI_Controller {
         if($validacion == '1'){
             if($tipo == 'valida') $this->operacion_mod->validar_orden($id_tmp_compra,$validacion);
             $data = $this->data_comprobante($id_tmp_compra);
-            #$respuesta = $this->activar_reloj($id_tmp_compra);
+            $respuesta = $this->activar_reloj($id_tmp_compra);
             $data['clave'] = $clave;
             $this->load->view('validacion',$data);
         }else redirect('/inicio_con/index/', 'refresh');
@@ -347,6 +354,13 @@ class Operacion_con extends CI_Controller {
             curl_close($handler);
             return $response;
         }else return '0';
+    }
+    #Arriendo
+    function arriendos(){
+        $data = $this->valida();
+        $data['registros'] = $this->operacion_mod->arriendos();
+        $data['page'] = 'home_rent_client';
+        $this->load->view('home',$data);
     }
 }
 ?>

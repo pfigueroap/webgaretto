@@ -19,8 +19,14 @@
 				<?php if($tipo == '1'){ ?>
 				<li>
 					<a href="<?php echo site_url("inicio_con/compras_web"); ?>">
-					   <i class="material-icons">payments</i>
+					   <i class="material-icons">credit_card</i>
 					   <p class="hidden-lg hidden-md">Pagos</p>
+				    </a>
+				</li>
+				<li>
+					<a href="<?php echo site_url("operacion_con/arriendos"); ?>">
+					   <i class="material-icons">timeline</i>
+					   <p class="hidden-lg hidden-md">Arriendos</p>
 				    </a>
 				</li>
 				<li>

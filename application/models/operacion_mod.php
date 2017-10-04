@@ -286,5 +286,18 @@ class Operacion_mod extends CI_Controller {
             WHERE id_compra = '{$id_compra}'");        
         $this->actualiza_tmp_compra($id_compra,$pago,$compras,$despacho,$direccion,$tipo);
     }
+    function registra_arriendo($id_cliente,$id_tmp_compra,$arriendo){
+        $usuario = $this->session->userdata('usuario');
+        $this->db->query("INSERT INTO arriendo (f_inicio, per_gracia, costo_mensual, id_moneda, id_cliente, id_tmp_compra, usuario, f_creacion, h_creacion) 
+            VALUES ('{$arriendo['f_inicio']}', '{$arriendo['per_gracia']}', '{$arriendo['costo_mensual']}', '{$arriendo['id_moneda']}', '{$id_cliente}', '{$id_tmp_compra}', '{$usuario}', CURDATE(), CURTIME())");
+    }
+    function arriendos(){
+        $query = $this->db->query("SELECT a.*, u.nombre_1, u.apellido_1, u.rut FROM arriendo AS a 
+            INNER JOIN usuarios AS u ON a.id_cliente = u.id_usuario 
+            ORDER BY a.f_creacion DESC, a.h_creacion DESC");
+        $result = $query->result();
+        $arriendos = (array) $result;
+        return $arriendos;
+    }
 }
 ?>

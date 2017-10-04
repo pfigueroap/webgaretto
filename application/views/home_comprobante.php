@@ -14,7 +14,7 @@
                             elseif($estado == '2' and $valida == '0') echo "Información de compra - WebPay Rechazada"; 
                             elseif($estado == '2' and $valida == '1') echo "Información de compra - WebPay Aprobada"; 
                             elseif($estado == '3') echo "Información de Venta - por Validar"; 
-                            elseif($estado == '4') echo "Información de Arriendo - por Validar";
+                            elseif($estado == '4') echo "Información de Arriendo";
                             elseif($estado == '5') echo "Información de Regalo";
                             elseif($estado == '6') echo "Información de Transacción Validada"; ?>
                     </h3>
@@ -122,6 +122,8 @@
                         <a href="<?php echo site_url("historial_con/index"); ?>" class="btn btn-default btn-xs" style="background: #af1416;"><i class="fa fa-reply"></i> Volver </a>
                         <?php }elseif($clase == 'ordenes'){ ?>
                         <a href="<?php echo site_url("operacion_con/ordenes"); ?>" class="btn btn-default btn-xs" style="background: #af1416;"><i class="fa fa-reply"></i> Volver </a>
+                        <?php }elseif($clase == 'arriendo'){ ?>
+                        <a href="<?php echo site_url("operacion_con/arriendos"); ?>" class="btn btn-default btn-xs" style="background: #af1416;"><i class="fa fa-reply"></i> Volver </a>
                         <?php } ?>
                         <?php if($valida == '1'){?>
                         <a href="<?php echo site_url("operacion_con/down_comprobante/".$id_tmp_compra); ?>" target="_blank" class="btn btn-primary btn-xs" style="background: #af1416;     box-shadow:none;" > <i class="fa fa-file-pdf-o"></i> Descargar Comprobante</a>
