@@ -58,7 +58,7 @@ class Inicio_con extends CI_Controller {
         $contenido = array();
         foreach ($cabecera as $post)
             array_push($contenido, "'".$this->input->post($post)."'");
-        if($this->input->post('tipo_fac') == "'factura'"){
+        if($this->input->post('tipo_fac') == 'factura'){
             foreach(array('empresa','e_rut','e_giro','e_dir') as $post){
                 array_push($cabecera, $post);
                 array_push($contenido, "'".$this->input->post($post)."'");
