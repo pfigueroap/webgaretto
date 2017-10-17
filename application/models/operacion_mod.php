@@ -87,7 +87,7 @@ class Operacion_mod extends CI_Controller {
         return $clientes;
     }
     function registros(){
-    	$query = $this->db->query("SELECT c.id_tmp_compra, c.f_ingreso, c.h_ingreso, c.estado, c.valida, u.nombre_1, u.apellido_1, u.rut, SUM(d.total) AS total, s.factura, s.empresa, s.rut AS e_rut 
+    	$query = $this->db->query("SELECT c.id_tmp_compra, c.f_ingreso, c.h_ingreso, c.estado, c.valida, c.t_factura, c.empresa AS em_name, c.rut AS em_rut, u.nombre_1, u.apellido_1, u.rut, SUM(d.total) AS total, s.factura, s.empresa, s.rut AS e_rut 
     		FROM tmp_compra AS c 
     		LEFT JOIN usuarios AS u ON c.id_cliente = u.id_usuario 
             LEFT JOIN compra AS s ON c.id_compra = s.id_compra 

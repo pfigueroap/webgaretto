@@ -35,9 +35,13 @@
                                     <td><?php echo $registro->empresa; ?></td>
                                     <td><?php echo $registro->e_rut; ?></td>
                                     <?php }else{ ?>
+                                    <?php if($registro->t_factura == 'empresa' or $registro->t_factura == 'otro'){ ?>
+                                    <td><?php echo $registro->em_name; ?></td>
+                                    <td><?php echo $registro->em_rut; ?></td>
+                                    <?php }else{ ?>
                                     <td><?php echo $registro->nombre_1." ".$registro->apellido_1; ?></td>
                                     <td><?php echo $registro->rut; ?></td>
-                                    <?php } ?>
+                                    <?php }} ?>
                                     <td><?php echo $registro->id_tmp_compra; ?></td>
                                     <td><?php echo $registro->f_ingreso; ?></td>
                                     <td><?php echo $registro->h_ingreso; ?></td>
