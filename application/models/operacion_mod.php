@@ -62,7 +62,7 @@ class Operacion_mod extends CI_Controller {
     	$this->db->query("DELETE FROM tmp_det_compra WHERE id_tmp_detalle = '{$id_tmp_detalle}' AND usuario = '{$usuario}' AND estado = '0'");
     }
     function info($usuario){
-    	$query = $this->db->query("SELECT u.direccion AS dir_personal, e.direccion AS dir_laboral, e.empresa, e.rut FROM usuarios AS u
+    	$query = $this->db->query("SELECT u.direccion AS dir_personal, e.direccion AS dir_laboral, e.empresa, e.rut, e.giro FROM usuarios AS u
     		INNER JOIN empresa AS e ON u.id_empresa = e.id_empresa WHERE u.usuario = '{$usuario}'");
         $result = $query->result();
         $info = (array) $result[0];
@@ -98,7 +98,7 @@ class Operacion_mod extends CI_Controller {
         return $registros;
     }
     function orden($id_tmp_compra){
-    	$query = $this->db->query("SELECT c.id_tmp_compra, c.valida, c.f_ingreso, c.h_ingreso, c.estado, c.direccion, c.f_pago, c.t_despacho, c.id_compra, c.f_pago, c.t_factura, c.empresa, c.rut as e_rut, u.nombre_1, u.apellido_1, u.rut, u.usuario AS user, SUM(d.total) AS total 
+    	$query = $this->db->query("SELECT c.id_tmp_compra, c.valida, c.f_ingreso, c.h_ingreso, c.estado, c.direccion, c.f_pago, c.t_despacho, c.id_compra, c.f_pago, c.t_factura, c.empresa, c.rut as e_rut, c.giro, c.dir_fact, u.nombre_1, u.apellido_1, u.rut, u.usuario AS user, SUM(d.total) AS total 
     		FROM tmp_compra AS c 
     		INNER JOIN usuarios AS u ON c.id_cliente = u.id_usuario 
     		INNER JOIN tmp_det_compra AS d ON c.id_tmp_compra = d.id_tmp_compra 
@@ -131,9 +131,8 @@ class Operacion_mod extends CI_Controller {
     function eliminar_det_orden($id_tmp_detalle){
     	$this->db->query("DELETE FROM tmp_det_compra WHERE id_tmp_detalle = '{$id_tmp_detalle}'");
     }
-    function actualizar_orden($id_tmp_compra,$despacho, $direccion,$pago,$factura,$name,$rut){
-    	$this->db->query("UPDATE tmp_compra SET t_despacho = '{$despacho}', direccion = '{$direccion}', f_pago = '{$pago}', t_factura = '{$factura}', empresa = '{$name}', rut = '{$rut}' 
-            WHERE id_tmp_compra = '{$id_tmp_compra}'");
+    function actualizar_orden($id_tmp_compra,$despacho, $direccion,$pago,$factura,$name,$rut,$giro,$dir_fact){
+    	$this->db->query("UPDATE tmp_compra SET t_despacho = '{$despacho}', direccion = '{$direccion}', f_pago = '{$pago}', t_factura = '{$factura}', empresa = '{$name}', rut = '{$rut}', giro = '{$giro}', dir_fact = '{$dir_fact}' WHERE id_tmp_compra = '{$id_tmp_compra}'");
     }
     function id_usuario($usuario){
         $query = $this->db->query("SELECT id_usuario FROM usuarios WHERE usuario = '{$usuario}'"); 
@@ -172,8 +171,7 @@ class Operacion_mod extends CI_Controller {
         return $randomString;
     }
     function info_reloj($id_tmp_compra){
-        $query = $this->db->query("SELECT u.usuario, u.rut, u.correo, u.nombre_1, u.nombre_2, u.apellido_1, u.apellido_2, 
-            p.marca, p.modelo, e.rut AS rut_empresa, e.direccion, e.giro, e.empresa, d.cantidad 
+        $query = $this->db->query("SELECT u.usuario, u.rut, u.correo, u.nombre_1, u.nombre_2, u.apellido_1, u.apellido_2, p.marca, p.modelo, e.rut AS rut_empresa, e.direccion, e.giro, e.empresa, d.cantidad 
             FROM tmp_compra AS c 
             INNER JOIN usuarios AS u ON c.id_cliente = u.id_usuario 
             INNER JOIN empresa AS e ON u.id_empresa = e.id_empresa 
@@ -281,16 +279,16 @@ class Operacion_mod extends CI_Controller {
             $this->db->query("UPDATE tmp_compra SET estado = '1' WHERE id_compra = '{$id_compra}'");
         }
     }
-    function registrar_compra($usuario,$pago,$total,$compras,$despacho,$direccion,$factura,$empresa,$rut,$tipo){
+    function registrar_compra($usuario,$pago,$total,$compras,$despacho,$direccion,$factura,$empresa,$rut,$giro,$dir_fact,$tipo){
         $this->db->query("INSERT INTO compra 
-            (tipo_pago,usuario,f_compra,h_compra,despacho,direccion,factura,empresa,rut,total) VALUES 
-            ('{$pago}','{$usuario}',CURDATE(),CURTIME(),'{$despacho}','{$direccion}','{$factura}','{$empresa}','{$rut}','{$total}')");
+            (tipo_pago,usuario,f_compra,h_compra,despacho,direccion,factura,empresa,rut,giro,dir_fact,total) VALUES 
+            ('{$pago}','{$usuario}',CURDATE(),CURTIME(),'{$despacho}','{$direccion}','{$factura}','{$empresa}','{$rut}','{$giro}','{$dir_fact}','{$total}')");
         $id_compra = $this->db->insert_id();
         $this->actualiza_tmp_compra($id_compra,$pago,$compras,$despacho,$direccion,$tipo);
         return $id_compra;
     }
-    function actualizar_compra($id_compra,$pago,$total,$compras,$despacho,$direccion,$factura,$empresa,$rut,$tipo){
-        $this->db->query("UPDATE compra SET tipo_pago = '{$pago}', despacho = '{$despacho}', direccion = '{$direccion}', factura = '{$factura}', empresa = '{$empresa}', rut = '{$rut}', total = '{$total}' 
+    function actualizar_compra($id_compra,$pago,$total,$compras,$despacho,$direccion,$factura,$empresa,$rut,$giro,$dir_fact,$tipo){
+        $this->db->query("UPDATE compra SET tipo_pago = '{$pago}', despacho = '{$despacho}', direccion = '{$direccion}', factura = '{$factura}', empresa = '{$empresa}', rut = '{$rut}', giro = '{$giro}', dir_fact = '{$dir_fact}', total = '{$total}' 
             WHERE id_compra = '{$id_compra}'");        
         $this->actualiza_tmp_compra($id_compra,$pago,$compras,$despacho,$direccion,$tipo);
     }

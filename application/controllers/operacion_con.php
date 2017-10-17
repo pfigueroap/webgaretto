@@ -107,12 +107,16 @@ class Operacion_con extends CI_Controller {
         if($data['factura'] == 'otro'){
             $data['name_fact'] = $this->input->post('name_fact');
             $data['rut_fact'] = $this->input->post('rut_fact');
+            $data['giro_fact'] = $this->input->post('giro_fact');
+            $data['dir_fact'] = $this->input->post('dir_fact');
         }elseif($data['factura'] == 'empresa'){
             $data['name_fact'] = $info['empresa'];
             $data['rut_fact'] = $info['rut'];
+            $data['giro_fact'] = $info['giro'];
+            $data['dir_fact'] = $info['dir_laboral'];
         }elseif($data['factura'] == 'boleta'){
-            $data['name_fact'] = '';
-            $data['rut_fact'] = '';
+            $data['name_fact'] = '';$data['rut_fact'] = '';
+            $data['giro_fact'] = '';$data['dir_fact'] = '';
         }
         #Pago
         $data['pago'] = $this->input->post('t_pago');
@@ -122,9 +126,9 @@ class Operacion_con extends CI_Controller {
             $id_tmp_compra = $data['compras'][0]->id_tmp_compra;
             if($data['compras'][0]->id_compra != '0'){
                 $data['id_compra'] = $data['compras'][0]->id_compra;
-                $this->operacion_mod->actualizar_compra($data['id_compra'],$data['pago'],$data['total'],$data['compras'],$data['despacho'],$data['direccion'],$data['factura'],$data['name_fact'],$data['rut_fact'],$tipo);
+                $this->operacion_mod->actualizar_compra($data['id_compra'],$data['pago'],$data['total'],$data['compras'],$data['despacho'],$data['direccion'],$data['factura'],$data['name_fact'],$data['rut_fact'],$data['giro_fact'],$data['dir_fact'],$tipo);
             }else{
-                $data['id_compra'] = $this->operacion_mod->registrar_compra($data['usuario'],$data['pago'],$data['total'],$data['compras'],$data['despacho'],$data['direccion'],$data['factura'],$data['name_fact'],$data['rut_fact'],$tipo);
+                $data['id_compra'] = $this->operacion_mod->registrar_compra($data['usuario'],$data['pago'],$data['total'],$data['compras'],$data['despacho'],$data['direccion'],$data['factura'],$data['name_fact'],$data['rut_fact'],$data['giro_fact'],$data['dir_fact'],$tipo);
             }
             if($data['pago'] == 'webpay'){
                 $this->operacion_mod->pago($data['total'],$data['id_compra'],site_url("operacion_con/tbk_retorno"),site_url("operacion_con/comprobante/".$id_tmp_compra));
@@ -245,9 +249,11 @@ class Operacion_con extends CI_Controller {
         if($factura == 'otro'){
             $name = $this->input->post('name_fact');
             $rut = $this->input->post('rut_fact');
+            $giro = $this->input->post('giro_fact');
+            $dir_fact = $this->input->post('dir_fact');
         }
         $pago = $this->input->post('t_pago');
-        $this->operacion_mod->actualizar_orden($id_tmp_compra,$despacho,$direccion,$pago,$factura,$name,$rut);
+        $this->operacion_mod->actualizar_orden($id_tmp_compra,$despacho,$direccion,$pago,$factura,$name,$rut,$giro,$dir_fact);
         $this->det_orden($id_tmp_compra,$clase,'0');
     }
     #Crear orden

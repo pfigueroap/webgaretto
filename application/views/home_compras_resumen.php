@@ -70,19 +70,25 @@
                                     </thead>
                                     <tbody id="myTable">
                                         <tr>
-                                            <td style="text-align: center; width:100px;height:64px;"><input name="t_fact" value="boleta" type="radio" style="height:20px; width:20px; vertical-align: middle;" required></td>
+                                            <td style="text-align: center; width:100px;"><input name="t_fact" value="boleta" type="radio" style="height:20px; width:20px; vertical-align: middle;" required></td>
                                             <td>Boleta</td><td></td><td></td>
                                         </tr>
                                         <tr>
-                                            <td style="text-align: center; width:100px;height:64px;"><input name="t_fact" value="empresa" type="radio" style="height:20px; width:20px; vertical-align: middle;" required></td>
+                                            <td style="text-align: center; width:100px;"><input name="t_fact" value="empresa" type="radio" style="height:20px; width:20px; vertical-align: middle;" required></td>
                                             <td>Factura Empresa</td>
                                             <td><?php echo $info['empresa'];?></td><td><?php echo $info['rut'];?></td>
                                         </tr>
                                         <tr>
-                                            <td style="text-align: center; width:100px;height:64px;"><input name="t_fact" value="otro" type="radio" style="height:20px; width:20px; vertical-align: middle;" required></td>
+                                            <td style="text-align: center; width:100px;"><input name="t_fact" value="otro" type="radio" style="height:20px; width:20px; vertical-align: middle;" required></td>
                                             <td>Factura</td>
                                             <td><input name="name_fact" id="name_fact" type="text" style="width:150px;border: none;border-bottom: 1px solid;" placeholder="Empresa"></td>
                                             <td><input name="rut_fact" id="rut_fact" type="text" style="width:150px;border: none;border-bottom: 1px solid;" placeholder="Rut"></td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                            <td><input name="giro_fact" id="giro_fact" type="text" style="width:150px;border: none;border-bottom: 1px solid;" placeholder="Giro"></td>
+                                            <td><input name="dir_fact" id="dir_fact" type="text" style="width:150px;border: none;border-bottom: 1px solid;" placeholder="Dirección"></td>
                                         </tr>
                                     </tbody>
                                 </table>
