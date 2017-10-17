@@ -165,7 +165,6 @@ class Operacion_con extends CI_Controller {
     }
     #Comprobante
     function data_comprobante($id_tmp_compra){
-        $data = $this->valida();
         $data['id_tmp_compra'] = $id_tmp_compra; 
         $orden = $this->operacion_mod->orden($id_tmp_compra);
         foreach ($orden as $key => $value)
