@@ -215,7 +215,7 @@ class Operacion_con extends CI_Controller {
         $data = $this->valida();
         $data['estado'] = $estado;
         $data['orden'] = $this->operacion_mod->orden($id_tmp_compra);
-        $data['info'] = $this->operacion_mod->info($data['orden']['usuario']);
+        $data['info'] = $this->operacion_mod->info($data['orden']['user']);
         $data['registros'] = $this->operacion_mod->detalle_registro($id_tmp_compra);
         $data['page'] = 'home_orden';
         $data['clase'] = $clase;
