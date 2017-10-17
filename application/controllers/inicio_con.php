@@ -54,7 +54,7 @@ class Inicio_con extends CI_Controller {
         }else redirect('/inicio_con/descripcion/'.$id_producto, 'refresh');
     }
     function tbk(){
-        $cabecera = array('nombre','cantidad','id_producto','rut','correo','direccion','tipo_fac');
+        $cabecera = array('nombre','cantidad','id_producto','rut','correo','direccion','telefono','tipo_fac');
         $contenido = array();
         foreach ($cabecera as $post)
             array_push($contenido, "'".$this->input->post($post)."'");
