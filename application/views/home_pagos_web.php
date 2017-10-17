@@ -30,8 +30,8 @@
                                 <?php foreach ($registros as $registro) { ?>
                                 <tr>
                                     <?php  if($registro->tipo_fac == 'factura'){ ?>
-                                    <td><?php echo $registro->nombre; ?></td>
-                                    <td><?php echo $registro->rut; ?></td>
+                                    <td><?php echo $registro->empresa; ?></td>
+                                    <td><?php echo $registro->e_rut; ?></td>
                                     <?php }else{ ?>
                                     <td><?php echo $registro->nombre; ?></td>
                                     <td><?php echo $registro->rut; ?></td>
