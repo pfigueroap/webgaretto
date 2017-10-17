@@ -95,8 +95,20 @@
                             <tr><td>Email comprador</td><td>:</td><td><?php echo $comprobante['correo'];?></td></tr>
                             <tr><td>Dirección despacho</td><td>:</td>
                                 <td><?php echo $comprobante['direccion'];?></td></tr>
+                            <tr><td>Teléfono</td><td>:</td>
+                                <td><?php echo $comprobante['telefono'];?></td></tr>
                             <tr><td>Tipo de facturación</td><td>:</td>
                                 <td><?php echo $comprobante['tipo_fac'];?></td></tr>
+                            <?php if($comprobante['tipo_fac'] == 'factura'){ ?>
+                            <tr><td>Razón Social</td><td>:</td>
+                                <td><?php echo $comprobante['empresa'];?></td></tr>
+                            <tr><td>Rut Empresa</td><td>:</td>
+                                <td><?php echo $comprobante['e_rut'];?></td></tr>
+                            <tr><td>Giro Empresa</td><td>:</td>
+                                <td><?php echo $comprobante['e_giro'];?></td></tr>
+                            <tr><td>Dirección Empresa</td><td>:</td>
+                                <td><?php echo $comprobante['e_dir'];?></td></tr>
+                            <?php } ?>
                         </table>
                         </p>
                         <img src="<?php echo base_url(); ?>application/images/webpay_exito.jpg" style="max-width: 600px; max-height: 400px" />
