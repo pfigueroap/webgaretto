@@ -250,7 +250,7 @@ class Operacion_mod extends CI_Controller {
             $this->db->query("UPDATE tmp_compra SET estado = '2', valida = '1' 
                 WHERE id_compra = '{$buyOrder}'");
             $id_tmp_compra = $this->id_tmp_compra($result->buyOrder);
-            $this->activar_reloj($id_tmp_compra);
+            //$this->activar_reloj($id_tmp_compra);
         }
     }
     function id_tmp_compra($id_compra){
