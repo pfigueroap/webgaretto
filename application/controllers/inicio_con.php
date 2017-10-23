@@ -24,8 +24,6 @@ class Inicio_con extends CI_Controller {
             $data['productos'] = $this->inicio_mod->productos();
             $data['stock'] = $this->inicio_mod->stock();
             $data['page'] = 'home_cont';
-            #echo "<PRE>";
-            #var_dump($data);
             $this->load->view('home',$data);
         }
     }
@@ -162,6 +160,8 @@ class Inicio_con extends CI_Controller {
         if(empty($data['usuario'])){
             $this->load->view('login');
         }else{
+            $data['productos'] = $this->inicio_mod->productos();
+            $data['stock'] = $this->inicio_mod->stock();
             $data['page'] = 'home_cont';
             $this->load->view('home',$data);
         }
@@ -171,6 +171,8 @@ class Inicio_con extends CI_Controller {
         $clave = $this->input->post('password');
         $data['tipo'] = $this->inicio_mod->valida_user($data['usuario'],$clave);
         if(in_array($data['tipo'], array('1','2'))){
+            $data['productos'] = $this->inicio_mod->productos();
+            $data['stock'] = $this->inicio_mod->stock();
             $data['page'] = 'home_cont';
             $this->load->view('home',$data);
         }else $this->load->view('login');
