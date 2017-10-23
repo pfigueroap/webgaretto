@@ -40,6 +40,11 @@
                         <li><a href="<?php echo site_url("operacion_con/index/4"); ?>">Regalo</a></li>
                     </ul>
                 </li>
+                <li>
+                    <a href="<?php echo site_url("activa_con/index"); ?>">
+                        <p>Activación</p>
+                    </a>
+                </li>
                 <?php } ?>
             </ul>
         </div>

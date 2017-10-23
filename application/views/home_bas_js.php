@@ -62,7 +62,7 @@
 </script>
 <?php }?>
 
-<?php if(in_array($page, array('home_user','home_historial','home_producto','home_compras','home_resumen','home_pagos_web','home_rent_client'))){?>
+<?php if(in_array($page, array('home_user','home_historial','home_producto','home_compras','home_resumen','home_pagos_web','home_rent_client','home_activa'))){?>
 <script src="<?php echo base_url(); ?>application/js/buscar.js"></script>
 <?php }elseif ($page == 'home_usuario') {?>
 <script>
