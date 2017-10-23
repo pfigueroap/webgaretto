@@ -21,7 +21,11 @@ class Inicio_con extends CI_Controller {
     function index(){
         $data = $this->valida();
         if(!empty($data)){
+            $data['productos'] = $this->inicio_mod->productos();
+            $data['stock'] = $this->inicio_mod->stock();
             $data['page'] = 'home_cont';
+            #echo "<PRE>";
+            #var_dump($data);
             $this->load->view('home',$data);
         }
     }
