@@ -88,8 +88,6 @@
                                 <td><input type="text" name="rut" style="width:200px" required></td></tr>
                                 <tr><td>Email</td><td>:</td>
                                 <td><input type="email" name="correo" style="width:200px" required></td></tr>
-                                <tr><td>Dirección despacho</td><td>:</td>
-                                <td><input type="text" name="direccion" style="width:200px" required></td></tr>
                                 <tr><td>Teléfono</td><td>:</td>
                                 <td><input type="number" name="telefono" style="width:200px" required></td></tr>
                             </table>
@@ -114,7 +112,7 @@
                         <p class="about-text">
                             <table class="table table-hover">
                                 <tr><td style="width:150px">Dirección destino</td><td style="width:20px">:</td>
-                                <td><input type="text" name="dir_dest" style="width:200px"></td></tr>
+                                <td><input type="text" name="direccion" style="width:200px"></td></tr>
                             </table>
                         </p>
                         <h1 class="about-title">Datos de Facturación</h1>

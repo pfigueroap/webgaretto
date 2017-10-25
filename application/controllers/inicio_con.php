@@ -56,7 +56,7 @@ class Inicio_con extends CI_Controller {
         }else redirect('/inicio_con/descripcion/'.$id_producto, 'refresh');
     }
     function tbk(){
-        $cabecera = array('nombre','cantidad','id_producto','rut','correo','direccion','telefono','tipo_fac','tipo_desp');
+        $cabecera = array('nombre','cantidad','id_producto','rut','correo','telefono','tipo_fac','tipo_desp');
         $contenido = array();
         foreach ($cabecera as $post)
             array_push($contenido, "'".$this->input->post($post)."'");
@@ -67,8 +67,8 @@ class Inicio_con extends CI_Controller {
             }
         }
         if($this->input->post('tipo_desp') == 'despacho'){
-            array_push($cabecera, 'dir_dest');
-            array_push($contenido, "'".$this->input->post('dir_dest')."'");
+            array_push($cabecera, 'direccion');
+            array_push($contenido, "'".$this->input->post('direccion')."'");
         }
         array_push($cabecera, 'f_ingreso');
         array_push($contenido, "'".date("Y-m-d")."'");
