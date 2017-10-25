@@ -93,10 +93,14 @@
                             <tr><td>Nombre Comprador</td><td>:</td><td><?php echo $comprobante['nombre'];?></td></tr>
                             <tr><td>Rut Comprador</td><td>:</td><td><?php echo $comprobante['rut'];?></td></tr>
                             <tr><td>Email comprador</td><td>:</td><td><?php echo $comprobante['correo'];?></td></tr>
-                            <tr><td>Dirección despacho</td><td>:</td>
-                                <td><?php echo $comprobante['direccion'];?></td></tr>
                             <tr><td>Teléfono</td><td>:</td>
                                 <td><?php echo $comprobante['telefono'];?></td></tr>
+                            <tr><td>Tipo de Despacho</td><td>:</td>
+                                <td><?php echo $comprobante['tipo_desp'];?></td></tr>
+                            <?php if($comprobante['tipo_desp'] == 'despacho'){ ?>
+                            <tr><td>Dirección despacho</td><td>:</td>
+                                <td><?php echo $comprobante['direccion'];?></td></tr>
+                            <?php } ?>
                             <tr><td>Tipo de facturación</td><td>:</td>
                                 <td><?php echo $comprobante['tipo_fac'];?></td></tr>
                             <?php if($comprobante['tipo_fac'] == 'factura'){ ?>
