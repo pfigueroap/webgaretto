@@ -31,8 +31,8 @@ th, td {
                 elseif($estado == '6') echo "Información de Transacción Validada";
             }else{ ?>
     	<?php 	if($pago == 'transferencia') echo "Información de compra - Transferencia Bancaria";
-    			elseif($pago == 'webpay' and $validador == '1') echo "Información de Compra Exitosa";
-    			elseif($pago == 'webpay' and $validador == '0') echo "Información de Compra Rechazada";
+    			elseif($pago == 'webpay' and $valida == '1') echo "Información de Compra Exitosa";
+    			elseif($pago == 'webpay' and $valida == '0') echo "Información de Compra Rechazada";
     		} ?>
     </h3>
     <table>
@@ -44,8 +44,8 @@ th, td {
         </tr>
         <tr>
             <td><?php echo $id_compra;?></td>
-            <td><?php echo $usuario;?></td>
-            <td><?php echo $total;?></td>
+            <td><?php echo $user;?></td>
+            <td><?php echo number_format($total,0,",",".");?></td>
             <td>CLP</td>
         </tr>
         <tr>
@@ -60,9 +60,9 @@ th, td {
             <td><?php echo $despacho;?></td>
             <td><?php echo $direccion;?></td>
         </tr>
-        <?php if($pago == 'webpay' and $validador == '0'){ ?>
+        <?php if($pago == 'webpay' and $valida == '0'){ ?>
         <tr><th colspan="4" style="background: LightGray;">La compra a sido declinada, por favor validar con su banco el origen del problema.</th></tr>
-        <?php }elseif($pago == 'transferencia'){?>
+        <?php }elseif($pago == 'transferencia' and $valida == '0'){?>
         <tr><th colspan="4" style="background: LightGray;">Está compra aún no se encuentra validada, una vez realizada la tansferencia a la cuenta señala a continuación, informando el ID de compra en el asunto, se procederá al despacho del producto.</th></tr>
         <tr>
             <th>Banco/Tipo de Cuenta</th>
@@ -104,5 +104,27 @@ th, td {
         </tr>
         <?php } ?>
     </table>
+    <?php if($valida == '1'){?>
+    <br><hr>
+    <h3>Voucher</h3>
+    <table>        
+        <tr>
+            <th>ID Compra</th>
+            <th>Monto Total</th>
+            <th>Tipo Pago</th>
+            <th>Fecha - Hora</th>
+            <th>Facturación</th>
+            <th>Validado</th>
+        </tr>
+        <tr>
+            <td><?php echo $id_compra; ?></td>
+            <td><?php echo number_format($total,0,",",".");?> CLP</td>
+            <td><?php echo $pago;?></td>
+            <td><?php echo $orden_compra['f_compra'].' - '.$orden_compra['h_compra'];?></td>
+            <td><?php echo $orden_compra['factura'];?></td>
+            <td>Si</td>
+        </tr>
+    </table>
+    <?php } ?>
 </div>
 	

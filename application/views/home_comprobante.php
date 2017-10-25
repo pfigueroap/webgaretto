@@ -117,19 +117,51 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="col-md-12 text-right">
-                        <?php if($clase == 'historial'){ ?>
-                        <a href="<?php echo site_url("historial_con/index"); ?>" class="btn btn-default btn-xs" style="background: #af1416;"><i class="fa fa-reply"></i> Volver </a>
-                        <?php }elseif($clase == 'ordenes'){ ?>
-                        <a href="<?php echo site_url("operacion_con/ordenes"); ?>" class="btn btn-default btn-xs" style="background: #af1416;"><i class="fa fa-reply"></i> Volver </a>
-                        <?php }elseif($clase == 'arriendo'){ ?>
-                        <a href="<?php echo site_url("operacion_con/arriendos"); ?>" class="btn btn-default btn-xs" style="background: #af1416;"><i class="fa fa-reply"></i> Volver </a>
-                        <?php } ?>
-                        <?php if($valida == '1'){?>
-                        <a href="<?php echo site_url("operacion_con/down_comprobante/".$id_tmp_compra); ?>" target="_blank" class="btn btn-primary btn-xs" style="background: #af1416;     box-shadow:none;" > <i class="fa fa-file-pdf-o"></i> Descargar Comprobante</a>
-                        <button onclick="window.print();" class="btn btn-primary btn-xs" style="background: #af1416;     box-shadow:none;" > <i class="fa fa-print"></i> Imprimir Comprobante</button>
-                        <?php } ?>
+                </div>
+                <?php if($valida == '1'){?>
+                <hr>
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="title">Voucher</h3>
                     </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>ID Compra</th>
+                                    <th>Monto Total</th>
+                                    <th>Tipo Pago</th>
+                                    <th>Fecha - Hora</th>
+                                    <th>Facturación</th>
+                                    <th>Validado</th>
+                                </tr>
+                            </thead>
+                            <tbody id="myTable">
+                                <tr>
+                                    <td><?php echo $id_compra; ?></td>
+                                    <td><?php echo number_format($total,0,",",".");?> CLP</td>
+                                    <td><?php echo $pago;?></td>
+                                    <td><?php echo $orden_compra['f_compra'].' - '.$orden_compra['h_compra'];?></td>
+                                    <td><?php echo $orden_compra['factura'];?></td>
+                                    <td><img src="<?php echo base_url(); ?>application/images/check.png" style="width: 30px;" /></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <?php } ?>
+                <div class="col-md-12 text-right">
+                    <?php if($clase == 'historial'){ ?>
+                    <a href="<?php echo site_url("historial_con/index"); ?>" class="btn btn-default btn-xs" style="background: #af1416;"><i class="fa fa-reply"></i> Volver </a>
+                    <?php }elseif($clase == 'ordenes'){ ?>
+                    <a href="<?php echo site_url("operacion_con/ordenes"); ?>" class="btn btn-default btn-xs" style="background: #af1416;"><i class="fa fa-reply"></i> Volver </a>
+                    <?php }elseif($clase == 'arriendo'){ ?>
+                    <a href="<?php echo site_url("operacion_con/arriendos"); ?>" class="btn btn-default btn-xs" style="background: #af1416;"><i class="fa fa-reply"></i> Volver </a>
+                    <?php } ?>
+                    <?php if($valida == '1'){?>
+                    <a href="<?php echo site_url("operacion_con/down_comprobante/".$id_tmp_compra); ?>" target="_blank" class="btn btn-primary btn-xs" style="background: #af1416;     box-shadow:none;" > <i class="fa fa-file-pdf-o"></i> Descargar Comprobante</a>
+                    <button onclick="window.print();" class="btn btn-primary btn-xs" style="background: #af1416;     box-shadow:none;" > <i class="fa fa-print"></i> Imprimir Comprobante</button>
+                    <?php } ?>
                 </div>
             </div>
         </div>

@@ -180,6 +180,11 @@ class Operacion_con extends CI_Controller {
     function comprobante(){
         $id_tmp_compra = $this->uri->segment(3);
         $data = $this->data_comprobante($id_tmp_compra);
+        $data['usuario'] = $this->session->userdata('usuario');
+        $data['tipo'] = $this->session->userdata('tipo');
+        $data['monedas'] = $this->operacion_mod->variable('moneda');
+        foreach ($data['monedas'] as $moneda)
+            $data['arr_mnd'][$moneda->id_moneda] = $moneda->moneda;
         $data['clase'] = $this->uri->segment(4);
         $this->load->view('home',$data);
     }
