@@ -94,6 +94,29 @@
                                 <td><input type="number" name="telefono" style="width:200px" required></td></tr>
                             </table>
                         </p>
+                        <h1 class="about-title">Despacho de Productos</h1>
+                        <p class="about-text">
+                            <table class="table table-hover">
+                                <tr>
+                                    <td style="text-align: center; width:50px;">
+                                        <input type = "radio" name = "tipo_desp" value = "retiro" required>
+                                    </td>
+                                    <td style="width:100px">Retiro en Local</td>
+                                    <td style="text-align: center; width:50px;">
+                                        <input type = "radio" name = "tipo_desp" value = "despacho" required>
+                                    </td>
+                                    <td style="width:100px">Despacho</td>
+                                </tr>
+                            </table>
+                        </p>
+                        <p class="about-text">Retiro en local: Nueva York 47, Santiago</p>
+                        <p class="about-text">En caso de Despacho:</p>
+                        <p class="about-text">
+                            <table class="table table-hover">
+                                <tr><td style="width:150px">Dirección destino</td><td style="width:20px">:</td>
+                                <td><input type="text" name="dir_dest" style="width:200px"></td></tr>
+                            </table>
+                        </p>
                         <h1 class="about-title">Datos de Facturación</h1>
                         <p class="about-text">
                             <table class="table table-hover">
@@ -120,6 +143,8 @@
                                 <td><input type="text" name="e_giro" style="width:200px"></td></tr>
                                 <tr><td>Dirección</td><td>:</td>
                                 <td><input type="text" name="e_dir" style="width:200px"></td></tr>
+                                <tr><td>Email Empresa</td><td>:</td>
+                                <td><input type="email" name="e_correo" style="width:200px"></td></tr>
                             </table>
                         </p>
                         <div class="well carousel-search hidden-sm">

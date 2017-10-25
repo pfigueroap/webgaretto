@@ -56,15 +56,19 @@ class Inicio_con extends CI_Controller {
         }else redirect('/inicio_con/descripcion/'.$id_producto, 'refresh');
     }
     function tbk(){
-        $cabecera = array('nombre','cantidad','id_producto','rut','correo','direccion','telefono','tipo_fac');
+        $cabecera = array('nombre','cantidad','id_producto','rut','correo','direccion','telefono','tipo_fac','tipo_desp');
         $contenido = array();
         foreach ($cabecera as $post)
             array_push($contenido, "'".$this->input->post($post)."'");
         if($this->input->post('tipo_fac') == 'factura'){
-            foreach(array('empresa','e_rut','e_giro','e_dir') as $post){
+            foreach(array('empresa','e_rut','e_giro','e_dir','e_correo') as $post){
                 array_push($cabecera, $post);
                 array_push($contenido, "'".$this->input->post($post)."'");
             }
+        }
+        if($this->input->post('tipo_desp') == 'despacho'){
+            array_push($cabecera, 'dir_dest');
+            array_push($contenido, "'".$this->input->post('dir_dest')."'");
         }
         array_push($cabecera, 'f_ingreso');
         array_push($contenido, "'".date("Y-m-d")."'");
