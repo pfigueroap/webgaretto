@@ -88,6 +88,8 @@
                             <tr><td>Monto</td><td>:</td>
                             <td><?php echo number_format($comprobante['amount'],0,",",".");?> CLP</td></tr>
                             <tr><td>Orden de compra</td><td>:</td><td><?php echo $comprobante['id_web'];?></td></tr>
+                            <tr><td>Código Autorización tbk</td><td>:</td>
+                                <td><?php echo $comprobante['authorizationCode'];?></td></tr>
                             <tr><td>Fecha y hora transacción</td><td>:</td>
                                 <td><?php echo $comprobante['transactionDate'];?></td></tr>
                             <tr><td>Nombre Comprador</td><td>:</td><td><?php echo $comprobante['nombre'];?></td></tr>
@@ -115,9 +117,39 @@
                             <?php } ?>
                         </table>
                         </p>
-                        <img src="<?php echo base_url(); ?>application/images/webpay_exito.jpg" style="max-width: 600px; max-height: 400px" />
+                        <hr/>
+                        <div class="row">
+                            <table>
+                                <tr>
+                                    <td style = "width: 600px;">
+                                        <table>
+                                            <tr>
+                                                <td style="width: 200px;">Orden de compra</td><td style="width: 10px">:</td>
+                                                <td><?php echo $comprobante['id_web'];?></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Fecha Voucher</td><td>:</td>
+                                                <td><?php echo $comprobante['transactionDate'];?></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Monto Total</td><td>:</td>
+                                                <td><?php echo number_format($comprobante['amount'],0,",",".");?> CLP</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Código Autorización tbk</td><td>:</td>
+                                                <td><?php echo $comprobante['authorizationCode'];?></td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td style = "width: 300px;">
+                                        <img src="<?php echo base_url(); ?>application/images/webpay_exito.jpg" style="max-width: 150px; max-height: 100px" />
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <br>
+                        <button onclick="window.print();" class="btn btn-primary btn-xs" style="background: #af1416;     box-shadow:none;" > <i class="fa fa-print"></i> Imprimir Comprobante</button>
                         <?php }?>
-                        <!--h1 class="about-title">Datos de Facturación</h1-->
                     </div>
                 </div>
             </div>
