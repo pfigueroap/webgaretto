@@ -36,7 +36,7 @@
                                     </thead>
                                     <thead>
                                         <tr>
-                                            <td><div class="form-group"><div><input name="cod_prod" type="number" class="form-control input-sm" 
+                                            <td><div class="form-group"><div><input name="cod_prod" type="text" class="form-control input-sm" 
                                                 <?php if($clase == 'crear'){?> placeholder="Código Producto"
                                                 <?php }elseif($clase == 'editar'){?> value="<?php echo $prod_edit['cod_prod'];}?>" required></div></div></td>
                                             <td><div class="form-group"><div><input name="producto" type="text" class="form-control input-sm"
