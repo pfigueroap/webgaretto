@@ -391,6 +391,8 @@ class Operacion_con extends CI_Controller {
         $buy_order = $this->uri->segment(3);
         $data = $this->valida();
         $data['periodo'] = $this->operacion_mod->periodo_arr($buy_order);
+        #echo "<PRE>";
+        var_dump($data);
         $data['arriendo'] = $this->operacion_mod->detalle_arriendo($data['periodo']['id_arriendo']);
         $data['page'] = 'home_det_arr_com';
         $this->load->view('home',$data);

@@ -406,7 +406,7 @@ class Operacion_mod extends CI_Controller {
     function periodo_arr($buy_order){
         $query = $this->db->query("SELECT * FROM registro_arriendo WHERE $buy_order = '{$buy_order}'");
         $result = $query->result();
-        $perido = (array) $result[0];
+        $periodo = (array) $result[0];
         return $periodo;
     }
 }
