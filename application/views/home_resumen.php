@@ -30,6 +30,7 @@
                             </thead>
                             <tbody id="myTable">
                                 <?php foreach ($registros as $registro) { ?>
+                                <?php if($registro->estado != '4') { ?>
                                 <tr>
                                     <?php if($registro->factura == 'empresa' or $registro->factura == 'otro'){ ?>
                                     <td><?php echo $registro->empresa; ?></td>
@@ -74,6 +75,7 @@
                                         <?php } ?>
                                     </td>
                                 </tr>
+                                <?php } ?>
                                 <?php } ?>
                             </tbody>
                             <tbody>

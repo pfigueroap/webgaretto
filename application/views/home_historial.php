@@ -31,6 +31,7 @@
                             </thead>
                             <tbody id="myTable">
                                 <?php foreach ($registros as $registro) { ?>
+                                <?php if($registro->estado != '4'){?>
                                 <tr>
                                     <?php if($registro->nombre_1 == ''){ ?>
                                     <td><?php echo $info['nombre_1']." ".$info['apellido_1']; ?></td>
@@ -76,6 +77,7 @@
                                         <?php } ?>
                                     </td>
                                 </tr>
+                                <?php } ?>
                                 <?php } ?>
                             </tbody>
                             <tbody>

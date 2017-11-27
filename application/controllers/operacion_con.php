@@ -284,30 +284,6 @@ class Operacion_con extends CI_Controller {
         }elseif($tipo == 'venta') $this->index_run('2');
         elseif($tipo == 'regalo') $this->index_run('4');
     }
-    #Crear orden arriendo
-    function crear_arriendo(){
-        $posts = array('f_inicio','per_gracia','cant_trab');
-        foreach ($posts as $post)
-            $arriendo[$post] = $this->input->post($post);
-        if($arriendo['cant_trab'] <= 100) $factor = 0.03;
-        elseif($arriendo['cant_trab'] > 100 and $arriendo['cant_trab'] <= 200) $factor = 0.026;
-        elseif($arriendo['cant_trab'] > 200 and $arriendo['cant_trab'] <= 500) $factor = 0.023;
-        elseif($arriendo['cant_trab'] > 500) $factor = 0.02;
-        $arriendo['costo_mensual'] = $arriendo['cant_trab'] * $factor;
-        $arriendo['id_moneda'] = '3';
-        $productos = $this->formulario();
-        if(count($productos) > 0){
-            $id_cliente = $this->input->post('id_cliente');
-            $id_tmp_compra = $this->operacion_mod->crear_registro($productos,'4',$id_cliente);
-            $this->operacion_mod->registra_arriendo($id_cliente,$id_tmp_compra,$arriendo);
-            $correo = $this->operacion_mod->correo($id_cliente);
-            $asunto = 'Solicitud de arriendo';
-            $mensaje = 'Se ha generado en nuestro sistema Garetto una nueva solicitud de arriendo de productos, por favor valide la compra en el sistema, para enviar los productos solicitados.';
-            $this->enviar_email('contacto@webgaretto.cl',"Equipo Garetto",$correo,$asunto,$mensaje);
-            $this->arriendos();
-            #$this->det_orden($id_tmp_compra,'ordenes','0');
-        }else $this->index_run('3');
-    }
     function enviar_email($email_org,$nombre,$email_des,$asunto,$mensaje){
         $config['mailtype'] = 'html';
         $this->email->initialize($config);
@@ -358,6 +334,29 @@ class Operacion_con extends CI_Controller {
             $data['clave'] = $clave;
             $this->load->view('validacion',$data);
         }else redirect('/inicio_con/index/', 'refresh');
+    }
+    #Crear orden arriendo
+    function crear_arriendo(){
+        $posts = array('f_inicio','per_gracia','cant_trab');
+        foreach ($posts as $post)
+            $arriendo[$post] = $this->input->post($post);
+        if($arriendo['cant_trab'] <= 100) $factor = 0.03;
+        elseif($arriendo['cant_trab'] > 100 and $arriendo['cant_trab'] <= 200) $factor = 0.026;
+        elseif($arriendo['cant_trab'] > 200 and $arriendo['cant_trab'] <= 500) $factor = 0.023;
+        elseif($arriendo['cant_trab'] > 500) $factor = 0.02;
+        $arriendo['costo_mensual'] = $arriendo['cant_trab'] * $factor;
+        $arriendo['id_moneda'] = '3';
+        $productos = $this->formulario();
+        if(count($productos) > 0){
+            $id_cliente = $this->input->post('id_cliente');
+            $id_tmp_compra = $this->operacion_mod->crear_registro($productos,'4',$id_cliente);
+            $this->operacion_mod->registra_arriendo($id_cliente,$id_tmp_compra,$arriendo);
+            $correo = $this->operacion_mod->correo($id_cliente);
+            $asunto = 'Solicitud de arriendo';
+            $mensaje = 'Se ha generado en nuestro sistema Garetto una nueva solicitud de arriendo de productos, por favor valide la compra en el sistema, para enviar los productos solicitados.';
+            $this->enviar_email('contacto@webgaretto.cl',"Equipo Garetto",$correo,$asunto,$mensaje);
+            $this->arriendos();
+        }else $this->index_run('3');
     }
     #Arriendo
     function arriendos(){

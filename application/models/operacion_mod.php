@@ -33,7 +33,7 @@ class Operacion_mod extends CI_Controller {
     }
     function crear_registro($registros,$estado,$id_cliente){
     	# $estado [compra temporal: 0], [transferencia por validar: 1], [webpay pagado: 2], [venta temporal: 3], [arriendo: 4], [regalo: 5]
-        if($estado == '5') $valida = '1'; #Validación Regalo
+        if($estado == '5' or $estado == '4') $valida = '1'; #Validación Regalo y Arriendo
         else $valida = '0';
     	$this->db->query("INSERT INTO tmp_compra (usuario,f_ingreso,h_ingreso,estado,id_cliente,valida) 
             VALUES ('{$registros[0]['usuario']}','{$registros[0]['f_ingreso']}','{$registros[0]['h_ingreso']}','{$estado}','{$id_cliente}','{$valida}')");
