@@ -369,10 +369,13 @@ class Operacion_con extends CI_Controller {
     function detalle_arriendo(){
         $id_arriendo = $this->uri->segment(3);
         $data = $this->valida();
+        $data['pago'] = $this->operacion_mod->periodos_pagos($id_arriendo);
         $data['arriendo'] = $this->operacion_mod->detalle_arriendo($id_arriendo);
         $data['periodos'] = $this->operacion_mod->periodo_arriendo($data['arriendo']['f_inicio']);
         $data['page'] = 'home_detalle_arriendo';
-        $this->load->view('home',$data);
+        echo "<PRE>";
+        var_dump($data);
+        #$this->load->view('home',$data);
     }
     function pago_arriendo(){
         $id_arriendo = $this->uri->segment(3);
@@ -382,8 +385,8 @@ class Operacion_con extends CI_Controller {
         $periodos = $this->operacion_mod->periodo_arriendo($arriendo['f_inicio']);
         $total = $arriendo['costo_mensual']*$periodos[$pos]['prc_pago']*26500;
         $buy_order = 1000*$id_arriendo+$id_cuota;
-        echo "<PRE>";
-        var_dump($arriendo);
+        #echo "<PRE>";
+        #var_dump($arriendo);
         $this->operacion_mod->reg_pago_arriendo($total,$buy_order,$arriendo['id_tmp_compra'],$id_arriendo,$periodos[$pos]);
         $this->operacion_mod->pago($total,$buy_order,site_url("operacion_con/tbk_retorno/arriendo"),site_url("operacion_con/comprobante_pago_cuota/".$buy_order));
     }

@@ -409,5 +409,13 @@ class Operacion_mod extends CI_Controller {
         $periodo = (array) $result[0];
         return $periodo;
     }
+    function periodos_pagos($id_arriendo){
+        $pagos = array();
+        $query = $this->db->query("SELECT * FROM registro_arriendo WHERE $id_arriendo = '{$id_arriendo}'");
+        $result = $query->result();
+        foreach ($result as $resp)
+            $pagos[$resp->id_cuota] = (array) $resp;
+        return $pagos;
+    }
 }
 ?>
