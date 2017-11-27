@@ -253,7 +253,7 @@ class Operacion_mod extends CI_Controller {
                 $id_tmp_compra = $this->id_tmp_compra($result->buyOrder);
             }
         }elseif($clase == 'arriendo') {
-            $this->db->query("UPDATE registro_arriendo SET id_tbk = '{$id_tbk}', validador = '{$validador}' WHERE buy_order = '{$buyOrder}'");
+            $this->db->query("UPDATE registro_arriendo SET id_tbk = '{$id_tbk}', valida = '{$validador}' WHERE buy_order = '{$buyOrder}'");
         }
     }
     function id_tmp_compra($id_compra){
