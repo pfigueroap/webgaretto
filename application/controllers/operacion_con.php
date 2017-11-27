@@ -390,8 +390,8 @@ class Operacion_con extends CI_Controller {
     function comprobante_pago_cuota(){
         $buy_order = $this->uri->segment(3);
         $data = $this->valida();
-        $data['registros'] = $this->operacion_mod->arriendos($data['tipo'],$data['usuario']);
         $data['periodo'] = $this->operacion_mod->periodo_arr($buy_order);
+        $data['arriendo'] = $this->operacion_mod->detalle_arriendo($data['periodo']['id_arriendo']);
         $data['page'] = 'home_det_arr_com';
         $this->load->view('home',$data);
     }
