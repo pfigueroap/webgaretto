@@ -385,10 +385,10 @@ class Operacion_con extends CI_Controller {
         $periodos = $this->operacion_mod->periodo_arriendo($arriendo['f_inicio']);
         $total = $arriendo['costo_mensual']*$periodos[$pos]['prc_pago']*26500;
         $buy_order = 1000*$id_arriendo+$id_cuota;
-        #echo "<PRE>";
-        #var_dump($arriendo);
+        echo "<PRE>";
+        var_dump($arriendo);
         $this->operacion_mod->reg_pago_arriendo($total,$buy_order,$arriendo['id_tmp_compra'],$id_arriendo,$periodos[$pos]);
-        $this->operacion_mod->pago($total,$buy_order,site_url("operacion_con/tbk_retorno/arriendo"),site_url("operacion_con/comprobante_pago_cuota/".$buy_order));
+        #$this->operacion_mod->pago($total,$buy_order,site_url("operacion_con/tbk_retorno/arriendo"),site_url("operacion_con/comprobante_pago_cuota/".$buy_order));
     }
     function comprobante_pago_cuota(){
         $buy_order = $this->uri->segment(3);

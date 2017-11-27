@@ -400,6 +400,7 @@ class Operacion_mod extends CI_Controller {
     function reg_pago_arriendo($total,$buy_order,$id_tmp_compra,$id_arriendo,$periodo){
         $query = $this->db->query("SELECT * FROM registro_arriendo WHERE $buy_order = '{$buy_order}'");
         if($query->num_rows == 0){
+            echo "INSERT INTO registro_arriendo (buy_order, id_tmp_compra, id_arriendo ,id_cuota, f_inicio, f_fin, prc_pago, total) VALUES ('{$buy_order}', '{$id_tmp_compra}', '{$id_arriendo}', '{$periodo['id']}', '{$periodo['f_inicio']}', '{$periodo['f_fin']}', '{$periodo['prc_pago']}', '{$total}')";
             $query = $this->db->query("INSERT INTO registro_arriendo (buy_order, id_tmp_compra, id_arriendo ,id_cuota, f_inicio, f_fin, prc_pago, total) VALUES ('{$buy_order}', '{$id_tmp_compra}', '{$id_arriendo}', '{$periodo['id']}', '{$periodo['f_inicio']}', '{$periodo['f_fin']}', '{$periodo['prc_pago']}', '{$total}')");
         }
     }
