@@ -111,6 +111,7 @@ class Inicio_con extends CI_Controller {
         if(empty($token)) $data['compra'] = 'fallida';
         else{ 
             $data['comprobante'] = $this->inicio_mod->comprobante($token);
+            $data['info_comp'] = $this->inicio_mod->info_conf_comp();
             $data['compra'] = 'exito';
         }
         $this->load->view('page_comprobante_web',$data);
@@ -147,16 +148,23 @@ class Inicio_con extends CI_Controller {
     }
     function edit_web(){
         $data = $this->valida();
-        $form = array('titulo','valor','rotar','sec1_tit','sec1_desc','sec1_stit','sec1_det','sec2_tit','sec2_desc','sec2_1_tit',
-            'sec2_1_desc','sec2_2_tit','sec2_2_desc','sec2_3_tit','sec2_3_desc','sec3_tit','sec3_desc','sec4_tit','sec4_desc',
-            'sec4_direc','sec4_comuna','sec4_email','sec4_tel');
+        $tmp = $this->inicio_mod->web();
+        $post_img = array('sec5_1_pimg','sec5_2_pimg','sec5_3_pimg');
+        foreach ($post_img as $img) {
+            $imagen = $this->cargar_imagen('web',$img);
+            if($imagen != '')
+                $info[$img] = $imagen;
+            else
+                $info[$img] = $tmp[$img];
+        }
+        $form = array('titulo','valor','rotar','sec1_tit','sec1_desc','sec1_stit','sec1_det','sec2_tit','sec2_desc','sec2_1_tit','sec2_1_desc','sec2_2_tit','sec2_2_desc','sec2_3_tit','sec2_3_desc','sec3_tit','sec3_desc','sec4_tit','sec4_desc','sec4_direc','sec4_comuna','sec4_email','sec4_tel','sec5_tit','sec5_desc','sec5_1_ptit','sec5_1_pdesc','sec5_1_pcheck','sec5_2_ptit','sec5_2_pdesc','sec5_2_pcheck','sec5_3_ptit','sec5_3_pdesc','sec5_3_pcheck');
         foreach ($form as $post)
             $info[$post] = $this->input->post($post);
         $info['user'] = $data['usuario'];
         $info['fecha'] = date("Y-m-d");
         $info['hora'] = date("H:i:s"); 
         $this->inicio_mod->insert_tab($info,'page');
-        $this->web();
+        redirect('/inicio_con/web/', 'refresh');
     }
     function ingreso(){
         $data['usuario'] = $this->session->userdata('usuario');
@@ -204,12 +212,21 @@ class Inicio_con extends CI_Controller {
         $data = $this->valida();
         $data['page'] = 'home_configuracion';
         $data['correo'] = $this->inicio_mod->correo_valida();
+        $data['info_comp'] = $this->inicio_mod->info_conf_comp();
         if($data['tipo'] == '1') $this->load->view('home',$data);
         else $this->index();
     }
     function conf_correo(){
         $correo = $this->input->post('correo');
         $this->inicio_mod->conf_correo($correo,$this->session->userdata('usuario'));
+        $this->configuracion();
+    }
+    function conf_comprobante(){
+        $nombre = $this->input->post('nombre');
+        $correo = $this->input->post('correo');
+        $telefono = $this->input->post('telefono');
+        $usuario = $this->session->userdata('usuario');
+        $this->inicio_mod->conf_comprobante($nombre,$correo,$telefono,$usuario);
         $this->configuracion();
     }
     function salir(){
@@ -225,17 +242,17 @@ class Inicio_con extends CI_Controller {
         $data['page'] = 'home_usuario';
         $this->load->view('home',$data);
     }
-    function cargar_imagen(){
-        $config['upload_path'] = 'application/images/usuarios/';
+    function cargar_imagen($path,$img){
+        $config['upload_path'] = 'application/images/'.$path.'/';
         $config['allowed_types'] = 'jpg';
         $config['max_size'] = 0;
         $this->upload->initialize($config);
-        if ($this->upload->do_upload('imagen')) $datos = $this->upload->data();
+        if ($this->upload->do_upload($img)) $datos = $this->upload->data();
         return $datos['file_name'];
     }
     function edit_user(){
         $data = $this->valida();
-        $imagen = $this->cargar_imagen();
+        $imagen = $this->cargar_imagen('usuarios','imagen');
         if($imagen != '')
             $info['imagen'] = $imagen;
         $id_usuario = $this->input->post('id_usuario');
@@ -298,24 +315,6 @@ class Inicio_con extends CI_Controller {
         }
         $data['page'] = 'pass';
         $this->load->view('home',$data);
-    }
-    function activar_reloj(){
-        $url = "http://www.relojgaretto.cl/sensores/agregar";  
-        $postData = array(
-            "usuario" => "pablo",
-            "rut_usuario" => "16016083",
-            "email_usuario" => "pfigueroap.plaza@gmail.com", 
-            "clave" => sha1("pablo"),
-            "modelo" => "FGT45",
-            "marca" => "ZKT",
-            "cantidad" => "1");  
-        $handler = curl_init();  
-        curl_setopt($handler, CURLOPT_URL, $url);  
-        curl_setopt($handler, CURLOPT_POST,true);  
-        curl_setopt($handler, CURLOPT_POSTFIELDS, $postData);
-        $response = curl_exec ($handler);  
-        curl_close($handler);
-        echo $response;
     }
     function compras_web(){
         $data = $this->valida();

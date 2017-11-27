@@ -33,9 +33,8 @@
         <link href="<?php echo base_url(); ?>application/css/style.css" rel="stylesheet">
     </head>
     <body>
-        <div id="preloader"></div>
         <!--==========================
-          Portada
+            Portada
         ============================-->
         <section id="hero">
             <div class="hero-container">
@@ -53,7 +52,7 @@
             </div>
         </section>
         <!--==========================
-          Barra Navegación
+            Barra Navegación
         ============================-->
         <header id="header">
             <div class="container">
@@ -76,7 +75,7 @@
             </div>
         </header><!-- #header -->
         <!--==========================
-          Nosotros
+            Nosotros
         ============================-->
         <section id="about">
             <div class="container wow fadeInUp">
@@ -100,7 +99,7 @@
             </div>
         </section>
         <!--==========================
-          Servicios
+            Servicios
         ============================-->
         <section id="services">
             <div class="container wow fadeInUp">
@@ -133,7 +132,7 @@
             </div>
         </section>
         <!--==========================
-          Productos
+            Productos
         ============================-->
         <section id="portfolio">
             <div class="container wow fadeInUp">
@@ -146,7 +145,7 @@
                 </div>
                 <div class="row">
                     <?php foreach ($productos as $producto) { ?>
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <a class="portfolio-item" style="background-image: url(<?php echo base_url(); ?>application/images/productos/<?php echo $producto->imagen;?>);" href="<?php echo site_url("inicio_con/descripcion/".$producto->id_producto); ?>">
                             <div class="details">
                                 <h4><?php echo $producto->producto;?></h4>
@@ -159,7 +158,74 @@
             </div>
         </section>
         <!--==========================
-          Contacto
+            PROMO Section
+        ============================-->
+        <?php 
+        $val_sec_prom = $sec5_1_pcheck + $sec5_2_pcheck + $sec5_3_pcheck;
+        if($val_sec_prom > 0){ ?>
+        <section id="promociones">
+            <div class="container wow fadeInUp">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h3 class="section-title"><?php echo $sec5_tit; ?></h3>
+                        <div class="section-title-divider"></div>
+                        <p class="section-description"><?php echo $sec5_desc; ?></p>
+                        <div id="myCarousel" class="carousel slide" data-ride="carousel">
+                            <!-- Indicators -->
+                            <ol class="carousel-indicators">
+                                <li data-target="#myCarousel" data-slide-to="0" class="active" style="background-color: black; border: black;"></li>
+                                <?php if($val_sec_prom > 1){ ?>
+                                <li data-target="#myCarousel" data-slide-to="1" style="background-color: black"></li>
+                                <?php } ?><?php if($val_sec_prom > 2){ ?>
+                                <li data-target="#myCarousel" data-slide-to="2" style="background-color: black"></li>
+                                <?php } ?>
+                            </ol>
+                            <!-- Wrapper for slides -->
+                            <div class="carousel-inner">
+                                <?php if($sec5_1_pcheck == '1'){ ?>
+                                <div class="item active">
+                                    <img src="<?php echo base_url(); ?>application/images/web/<?php echo $sec5_1_pimg;?>" style="width:50%;text-align: center;">
+                                    <div class="carousel-caption">
+                                        <h2 style="font-style: bold; color: grey; border: black;"><?php echo $sec5_1_ptit; ?></h2>
+                                        <p><?php echo $sec5_1_pdesc; ?></p>
+                                    </div>
+                                </div>
+                                <?php } ?>
+                                <?php if($sec5_2_pcheck == '1'){ ?>
+                                    <?php if($sec5_1_pcheck == '0'){ ?>
+                                <div class="item active">
+                                    <?php }else{ ?>
+                                <div class="item">
+                                    <?php } ?>
+                                    <img src="<?php echo base_url(); ?>application/images/web/<?php echo $sec5_2_pimg;?>" style="width:50%;text-align: center;">
+                                    <div class="carousel-caption">
+                                        <h2 style="font-style: bold; color: grey; border: black;"><?php echo $sec5_2_ptit; ?></h2>
+                                        <p><?php echo $sec5_2_pdesc; ?></p>
+                                    </div>
+                                </div>
+                                <?php } ?>
+                                <?php if($sec5_3_pcheck == '1'){ ?>
+                                    <?php if($sec5_1_pcheck == '0' and $sec5_2_pcheck == '0'){ ?>
+                                <div class="item active">
+                                    <?php }else{ ?>
+                                <div class="item">
+                                    <?php } ?>
+                                    <img src="<?php echo base_url(); ?>application/images/web/<?php echo $sec5_3_pimg;?>" style="width:50%;text-align: center;">
+                                    <div class="carousel-caption">
+                                        <h2 style="font-style: bold; color: grey; border: black;"><?php echo $sec5_3_ptit; ?></h2>
+                                        <p><?php echo $sec5_3_pdesc; ?></p>
+                                    </div>
+                                </div>
+                                <?php } ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <?php } ?>
+        <!--==========================
+            Contacto
         ============================-->
         <section id="contact">
             <div class="container wow fadeInUp">
@@ -230,7 +296,8 @@
         </footer><!-- #footer -->
         <a href="#" class="back-to-top"><i class="fa fa-chevron-up"></i></a>
         <!-- Required JavaScript Libraries -->
-        <script src="<?php echo base_url(); ?>application/js/jquery.min.js"></script>
+        <!--script src="<?php #echo base_url(); ?>application/js/jquery.min.js"></script-->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <script src="<?php echo base_url(); ?>application/js/jquery-migrate.min.js"></script>
         <script src="<?php echo base_url(); ?>application/js/bootstrap.min.js"></script>
         <script src="<?php echo base_url(); ?>application/js/superfish/hoverIntent.js"></script>

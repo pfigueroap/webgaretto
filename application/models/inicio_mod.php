@@ -187,14 +187,24 @@ class Inicio_mod extends CI_Controller {
         return $stock;
     }
     function conf_correo($correo,$usuario){
-        $this->db->query("INSERT INTO correo_valida (correo_validacion,fecha,hora,usuario) 
-            VALUES ('{$correo}',CURDATE(),CURTIME(),'{$usuario}')");
+        $this->db->query("INSERT INTO configuracion (tipo,correo,fecha,hora,usuario) 
+            VALUES ('valida','{$correo}',CURDATE(),CURTIME(),'{$usuario}')");
+    }
+    function conf_comprobante($nombre,$correo,$telefono,$usuario){
+        $this->db->query("INSERT INTO configuracion (tipo,nombre,telefono,correo,fecha,hora,usuario) 
+            VALUES ('comprobante','{$nombre}','{$telefono}','{$correo}',CURDATE(),CURTIME(),'{$usuario}')");
     }
     function correo_valida(){
-        $query = $this->db->query("SELECT correo_validacion FROM correo_valida ORDER BY id_config DESC LIMIT 1");
+        $query = $this->db->query("SELECT correo FROM configuracion WHERE tipo = 'valida' ORDER BY id_config DESC LIMIT 1");
         $result = $query->result();
-        $correo = $result[0]->correo_validacion;
+        $correo = $result[0]->correo;
         return $correo;
+    }
+    function info_conf_comp(){
+        $query = $this->db->query("SELECT nombre, telefono, correo FROM configuracion WHERE tipo = 'comprobante' ORDER BY id_config DESC LIMIT 1");
+        $result = $query->result();
+        $info = $result[0];
+        return $info;
     }
     function correo_adm(){
         $query = $this->db->query("SELECT correo FROM usuarios WHERE tipo = '1' AND estado = '0'");

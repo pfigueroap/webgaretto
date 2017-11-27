@@ -125,6 +125,7 @@ th, td {
             <td>Si</td>
         </tr>
     </table>
+    <textarea style="width: 100%;height: 60px;font-size: 8pt;text-align: justify;background-color: whitesmoke;" readonly>Estimado Cliente, gracias por preferirnos, en Garetto estamos para ayudarlo, una vez recibido su producto,<br>agradeceremos tomar contacto con Nuestra área de Servicios y Soporte, para asesorarlo en su Instalación y<br>respectiva validación. El nombre de la persona encargada es <?php echo $info_comp->nombre; ?>, su N° telefónico es <?php echo $info_comp->telefono; ?><br>y su mail es <?php echo $info_comp->correo; ?>.</textarea>
     <?php } ?>
 </div>
 	

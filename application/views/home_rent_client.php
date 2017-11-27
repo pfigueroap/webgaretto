@@ -18,6 +18,7 @@
                                     <th>Rut Cliente</th>
                                     <th>ID Arriendo</th>
                                     <th>Fecha Inicio</th>
+                                    <th>Cantidad Trabajadores</th>
                                     <th>Periodo de Gracia</th>
                                     <th>Costo Mensual</th>
                                     <th>Fecha Creación</th>
@@ -33,15 +34,16 @@
                                     <td><?php echo $registro->rut; ?></td>
                                     <td><?php echo $registro->id_arriendo; ?></td>
                                     <td><?php echo $registro->f_inicio; ?></td>
+                                    <td><?php echo $registro->cant_trab; ?></td>
                                     <td><?php echo $registro->per_gracia; ?></td>
-                                    <td><?php echo number_format($registro->costo_mensual,0,",","."); ?></td>
+                                    <td><?php echo number_format($registro->costo_mensual,2,",",".")." ".$arr_mnd[$registro->id_moneda]; ?></td>
                                     <td><?php echo $registro->f_creacion; ?></td>
                                     <td><?php echo $registro->h_creacion; ?></td>
                                     <td><?php 
                                     if($registro->estado == '0') echo "Activo"; 
                                     else echo "Inactivo";
                                     ?></td>
-                                    <td><a href="<?php echo site_url("operacion_con/comprobante/".$registro->id_tmp_compra."/arriendo"); ?>" class="btn btn-primary btn-xs"><i class="fa fa-eye"></i> Ver </a></td>
+                                    <td><a href="<?php echo site_url("operacion_con/detalle_arriendo/".$registro->id_arriendo); ?>" class="btn btn-primary btn-xs"><i class="fa fa-eye"></i> Ver </a></td>
                                 </tr>
                                 <?php } ?>
                             </tbody>

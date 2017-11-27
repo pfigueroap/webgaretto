@@ -33,10 +33,9 @@
         <link href="<?php echo base_url(); ?>application/css/style.css" rel="stylesheet">
     </head>
     <body>
-        <div id="preloader"></div>
-        <?php echo form_open('inicio_con/edit_web'); ?>
+        <?php echo form_open_multipart('inicio_con/edit_web'); ?>
         <!--==========================
-          Hero Section
+            Portada
         ============================-->
         <section id="hero">
             <div class="hero-container">
@@ -56,7 +55,7 @@
             </div>
         </section>
         <!--==========================
-          Header Section
+            Barra Navegación
         ============================-->
         <header id="header">
             <div class="container">
@@ -76,7 +75,7 @@
             </div>
         </header><!-- #header -->
         <!--==========================
-          About Section
+            Nosotros
         ============================-->
         <section id="about">
             <div class="container wow fadeInUp">
@@ -90,11 +89,7 @@
                             <input name="sec1_desc" type="text" value="<?php echo $sec1_desc; ?>" style="background:inherit;width: 500px;text-align:center;" ></p>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-3">
-                        <a href="#" class="btn btn-primary btn-xs" style="font-size: 10pt;width: 100px;height:20px;background: #af1416; box-shadow:none;text-align:center;" > <i class="fa fa-edit" style="font-size: 10pt;"></i> &nbsp&nbsp Editar </a>
-                    </div>
-                </div>
+                <div class="row"></div>
             </div>
             <br/>
             <div class="container about-container wow fadeInUp">
@@ -111,7 +106,7 @@
             </div>
         </section>
         <!--==========================
-          Services Section
+            Servicios
         ============================-->
         <section id="services">
             <div class="container wow fadeInUp">
@@ -157,7 +152,7 @@
             </div>
         </section>
         <!--==========================
-          Porfolio Section
+            Productos
         ============================-->
         <section id="portfolio">
             <div class="container wow fadeInUp">
@@ -174,7 +169,7 @@
                 </div>
                 <div class="row">
                     <?php foreach ($productos as $producto) { ?>
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <a class="portfolio-item" style="background-image: url(<?php echo base_url(); ?>application/images/productos/<?php echo $producto->imagen;?>);" href="#">
                             <div class="details">
                                 <h4><?php echo $producto->producto;?></h4>
@@ -186,6 +181,69 @@
                 </div>
             </div>
         </section>
+        <!--==========================
+            PROMO Section
+        ============================-->
+        <section id="promociones">
+            <div class="container wow fadeInUp">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h3 class="section-title">
+                            <input name="sec5_tit" type="text" value="<?php echo $sec5_tit; ?>" style="background:inherit;width: 500px;text-align:center;" >
+                        </h3>
+                        <div class="section-title-divider"></div>
+                        <p class="section-description">
+                            <input name="sec5_desc" type="text" value="<?php echo $sec5_desc; ?>" style="background:inherit;width: 500px;text-align:center;" >
+                        </p>
+                        <div class="col-md-12">
+                            <hr>
+                            <div class="col-md-6">
+                                <h2 style="font-style: bold; color: black; border: grey;">
+                                    <input name="sec5_1_ptit" type="text" value="<?php echo $sec5_1_ptit; ?>" style="background:inherit;width: 500px;text-align:center;" >
+                                </h2>
+                                <p><input name="sec5_1_pdesc" type="text" value="<?php echo $sec5_1_pdesc; ?>" style="background:inherit;width: 500px;text-align:center;" ></p>
+                                <input class="btn btn-default btn-xs" style="background: #af1416;width: 500px;" type="file" name="sec5_1_pimg" id="sec5_1_pimg" size="30" accept=".jpg" /><br>
+                                <input type="checkbox" style="width: 20px;height: 20px;font-size: 15pt;" name="sec5_1_pcheck" value="1" <?php if($sec5_1_pcheck == '1') echo "checked" ?>>&nbsp;&nbsp;Activar Promoción<br>
+                            </div>
+                            <div class="col-md-6">
+                                <img id="img5_1" src="<?php echo base_url(); ?>application/images/web/<?php echo $sec5_1_pimg;?>" style="width:50%;">
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <hr>
+                            <div class="col-md-6">
+                                <h2 style="font-style: bold; color: black; border: grey;">
+                                    <input name="sec5_2_ptit" type="text" value="<?php echo $sec5_2_ptit; ?>" style="background:inherit;width: 500px;text-align:center;" >
+                                </h2>
+                                <p><input name="sec5_2_pdesc" type="text" value="<?php echo $sec5_2_pdesc; ?>" style="background:inherit;width: 500px;text-align:center;" ></p>
+                                <input class="btn btn-default btn-xs" style="background: #af1416;width: 500px;" type="file" name="sec5_2_pimg" id="sec5_2_pimg" size="30" accept=".jpg" /><br>
+                                <input type="checkbox" style="width: 20px;height: 20px;font-size: 15pt;" name="sec5_2_pcheck" value="1" <?php if($sec5_2_pcheck == '1') echo "checked" ?>>&nbsp;&nbsp;Activar Promoción<br>
+                            </div>
+                            <div class="col-md-6">
+                                <img id="img5_2" src="<?php echo base_url(); ?>application/images/web/<?php echo $sec5_2_pimg;?>" style="width:50%;">
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <hr>
+                            <div class="col-md-6">
+                                <h2 style="font-style: bold; color: black; border: grey;">
+                                    <input name="sec5_3_ptit" type="text" value="<?php echo $sec5_3_ptit; ?>" style="background:inherit;width: 500px;text-align:center;" >
+                                </h2>
+                                <p><input name="sec5_3_pdesc" type="text" value="<?php echo $sec5_3_pdesc; ?>" style="background:inherit;width: 500px;text-align:center;" ></p>
+                                <input class="btn btn-default btn-xs" style="background: #af1416;width: 500px;" type="file" name="sec5_3_pimg" id="sec5_3_pimg" size="30" accept=".jpg" /><br>
+                                <input type="checkbox" style="width: 20px;height: 20px;font-size: 15pt;" name="sec5_3_pcheck" value="1" <?php if($sec5_3_pcheck == '1') echo "checked" ?>>&nbsp;&nbsp;Activar Promoción<br>
+                            </div>
+                            <div class="col-md-6">
+                                <img id="img5_3" src="<?php echo base_url(); ?>application/images/web/<?php echo $sec5_3_pimg;?>" style="width:50%;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!--==========================
+            Contacto
+        ============================-->
         <section id="contact">
             <div class="container wow fadeInUp">
                 <div class="row">
@@ -256,7 +314,8 @@
         </footer><!-- #footer -->
         <a href="#" class="back-to-top"><i class="fa fa-chevron-up"></i></a>
         <!-- Required JavaScript Libraries -->
-        <script src="<?php echo base_url(); ?>application/js/jquery.min.js"></script>
+        <!--script src="<?php #echo base_url(); ?>application/js/jquery.min.js"></script-->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <script src="<?php echo base_url(); ?>application/js/jquery-migrate.min.js"></script>
         <script src="<?php echo base_url(); ?>application/js/bootstrap.min.js"></script>
         <script src="<?php echo base_url(); ?>application/js/superfish/hoverIntent.js"></script>
@@ -267,5 +326,37 @@
         <script src="<?php echo base_url(); ?>application/js/easing/easing.js"></script>
         <!-- Template Specisifc Custom Javascript File -->
         <script src="<?php echo base_url(); ?>application/js/custom.js"></script>
+        <script type="text/javascript">$(document).ready(function(){
+            $("#sec5_1_pimg").change(function(){
+                var input=this;
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        $('#img5_1').attr('src', e.target.result);
+                    }
+                    reader.readAsDataURL(input.files[0]);
+                }
+            })
+            $("#sec5_2_pimg").change(function(){
+                var input=this;
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        $('#img5_2').attr('src', e.target.result);
+                    }
+                    reader.readAsDataURL(input.files[0]);
+                }
+            })
+            $("#sec5_3_pimg").change(function(){
+                var input=this;
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        $('#img5_3').attr('src', e.target.result);
+                    }
+                    reader.readAsDataURL(input.files[0]);
+                }
+            })
+        });</script>
     </body>
 </html>

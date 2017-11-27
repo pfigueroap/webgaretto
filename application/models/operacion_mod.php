@@ -81,7 +81,7 @@ class Operacion_mod extends CI_Controller {
     	return $direccion;
     }
     function clientes(){
-    	$query = $this->db->query("SELECT * FROM usuarios WHERE tipo = '2'");
+    	$query = $this->db->query("SELECT u.*, e.empresa FROM usuarios AS u LEFT JOIN empresa AS e ON u.id_empresa = e.id_empresa WHERE tipo = '2'");
         $result = $query->result();
         $clientes = (array) $result;
         return $clientes;
@@ -217,13 +217,13 @@ class Operacion_mod extends CI_Controller {
         $result = $webpay->getNormalTransaction()->initTransaction($monto,$orden,$comercio, $url_retorno, $url_final);
         redirect($result->url.'?token_ws='.$result->token);
     }
-    function retorno($token){
+    function retorno($token,$clase){
         $webpay = $this->webpay();
         $result = $webpay->getNormalTransaction()->getTransactionResult($token);
-        $this->save_retorno($token,$result);
+        $this->save_retorno($token,$result,$clase);
         redirect($result->urlRedirection.'?token_ws='.$token);
     }
-    function save_retorno($token,$result){
+    function save_retorno($token,$result,$clase){
         $accountingDate = $result->accountingDate;
         $buyOrder = $result->buyOrder;
         $cardNumber = $result->cardDetail->cardNumber;
@@ -242,15 +242,18 @@ class Operacion_mod extends CI_Controller {
         $this->db->query("INSERT INTO transbank (token,accountingDate,buyOrder,cardNumber,cardExpirationDate,authorizationCode,paymentTypeCode,responseCode,sharesNumber,amount,commerceCode,responseDescription,sessionId,transactionDate,urlRedirection,VCI) VALUES ('{$token}','{$accountingDate}','{$buyOrder}','{$cardNumber}','{$cardExpirationDate}','{$authorizationCode}','{$paymentTypeCode}','{$responseCode}','{$sharesNumber}','{$amount}','{$commerceCode}','{$responseDescription}','{$sessionId}','{$transactionDate}','{$urlRedirection}','{$VCI}')");
         $id_tbk = $this->db->insert_id();
         $validador = $responseCode+1; #Validación de Compra
-        $this->db->query("UPDATE compra SET id_tbk = '{$id_tbk}', validador = '{$validador}' 
-            WHERE id_compra = '{$buyOrder}'");
-        if($validador == '1'){
-            $this->db->query("UPDATE tmp_det_compra SET estado = '2', valida = '1' 
+        if($clase == 'compra'){
+            $this->db->query("UPDATE compra SET id_tbk = '{$id_tbk}', validador = '{$validador}' 
                 WHERE id_compra = '{$buyOrder}'");
-            $this->db->query("UPDATE tmp_compra SET estado = '2', valida = '1' 
-                WHERE id_compra = '{$buyOrder}'");
-            $id_tmp_compra = $this->id_tmp_compra($result->buyOrder);
-            //$this->activar_reloj($id_tmp_compra);
+            if($validador == '1'){
+                $this->db->query("UPDATE tmp_det_compra SET estado = '2', valida = '1' 
+                    WHERE id_compra = '{$buyOrder}'");
+                $this->db->query("UPDATE tmp_compra SET estado = '2', valida = '1' 
+                    WHERE id_compra = '{$buyOrder}'");
+                $id_tmp_compra = $this->id_tmp_compra($result->buyOrder);
+            }
+        }elseif($clase == 'arriendo') {
+            $this->db->query("UPDATE registro_arriendo SET id_tbk = '{$id_tbk}', validador = '{$validador}' WHERE buy_order = '{$buyOrder}'");
         }
     }
     function id_tmp_compra($id_compra){
@@ -294,16 +297,8 @@ class Operacion_mod extends CI_Controller {
     }
     function registra_arriendo($id_cliente,$id_tmp_compra,$arriendo){
         $usuario = $this->session->userdata('usuario');
-        $this->db->query("INSERT INTO arriendo (f_inicio, per_gracia, costo_mensual, id_moneda, id_cliente, id_tmp_compra, usuario, f_creacion, h_creacion) 
-            VALUES ('{$arriendo['f_inicio']}', '{$arriendo['per_gracia']}', '{$arriendo['costo_mensual']}', '{$arriendo['id_moneda']}', '{$id_cliente}', '{$id_tmp_compra}', '{$usuario}', CURDATE(), CURTIME())");
-    }
-    function arriendos(){
-        $query = $this->db->query("SELECT a.*, u.nombre_1, u.apellido_1, u.rut FROM arriendo AS a 
-            INNER JOIN usuarios AS u ON a.id_cliente = u.id_usuario 
-            ORDER BY a.f_creacion DESC, a.h_creacion DESC");
-        $result = $query->result();
-        $arriendos = (array) $result;
-        return $arriendos;
+        $this->db->query("INSERT INTO arriendo (f_inicio, per_gracia, cant_trab, costo_mensual, id_moneda, id_cliente, id_tmp_compra, usuario, f_creacion, h_creacion) 
+            VALUES ('{$arriendo['f_inicio']}', '{$arriendo['per_gracia']}', '{$arriendo['cant_trab']}', '{$arriendo['costo_mensual']}', '{$arriendo['id_moneda']}', '{$id_cliente}', '{$id_tmp_compra}', '{$usuario}', CURDATE(), CURTIME())");
     }
     function activar_reloj($id_tmp_compra){
         $url = "http://www.relojgaretto.cl/sensores/agregar";
@@ -336,6 +331,83 @@ class Operacion_mod extends CI_Controller {
             curl_close($handler);
             return $response;
         }else return '0';
+    }
+    function info_conf_comp(){
+        $query = $this->db->query("SELECT nombre, telefono, correo FROM configuracion WHERE tipo = 'comprobante' ORDER BY id_config DESC LIMIT 1");
+        $result = $query->result();
+        $info = $result[0];
+        return $info;
+    }
+    function detalle_arriendo($id_arriendo){
+        $query = $this->db->query("SELECT a.*, u.nombre_1, u.nombre_2, u.apellido_1, u.apellido_2, u.rut, u.correo, u.celular, u.usuario as user_client FROM arriendo AS a 
+            INNER JOIN usuarios AS u ON a.id_cliente = u.id_usuario  
+            WHERE id_arriendo = '{$id_arriendo}'");
+        $result = $query->result();
+        $arriendo = (array) $result[0];
+        $query = $this->db->query("SELECT * FROM tmp_det_compra AS t 
+            INNER JOIN producto AS p ON t.id_producto = p.id_producto 
+            WHERE id_tmp_compra = '{$arriendo['id_tmp_compra']}'");
+        $result = $query->result();
+        $arriendo['productos'] = (array) $result;
+        return $arriendo;
+    }
+    function periodo_arriendo($f_inicio){
+        $facturas = array();
+        $inicio = new DateTime($f_inicio);
+        $tmp_inicio = new DateTime($f_inicio);
+        $fin = new DateTime(date("Y-m-d"));
+        $delta = $inicio->diff($fin);
+        $per = $delta->y*12+$delta->m+1;
+        for($i = 1; $i <= $per; $i++){
+            $tmp_array = array();
+            $tmp_array['id'] = $i;
+            if($i == 1){
+                $tmp_array['f_inicio'] = $f_inicio;
+                $inicio->add(new DateInterval('P1M'));
+                $tmp_array['f_fin'] = $inicio->format('Y-m-').'05';
+                $tmp_ini = $inicio->format('Y-m-').'06';
+                $tmp_fin = new DateTime($tmp_array['f_fin']);
+                $diff = $tmp_inicio->diff($tmp_fin);
+                $tmp_array['prc_pago'] = $diff->m+$diff->d/30;
+            }else{
+                $tmp_array['f_inicio'] = $tmp_ini;
+                $tmp_date = $tmp_fin;
+                $tmp_date->add(new DateInterval('P1M'));
+                $tmp_array['f_fin'] = $tmp_date->format('Y-m-d');
+                $tmp_ini = $tmp_date->format('Y-m-').'06';
+                $tmp_fin = new DateTime($tmp_array['f_fin']);
+                $tmp_array['prc_pago'] = 1;
+            }
+            array_push($facturas, $tmp_array);
+        }
+        return $facturas;
+    }
+    function arriendos($tipo,$usuario){
+        if($tipo == '1'){
+            $query = $this->db->query("SELECT a.*, u.nombre_1, u.apellido_1, u.rut FROM arriendo AS a 
+                INNER JOIN usuarios AS u ON a.id_cliente = u.id_usuario 
+                ORDER BY a.f_creacion DESC, a.h_creacion DESC");
+        }elseif($tipo == '2'){
+            $query = $this->db->query("SELECT a.*, u.nombre_1, u.apellido_1, u.rut FROM arriendo AS a 
+                INNER JOIN usuarios AS u ON a.id_cliente = u.id_usuario 
+                WHERE u.usuario = '{$usuario}' 
+                ORDER BY a.f_creacion DESC, a.h_creacion DESC");
+        }
+        $result = $query->result();
+        $arriendos = (array) $result;
+        return $arriendos;
+    }
+    function reg_pago_arriendo($total,$buy_order,$id_tmp_compra,$id_arriendo,$periodo){
+        $query = $this->db->query("SELECT * FROM registro_arriendo WHERE $buy_order = '{$buy_order}'");
+        if($query->num_rows == 0){
+            $query = $this->db->query("INSERT INTO registro_arriendo (buy_order, id_tmp_compra, id_arriendo ,id_cuota, f_inicio, f_fin, prc_pago, total) VALUES ('{$buy_order}', '{$id_tmp_compra}', '{$id_arriendo}', '{$periodo['id']}', '{$periodo['f_inicio']}', '{$periodo['f_fin']}', '{$periodo['prc_pago']}', '{$total}')");
+        }
+    }
+    function periodo_arr($buy_order){
+        $query = $this->db->query("SELECT * FROM registro_arriendo WHERE $buy_order = '{$buy_order}'");
+        $result = $query->result();
+        $perido = (array) $result[0];
+        return $periodo;
     }
 }
 ?>

@@ -131,7 +131,7 @@ class Operacion_con extends CI_Controller {
                 $data['id_compra'] = $this->operacion_mod->registrar_compra($data['usuario'],$data['pago'],$data['total'],$data['compras'],$data['despacho'],$data['direccion'],$data['factura'],$data['name_fact'],$data['rut_fact'],$data['giro_fact'],$data['dir_fact'],$tipo);
             }
             if($data['pago'] == 'webpay'){
-                $this->operacion_mod->pago($data['total'],$data['id_compra'],site_url("operacion_con/tbk_retorno"),site_url("operacion_con/comprobante/".$id_tmp_compra));
+                $this->operacion_mod->pago($data['total'],$data['id_compra'],site_url("operacion_con/tbk_retorno/compra"),site_url("operacion_con/comprobante/".$id_tmp_compra));
             }elseif ($data['pago'] == 'transferencia') {
                 $correos = $this->operacion_mod->correo_adm();
                 $asunto = "Compra Productos de ".$data['usuario'];
@@ -146,8 +146,9 @@ class Operacion_con extends CI_Controller {
     }
     #Respuestas Transbank
     function tbk_retorno(){
+        $clase = $this->uri->segment(3);
         $token = $this->input->post('token_ws');
-        $this->operacion_mod->retorno($token);
+        $this->operacion_mod->retorno($token,$clase);
 
     }
     function tbk_final(){
@@ -173,6 +174,7 @@ class Operacion_con extends CI_Controller {
             $data['orden_compra'] = $this->operacion_mod->orden_compra($data['id_compra']);
         $data['pago'] = $data['f_pago'];
         $data['despacho'] = $data['t_despacho'];
+        $data['info_comp'] = $this->operacion_mod->info_conf_comp();
         $data['compras'] = $this->operacion_mod->detalle_registro($id_tmp_compra);
         $data['page'] = 'home_comprobante';
         return $data;
@@ -265,19 +267,12 @@ class Operacion_con extends CI_Controller {
         $tipo = $this->uri->segment(3);
         $asunto = array(
             'venta' => 'Solicitud de compra',
-            'arriendo' => 'Solicitud de arriendo',
             'regalo' => 'Regalo de Garetto');
         $mensaje = array(
             'venta' => 'Se ha generado en nuestro sistema Garetto una nueva solicitud de adquisición de productos, por favor valide la compra en el sistema, para enviar los productos solicitados.',
-            'arriendo' => 'Se ha generado en nuestro sistema Garetto una nueva solicitud de arriendo de productos, por favor valide la compra en el sistema, para enviar los productos solicitados.',
             'regalo' => 'Se ha generado en nuestro sistema Garetto un regalo para usted, para mayor información y pasos a seguir, por favor ingrese a nuestro sistema web.');
         if($tipo == 'venta') $estado = '3';
-        elseif($tipo == 'arriendo'){
-            $estado = '4';
-            $posts = array('f_inicio','per_gracia','costo_mensual','id_moneda');
-            foreach ($posts as $post)
-                $arriendo[$post] = $this->input->post($post);
-        }elseif($tipo == 'regalo') $estado = '5';
+        elseif($tipo == 'regalo') $estado = '5';
         $ventas = $this->formulario();
         if(count($ventas) > 0){
             $id_cliente = $this->input->post('id_cliente');
@@ -287,8 +282,31 @@ class Operacion_con extends CI_Controller {
             $this->enviar_email('contacto@webgaretto.cl',"Equipo Garetto",$correo,$asunto[$tipo],$mensaje[$tipo]);
             $this->det_orden($id_tmp_compra,'ordenes','0');
         }elseif($tipo == 'venta') $this->index_run('2');
-        elseif($tipo == 'arriendo') $this->index_run('3');
         elseif($tipo == 'regalo') $this->index_run('4');
+    }
+    #Crear orden arriendo
+    function crear_arriendo(){
+        $posts = array('f_inicio','per_gracia','cant_trab');
+        foreach ($posts as $post)
+            $arriendo[$post] = $this->input->post($post);
+        if($arriendo['cant_trab'] <= 100) $factor = 0.03;
+        elseif($arriendo['cant_trab'] > 100 and $arriendo['cant_trab'] <= 200) $factor = 0.026;
+        elseif($arriendo['cant_trab'] > 200 and $arriendo['cant_trab'] <= 500) $factor = 0.023;
+        elseif($arriendo['cant_trab'] > 500) $factor = 0.02;
+        $arriendo['costo_mensual'] = $arriendo['cant_trab'] * $factor;
+        $arriendo['id_moneda'] = '3';
+        $productos = $this->formulario();
+        if(count($productos) > 0){
+            $id_cliente = $this->input->post('id_cliente');
+            $id_tmp_compra = $this->operacion_mod->crear_registro($productos,'4',$id_cliente);
+            $this->operacion_mod->registra_arriendo($id_cliente,$id_tmp_compra,$arriendo);
+            $correo = $this->operacion_mod->correo($id_cliente);
+            $asunto = 'Solicitud de arriendo';
+            $mensaje = 'Se ha generado en nuestro sistema Garetto una nueva solicitud de arriendo de productos, por favor valide la compra en el sistema, para enviar los productos solicitados.';
+            $this->enviar_email('contacto@webgaretto.cl',"Equipo Garetto",$correo,$asunto,$mensaje);
+            $this->arriendos();
+            #$this->det_orden($id_tmp_compra,'ordenes','0');
+        }else $this->index_run('3');
     }
     function enviar_email($email_org,$nombre,$email_des,$asunto,$mensaje){
         $config['mailtype'] = 'html';
@@ -344,8 +362,36 @@ class Operacion_con extends CI_Controller {
     #Arriendo
     function arriendos(){
         $data = $this->valida();
-        $data['registros'] = $this->operacion_mod->arriendos();
+        $data['registros'] = $this->operacion_mod->arriendos($data['tipo'],$data['usuario']);
         $data['page'] = 'home_rent_client';
+        $this->load->view('home',$data);
+    }
+    function detalle_arriendo(){
+        $id_arriendo = $this->uri->segment(3);
+        $data = $this->valida();
+        $data['arriendo'] = $this->operacion_mod->detalle_arriendo($id_arriendo);
+        $data['periodos'] = $this->operacion_mod->periodo_arriendo($data['arriendo']['f_inicio']);
+        $data['page'] = 'home_detalle_arriendo';
+        $this->load->view('home',$data);
+    }
+    function pago_arriendo(){
+        $id_arriendo = $this->uri->segment(3);
+        $id_cuota = $this->uri->segment(4);
+        $pos = intval($id_cuota)-1;
+        $arriendo = $this->operacion_mod->detalle_arriendo($id_arriendo);
+        $periodos = $this->operacion_mod->periodo_arriendo($arriendo['f_inicio']);
+        $total = $arriendo['costo_mensual']*$periodos[$pos]['prc_pago']*26500;
+        $buy_order = 1000*$id_arriendo+$id_cuota;
+        echo "<PRE>";
+        var_dump($arriendo);
+        $this->operacion_mod->reg_pago_arriendo($total,$buy_order,$arriendo['id_tmp_compra'],$id_arriendo,$periodos[$pos]);
+        $this->operacion_mod->pago($total,$buy_order,site_url("operacion_con/tbk_retorno/arriendo"),site_url("operacion_con/comprobante_pago_cuota/".$buy_order));
+    }
+    function comprobante_pago_cuota(){
+        $buy_order = $this->uri->segment(3);
+        $data = $this->valida();
+        $data['periodo'] = $this->operacion_mod->periodo_arr($buy_order);
+        $data['page'] = 'home_det_arr_com';
         $this->load->view('home',$data);
     }
 }
