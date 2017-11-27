@@ -398,10 +398,11 @@ class Operacion_mod extends CI_Controller {
         return $arriendos;
     }
     function reg_pago_arriendo($total,$buy_order,$id_tmp_compra,$id_arriendo,$periodo){
-        $query = $this->db->query("SELECT * FROM registro_arriendo WHERE $buy_order = '{$buy_order}'");
+        $query = $this->db->query("SELECT * FROM registro_arriendo WHERE buy_order = '{$buy_order}'");
         if($query->num_rows == 0){
-            echo "INSERT INTO registro_arriendo (buy_order, id_tmp_compra, id_arriendo ,id_cuota, f_inicio, f_fin, prc_pago, total) VALUES ('{$buy_order}', '{$id_tmp_compra}', '{$id_arriendo}', '{$periodo['id']}', '{$periodo['f_inicio']}', '{$periodo['f_fin']}', '{$periodo['prc_pago']}', '{$total}')";
-            $query = $this->db->query("INSERT INTO registro_arriendo (buy_order, id_tmp_compra, id_arriendo ,id_cuota, f_inicio, f_fin, prc_pago, total) VALUES ('{$buy_order}', '{$id_tmp_compra}', '{$id_arriendo}', '{$periodo['id']}', '{$periodo['f_inicio']}', '{$periodo['f_fin']}', '{$periodo['prc_pago']}', '{$total}')");
+            $this->db->query("INSERT INTO registro_arriendo (buy_order, id_tmp_compra, id_arriendo ,id_cuota, f_inicio, f_fin, prc_pago, total) VALUES ('{$buy_order}', '{$id_tmp_compra}', '{$id_arriendo}', '{$periodo['id']}', '{$periodo['f_inicio']}', '{$periodo['f_fin']}', '{$periodo['prc_pago']}', '{$total}')");
+        }else{
+            $this->db->query("UPDATE registro_arriendo SET id_tmp_compra = '{$id_tmp_compra}', id_arriendo = '{$id_arriendo}', id_cuota = '{$periodo['id']}', f_inicio = '{$periodo['f_inicio']}', f_fin = '{$periodo['f_fin']}', prc_pago = '{$periodo['prc_pago']}', total = '{$total}' WHERE buy_order = '{$buy_order}'");
         }
     }
     function periodo_arr($buy_order){
