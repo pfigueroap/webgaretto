@@ -373,9 +373,9 @@ class Operacion_con extends CI_Controller {
         $data['arriendo'] = $this->operacion_mod->detalle_arriendo($id_arriendo);
         $data['periodos'] = $this->operacion_mod->periodo_arriendo($data['arriendo']['f_inicio']);
         $data['page'] = 'home_detalle_arriendo';
-        echo "<PRE>";
-        var_dump($data);
-        #$this->load->view('home',$data);
+        #echo "<PRE>";
+        #var_dump($data);
+        $this->load->view('home',$data);
     }
     function pago_arriendo(){
         $id_arriendo = $this->uri->segment(3);

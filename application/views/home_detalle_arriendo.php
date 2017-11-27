@@ -107,6 +107,8 @@
                                     <td><?php echo number_format($periodo['prc_pago']*$arriendo['costo_mensual'],3,",",".")." ".$arr_mnd[$arriendo['id_moneda']]; ?></td>
                                     <td><?php if($periodo['id'] <= $arriendo['per_gracia']){?>
                                         <a href="#" class="btn btn-success btn-xs"><i class="fa fa-gift"></i> Período de Gracia </a>
+                                        <?php }elseif($pago[$periodo['id']]['valida'] == '1'){ ?>
+                                        <a href="#" class="btn btn-success btn-xs"><i class="fa fa-thumbs-o-up"></i> Pagado </a>
                                         <?php }else{ ?>
                                         <a href="<?php echo site_url("operacion_con/pago_arriendo/".$arriendo['id_arriendo']."/".$periodo['id']); ?>" class="btn btn-warning btn-xs"><i class="fa fa-credit-card-alt"></i> Pagar </a>
                                         <?php }?> 
