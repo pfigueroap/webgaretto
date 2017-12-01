@@ -177,6 +177,8 @@ class Operacion_con extends CI_Controller {
         $data['info_comp'] = $this->operacion_mod->info_conf_comp();
         $data['compras'] = $this->operacion_mod->detalle_registro($id_tmp_compra);
         $data['page'] = 'home_comprobante';
+        #echo "<PRE>";
+        #var_dump($data);
         return $data;
     }
     function comprobante(){

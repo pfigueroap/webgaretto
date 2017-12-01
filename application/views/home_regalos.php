@@ -7,9 +7,9 @@
             <div class="col-md-12">
                 <?php echo form_open('operacion_con/crear_orden/regalo'); ?>
                 <div class="col-md-12 text-right">
-                    <select style="font-size: 15pt;width: 20%;height:50px;margin-right: 30px;margin-bottom: 20px;background: white;" name="id_cliente">
+                    <select style="font-size: 15pt;width: 400px;height:50px;margin-right: 30px;margin-bottom: 20px;background: white;" name="id_cliente">
                         <?php foreach ($clientes as $cliente) {?>
-                        <option value="<?php echo $cliente->id_usuario; ?>"><?php echo $cliente->nombre_1." ".$cliente->apellido_1." (".$cliente->usuario.")"; ?></option>
+                        <option value="<?php echo $cliente->id_usuario; ?>"><?php echo $cliente->empresa." - ".$cliente->usuario; ?></option>
                         <?php }?>
                     </select>
                     <button class="btn btn-primary btn-xs" style="font-size: 15pt;width: 30%;height:50px;margin-right: 30px;margin-bottom: 20px;background: #af1416;     box-shadow:none;" > <i class="fa fa-gift" style="font-size: 20pt;"></i> &nbsp&nbsp&nbsp Regalar </button>

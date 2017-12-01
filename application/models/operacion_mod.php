@@ -325,6 +325,10 @@ class Operacion_mod extends CI_Controller {
             curl_setopt($handler, CURLOPT_POST,true);
             curl_setopt($handler, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($handler, CURLOPT_POSTFIELDS, $postData);
+            #$headers = array(
+             #   'Content-Type: application/x-www-form-urlencoded', 
+             #   'gtoken: EN128S7NvEmRoHiSOaypRQ.VKYw5ad3cEKV8_P6V54QmQ.14RebQ_3f06a67qKQMM4Qw.iQPYtlq6VE2uAhAtiBOTaQ.W2XhStOz4ku8XmCbxt27oQ');
+            #curl_setopt($handler, CURLOPT_HTTPHEADER, $headers);
             $response = curl_exec ($handler);
             #echo "Respuesta:";
             #var_dump($response);

@@ -9,10 +9,7 @@
                     <div class="card-header">
                         <h3 class="title">Activación de Productos</h3>
                     </div>
-                    <!--CONTENIDO BODY-->
-                    <br/>
-                    <br/>
-                    <!--TABLA-->
+                    <br/><br/>
                     <?php echo form_open('activa_con/add_reloj'); ?>
                     <div class="table-responsive">
                         <table class="table table-hover">
@@ -74,69 +71,37 @@
                         <tr>
                             <td style="width: 200px">
                                 <div class="col-md-2 col-sm-6 col-xs-12 form-group">
-                                    <input name="id_compra" type="number" style="width: 200px" class="form-control col-md-7 col-xs-12 parsley-success" placeholder="ID Compra" required>
+                                    <input name="id_compra" type="number" style="width: 200px" class="form-control col-md-7 col-xs-12 parsley-success" placeholder="ID Registro" required>
                                 </div>
                             </td>
-                            <td style="text-align: center;"><input name="tipo_orden" value="web" type="radio" style="height:15px; width:15px; vertical-align: middle;" required></td>
-                            <td style="width: 80px">Web</td>
-                            <td style="text-align: center;"><input name="tipo_orden" value="orden" type="radio" style="height:15px; width:15px; vertical-align: middle;" required></td>
-                            <td style="width: 80px">Ordén</td>
+                            <td style="text-align: center;">
+                                <input name="tipo_orden" value="web" type="radio" style="height:15px; width:15px; vertical-align: middle;" required>
+                            </td><td style="width: 80px">Web</td>
+                            <td style="text-align: center;">
+                                <input name="tipo_orden" value="orden" type="radio" style="height:15px; width:15px; vertical-align: middle;" required>
+                            </td><td style="width: 80px">Ordén</td>
+                            <td style="text-align: center;">
+                                <input name="tipo_orden" value="arriendo" type="radio" style="height:15px; width:15px; vertical-align: middle;" required>
+                            </td><td style="width: 80px">Arriendo</td>
+                            <td style="text-align: center;">
+                                <input name="tipo_orden" value="regalo" type="radio" style="height:15px; width:15px; vertical-align: middle;" required>
+                            </td><td style="width: 80px">Regalo</td>
                             <td style="width: 200px"><button class="btn btn-primary btn-xs" style="background: #af1416;box-shadow:none;"><i class="fa fa-clock-o"></i> Agregar Reloj </button></td>
-                            <td style="width: 600px;text-align: right;"><ul class="pagination pagination-lg pager" id="myPager"></ul></td>
+                            <td style="width: 200px"><a href="<?php echo site_url("activa_con/menu_empresas"); ?>" class="btn btn-primary btn-xs" style="background: #af1416;box-shadow:none;"><i class="fa fa-plus"></i> Agregar Empresa </a></td>
+                            <td style="width: 400px;text-align: center;"><ul class="pagination pagination-lg pager" id="myPager"></ul></td>
                         </tr>
                     </table>
-                    </form>
-                </div>
-                <div class="card">
-                    <?php echo form_open('activa_con/add_empresa'); ?>
-                    <div class="col-md-12 col-sm-12 col-xs-12">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr><th style="text-align: center; width:100px;">Seleccion</th><th>Empresa</th></tr>
-                            </thead>
-                            <tbody id="myTable">
-                                <tr class="form-group">
-                                    <td style="text-align: center; width:100px;">
-                                        <input name="s_empresa" value="existe" type="radio" style="height:20px; width:20px; vertical-align: middle;" required checked="True">
-                                    </td>
-                                    <td>
-                                        <select class="form-control col-md-7 col-xs-12 parsley-success" name="id_empresa">
-                                        <?php foreach ($empresas as $empresa) {?>
-                                            <option value="<?php echo $empresa->id_empresa;?>" <?php if($empresa->id_empresa == $info['id_empresa']) echo "selected";?>><?php echo $empresa->empresa;?></option>
-                                        <?php }?>
-                                        </select>
-                                    </td>
-                                </tr>
-                                <tr class="form-group">
-                                    <td style="text-align: center; width:100px;">
-                                        <input name="s_empresa" value="nueva" type="radio" style="height:20px; width:20px; vertical-align: middle;" required>
-                                    </td>
-                                    <td>
-                                        <div class="col-md-2 col-sm-6 col-xs-12" style="width: 300px;">
-                                            <input name="e_name" type="text" class="form-control col-md-7 col-xs-12 parsley-success" placeholder="Razón Social">
-                                        </div>
-                                        <div class="col-md-2 col-sm-6 col-xs-12" style="width: 200px;">
-                                            <input name="e_rut" type="text" onkeypress="return soloRut(event)" class="form-control col-md-7 col-xs-12 parsley-success" placeholder="Rut">
-                                        </div>
-                                        <div class="col-md-2 col-sm-6 col-xs-12" style="width: 400px;">
-                                            <input name="e_dir" type="text" class="form-control col-md-7 col-xs-12 parsley-success" placeholder="Direccion">
-                                        </div>
-                                        <div class="col-md-2 col-sm-6 col-xs-12">
-                                            <input name="e_giro" type="text" class="form-control col-md-7 col-xs-12 parsley-success" placeholder="Giro">
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="col-md-12 text-right">
-                        <button class="btn btn-primary btn-xs" style="background: #af1416;box-shadow:none;"><i class="fa fa-plus"></i> Agregar Empresa </button>
-                    </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
+<?php if($mensaje != ''){ 
+echo '<script type="text/javascript">
+    var txt;
+    txt = "'.$mensaje.'";
+    alert(txt);
+</script>';
+ } ?>
 	        

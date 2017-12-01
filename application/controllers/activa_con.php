@@ -21,26 +21,51 @@ class Activa_con extends CI_Controller {
             return $data;
         }
     }
-    function index(){
+    function index($mensaje = ''){
         $data = $this->valida();
+        $data['mensaje'] = $mensaje;
         $data['registros'] = $this->activa_mod->registros();
         $data['page'] = 'home_activa';
         $this->load->view('home',$data);
     }
-    function add_empresa(){
+    function menu_empresas($mensaje = ''){
         $data = $this->valida();
-        $seleccion = $this->input->post('s_empresa');
-        if($seleccion == 'existe'){
-            $id_empresa = $this->input->post('id_empresa');
-            $this->activa_mod->activa_id($id_empresa,'1');
-        }elseif ($seleccion == 'nueva') {
-            $empresa = $this->input->post('e_name');
-            $rut = $this->input->post('e_rut');
-            $direccion = $this->input->post('e_dir');
-            $giro = $this->input->post('e_giro');
-            $this->activa_mod->activa_empresa($empresa,$rut,$direccion,$giro);
+        $data['mensaje'] = $mensaje;
+        $data['clase'] = $this->uri->segment(3);
+        if($data['clase'] == 'editar')
+            $data['info_empresa'] = $this->activa_mod->empresa($this->uri->segment(4));
+        $data['page'] = 'home_gest_empresas';
+        $this->load->view('home',$data);        
+    }
+    function add_empresa(){
+        $clase = $this->uri->segment(3);
+        if($clase == 'editar')
+            $id_empresa = $this->uri->segment(4);
+        $cabecera = array('empresa','nombre_corto','direccion','rut','giro','nom_representante','rut_representante');
+        $contenido = array();
+        foreach ($cabecera as $post){
+            if($clase == 'editar')
+                array_push($contenido, $post."='".$this->input->post($post)."'");
+            else
+                array_push($contenido, "'".$this->input->post($post)."'");
         }
-        $this->index();
+        if($clase == 'editar')
+            $this->activa_mod->edit_empresa($id_empresa,$contenido);
+        else
+            $this->activa_mod->add_registro('empresa',$cabecera,$contenido);
+        redirect('/activa_con/menu_empresas/', 'refresh');
+    }
+    function activa_empresa(){
+        $id_empresa = $this->input->post('s_empresa');
+        $empresa = $this->activa_mod->empresa($id_empresa);
+        $mensaje = $this->activa_mod->activa_empresa($empresa);
+        if($mensaje == 'OK'){
+            $mensaje = "Empresa activada exitosamente";
+            $this->activa_mod->activa_id($id_empresa,'1');
+            $this->index($mensaje);
+        }else{
+            $this->menu_empresas($mensaje);
+        }
     }
     function add_reloj(){
         $data = $this->valida();
@@ -60,23 +85,35 @@ class Activa_con extends CI_Controller {
     function registro(){
         $this->registro_empresa($this->uri->segment(3));
     }
-    function view_reg_ti($id_empresa){
+    function view_reg_ti($id_empresa,$mensaje){
         $data = $this->valida();
+        $data['mensaje'] = $mensaje;
         $data['id_empresa'] = $id_empresa;
-        $data['usuarios'] = $this->activa_mod->usuarios_empresa($data['id_empresa']);
         $data['empresa'] = $this->activa_mod->empresa($id_empresa);
+        $data['usuarios'] = $this->activa_mod->usuarios_empresa($data['empresa']['nombre_corto']);
         $data['page'] = 'home_registro_userti';
         $this->load->view('home',$data);
     }
     function registro_ti(){
-        $this->view_reg_ti($this->uri->segment(3));
+        $this->view_reg_ti($this->uri->segment(3),'');
     }
-    function add_user_ti(){
-        $data = $this->valida();
+    function crear_ti(){
         $id_empresa = $this->uri->segment(3);
         $user_ti = $this->input->post('user_ti');
-        $this->activa_mod->registra_user_ti($user_ti,$id_empresa);
-        $this->view_reg_ti($id_empresa);
+        $rut_ti = $this->input->post('rut_ti');
+        $correo_ti = $this->input->post('correo_ti');
+        $empresa = $this->activa_mod->empresa($id_empresa);
+        $resp = $this->activa_mod->crear_ti($empresa['nombre_corto'],$user_ti,$rut_ti,$correo_ti);
+        $this->index($resp);
+    }
+    function add_user_ti(){
+        $id_empresa = $this->uri->segment(3);
+        $user_ti = $this->input->post('user_ti');
+        $post = split('@',$user_ti)[0];
+        $id_ti = $this->input->post($post);
+        $empresa = $this->activa_mod->empresa($id_empresa);
+        $resp = $this->activa_mod->registra_user_ti($user_ti,$id_empresa,$empresa['nombre_corto'],$id_ti);
+        $this->index($resp);
     }
     function desactiva_empresa(){
         $data = $this->valida();

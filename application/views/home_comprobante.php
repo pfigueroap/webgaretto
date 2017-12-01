@@ -22,6 +22,24 @@
                     <div class="table-responsive">
                         <table class="table table-hover">
                             <tbody id="myTable">
+                                <?php if($estado == '5'){ ?>
+                                <tr>
+                                    <th>ID Regalo</th>
+                                    <th>Usuario</th>
+                                    <th>Nombre</th>
+                                    <th>Correo</th>
+                                    <th>Teléfono</th>
+                                    <th>Fecha / Hora Regalo</th>
+                                </tr>
+                                <tr>
+                                    <td><?php echo $id_tmp_compra;?></td>
+                                    <td><?php echo $user;?></td>
+                                    <td><?php echo $info_comp->nombre;?></td>
+                                    <td><?php echo $info_comp->correo;?></td>
+                                    <td><?php echo $info_comp->telefono;?></td>
+                                    <td><?php echo $f_ingreso." / ".$h_ingreso; ?></td>
+                                </tr>
+                                <?php }else{ ?>
                                 <tr>
                                     <th>ID Compra</th>
                                     <th>Usuario</th>
@@ -48,13 +66,13 @@
                                 </tr>
                                 <?php if($id_tmp_compra != '0'){ ?>
                                 <tr>
-                                    <th>Fecha  -  Hora Compra</th>
+                                    <th>Fecha  /  Hora Compra</th>
                                     <th>Facturación</th>
                                     <th>Empresa</th>
                                     <th>Rut</th>
                                 </tr>
                                 <tr>
-                                    <td><?php echo $orden_compra['f_compra'].' - '.$orden_compra['h_compra'];?></td>
+                                    <td><?php echo $orden_compra['f_compra'].' / '.$orden_compra['h_compra'];?></td>
                                     <td><?php echo $orden_compra['factura'];?></td>
                                     <td><?php echo $orden_compra['empresa'];?></td>
                                     <td><?php echo $orden_compra['rut'];?></td>
@@ -76,7 +94,8 @@
                                     <td>11.111.111-1</td>
                                     <td>contacto@garetto.cl</td>
                                 </tr>
-                                <?php }?>
+                                <?php } ?>
+                                <?php } ?>
                             </tbody>
                         </table>
                     </div>
@@ -126,6 +145,28 @@
                     </div>
                     <div class="table-responsive">
                         <table class="table table-hover">
+                            <?php if($estado == '5'){ ?>
+                            <thead>
+                                <tr>
+                                    <th>ID Regalo</th>
+                                    <th>Monto Total</th>
+                                    <th>Tipo Transacción</th>
+                                    <th>Fecha / Hora</th>
+                                    <th>Beneficiado</th>
+                                    <th>Validado</th>
+                                </tr>
+                            </thead>
+                            <tbody id="myTable">
+                                <tr>
+                                    <td><?php echo $id_tmp_compra; ?></td>
+                                    <td>0 CLP</td>
+                                    <td>Regalo</td>
+                                    <td><?php echo $f_ingreso." / ".$h_ingreso; ?></td>
+                                    <td><?php echo $user; ?></td>
+                                    <td><img src="<?php echo base_url(); ?>application/images/check.png" style="width: 30px;" /></td>
+                                </tr>
+                            </tbody>
+                            <?php }else{ ?>
                             <thead>
                                 <tr>
                                     <th>ID Compra</th>
@@ -146,6 +187,7 @@
                                     <td><img src="<?php echo base_url(); ?>application/images/check.png" style="width: 30px;" /></td>
                                 </tr>
                             </tbody>
+                            <?php } ?>
                         </table>
                         <textarea style="width: 100%;height: 60px;font-size: 8pt;text-align: justify;background-color: whitesmoke;" readonly>Estimado Cliente, gracias por preferirnos, en Garetto estamos para ayudarlo, una vez recibido su producto, agradeceremos tomar contacto con Nuestra área de Servicios y Soporte, para asesorarlo en su Instalación y respectiva validación. El nombre de la persona encargada es <?php echo $info_comp->nombre; ?>, su N° telefónico es <?php echo $info_comp->telefono; ?> y su mail es <?php echo $info_comp->correo; ?>.</textarea>
                     </div>

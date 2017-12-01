@@ -1,0 +1,870 @@
+{
+	"info": {
+		"name": "Reloj",
+		"_postman_id": "957ff9b0-cb65-d1c4-ee67-9bc0388a733e",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Emulacion de compra plataforma Pablo",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Compra exitosa\"] = responseBody=\"1\";"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					},
+					{
+						"key": "gtoken",
+						"value": "EN128S7NvEmRoHiSOaypRQ.VKYw5ad3cEKV8_P6V54QmQ.14RebQ_3f06a67qKQMM4Qw.iQPYtlq6VE2uAhAtiBOTaQ.W2XhStOz4ku8XmCbxt27oQ"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "usuario",
+							"value": "pablo",
+							"type": "text"
+						},
+						{
+							"key": "rut_usuario",
+							"value": "160",
+							"type": "text"
+						},
+						{
+							"key": "email_usuario",
+							"value": "nestor.mora@usach.cl",
+							"type": "text"
+						},
+						{
+							"key": "modelo",
+							"value": "FGT45",
+							"type": "text"
+						},
+						{
+							"key": "marca",
+							"value": "ZKT",
+							"type": "text"
+						},
+						{
+							"key": "cantidad",
+							"value": "2",
+							"type": "text",
+							"description": "cantidad de relojes de esa marca"
+						},
+						{
+							"key": "rut_empresa",
+							"value": "7719",
+							"type": "text"
+						},
+						{
+							"key": "direccion_empresa",
+							"value": "Providencia",
+							"type": "text"
+						},
+						{
+							"key": "giro_empresa",
+							"value": "Informá",
+							"type": "text"
+						},
+						{
+							"key": "empresa",
+							"value": "Informática ",
+							"description": "nombre de empresa",
+							"type": "text"
+						},
+						{
+							"key": "nombres",
+							"value": "Pablo Andres",
+							"type": "text"
+						},
+						{
+							"key": "apellido1",
+							"value": "Figueroa",
+							"type": "text"
+						},
+						{
+							"key": "apellido2",
+							"value": "Plaza",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:8000/pv/listaUsuarios/garetto",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"pv",
+						"listaUsuarios",
+						"garetto"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "init config",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "",
+						"value": ""
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"email\":\"jtapiad89@gmail.com\",\n\t\"password\":\"asdasd\"\n}"
+				},
+				"url": {
+					"raw": "localhost:3000/sensores/initconfig/",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"sensores",
+						"initconfig",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "config interface",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "",
+						"value": ""
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"email\":\"jtapiad89@gmail.com\",\n\t\"password\":\"asdasd\",\n\t\"idred\":1\n}"
+				},
+				"url": {
+					"raw": "localhost:3000/sensores/configurar/",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"sensores",
+						"configurar",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "simular marcacion",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"idSensorTrabajador\":\"17105151\",\n\t\"idSensor\":7,\n\t\"fecha\":\"2017-08-25\",\n\t\"hora\":\"10:56:37\"\n}"
+				},
+				"url": {
+					"raw": "http://www.relojgaretto.cl/api/setMarcacionRt/",
+					"protocol": "http",
+					"host": [
+						"www",
+						"relojgaretto",
+						"cl"
+					],
+					"path": [
+						"api",
+						"setMarcacionRt",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "superbuscador",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "query",
+							"value": "pereira",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:8000/api/buscarTrabajador/",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"buscarTrabajador",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "lista Usuarios",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Compra exitosa\"] = responseBody=\"1\";"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					},
+					{
+						"key": "gtoken",
+						"value": "EN128S7NvEmRoHiSOaypRQ.VKYw5ad3cEKV8_P6V54QmQ.14RebQ_3f06a67qKQMM4Qw.iQPYtlq6VE2uAhAtiBOTaQ.W2XhStOz4ku8XmCbxt27oQ"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "usuario",
+							"value": "pablo",
+							"type": "text"
+						},
+						{
+							"key": "rut_usuario",
+							"value": "160",
+							"type": "text"
+						},
+						{
+							"key": "email_usuario",
+							"value": "nestor.mora@usach.cl",
+							"type": "text"
+						},
+						{
+							"key": "modelo",
+							"value": "FGT45",
+							"type": "text"
+						},
+						{
+							"key": "marca",
+							"value": "ZKT",
+							"type": "text"
+						},
+						{
+							"key": "cantidad",
+							"value": "2",
+							"type": "text",
+							"description": "cantidad de relojes de esa marca"
+						},
+						{
+							"key": "rut_empresa",
+							"value": "7719",
+							"type": "text"
+						},
+						{
+							"key": "direccion_empresa",
+							"value": "Providencia",
+							"type": "text"
+						},
+						{
+							"key": "giro_empresa",
+							"value": "Informá",
+							"type": "text"
+						},
+						{
+							"key": "empresa",
+							"value": "Informática ",
+							"description": "nombre de empresa",
+							"type": "text"
+						},
+						{
+							"key": "nombres",
+							"value": "Pablo Andres",
+							"type": "text"
+						},
+						{
+							"key": "apellido1",
+							"value": "Figueroa",
+							"type": "text"
+						},
+						{
+							"key": "apellido2",
+							"value": "Plaza",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:8000/pv/listaUsuarios/g2",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"pv",
+						"listaUsuarios",
+						"g2"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "set TI",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Compra exitosa\"] = responseBody=\"1\";"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					},
+					{
+						"key": "gtoken",
+						"value": "EN128S7NvEmRoHiSOaypRQ.VKYw5ad3cEKV8_P6V54QmQ.14RebQ_3f06a67qKQMM4Qw.iQPYtlq6VE2uAhAtiBOTaQ.W2XhStOz4ku8XmCbxt27oQ"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "usuario",
+							"value": "pablo",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "rut_usuario",
+							"value": "160",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "email_usuario",
+							"value": "nestor.mora@usach.cl",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "modelo",
+							"value": "FGT45",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "marca",
+							"value": "ZKT",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "cantidad",
+							"value": "2",
+							"type": "text",
+							"description": "cantidad de relojes de esa marca",
+							"disabled": true
+						},
+						{
+							"key": "rut_empresa",
+							"value": "7719",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "direccion_empresa",
+							"value": "Providencia",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "giro_empresa",
+							"value": "Informá",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "empresa",
+							"value": "Informática ",
+							"description": "nombre de empresa",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "nombres",
+							"value": "Pablo Andres",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "apellido1",
+							"value": "Figueroa",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "apellido2",
+							"value": "Plaza",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "http://www.relojgaretto.cl/pv/selTI/garetto/18",
+					"protocol": "http",
+					"host": [
+						"www",
+						"relojgaretto",
+						"cl"
+					],
+					"path": [
+						"pv",
+						"selTI",
+						"garetto",
+						"18"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "crear TI",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Compra exitosa\"] = responseBody=\"1\";"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					},
+					{
+						"key": "gtoken",
+						"value": "EN128S7NvEmRoHiSOaypRQ.VKYw5ad3cEKV8_P6V54QmQ.14RebQ_3f06a67qKQMM4Qw.iQPYtlq6VE2uAhAtiBOTaQ.W2XhStOz4ku8XmCbxt27oQ"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "usuario",
+							"value": "pablo",
+							"type": "text"
+						},
+						{
+							"key": "rut_usuario",
+							"value": "160",
+							"type": "text"
+						},
+						{
+							"key": "email_usuario",
+							"value": "nestor.mora@usach.cl",
+							"type": "text"
+						},
+						{
+							"key": "modelo",
+							"value": "FGT45",
+							"type": "text"
+						},
+						{
+							"key": "marca",
+							"value": "ZKT",
+							"type": "text"
+						},
+						{
+							"key": "cantidad",
+							"value": "2",
+							"type": "text",
+							"description": "cantidad de relojes de esa marca"
+						},
+						{
+							"key": "rut_empresa",
+							"value": "7719",
+							"type": "text"
+						},
+						{
+							"key": "direccion_empresa",
+							"value": "Providencia",
+							"type": "text"
+						},
+						{
+							"key": "giro_empresa",
+							"value": "Informá",
+							"type": "text"
+						},
+						{
+							"key": "empresa",
+							"value": "Informática ",
+							"description": "nombre de empresa",
+							"type": "text"
+						},
+						{
+							"key": "nombres",
+							"value": "Pablo Andres",
+							"type": "text"
+						},
+						{
+							"key": "apellido1",
+							"value": "Figueroa",
+							"type": "text"
+						},
+						{
+							"key": "apellido2",
+							"value": "Plaza",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:8000/pv/crearTI/garetto",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"pv",
+						"crearTI",
+						"garetto"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "crear empresa",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Compra exitosa\"] = responseBody=\"1\";"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					},
+					{
+						"key": "gtoken",
+						"value": "EN128S7NvEmRoHiSOaypRQ.VKYw5ad3cEKV8_P6V54QmQ.14RebQ_3f06a67qKQMM4Qw.iQPYtlq6VE2uAhAtiBOTaQ.W2XhStOz4ku8XmCbxt27oQ"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "usuario",
+							"value": "pablo",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "rut_representante",
+							"value": "9132984-0",
+							"type": "text"
+						},
+						{
+							"key": "nombre_representante",
+							"value": "VERGARA OLAVARRIA JOSE ANTONIO",
+							"type": "text"
+						},
+						{
+							"key": "modelo",
+							"value": "FGT45",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "marca",
+							"value": "ZKT",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "cantidad",
+							"value": "2",
+							"type": "text",
+							"description": "cantidad de relojes de esa marca",
+							"disabled": true
+						},
+						{
+							"key": "rut",
+							"value": "81771100-6",
+							"type": "text"
+						},
+						{
+							"key": "direccion",
+							"value": "Providencia",
+							"type": "text"
+						},
+						{
+							"key": "giro",
+							"value": "Informatismo",
+							"type": "text"
+						},
+						{
+							"key": "nombre",
+							"value": "Informática whared",
+							"description": "nombre de empresa",
+							"type": "text"
+						},
+						{
+							"key": "nombre_corto",
+							"value": "whared",
+							"type": "text"
+						},
+						{
+							"key": "apellido1",
+							"value": "Figueroa",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "apellido2",
+							"value": "Plaza",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:8000/pv/crearEmpresa",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"pv",
+						"crearEmpresa"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "actualizar empresa",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Compra exitosa\"] = responseBody=\"1\";"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					},
+					{
+						"key": "gtoken",
+						"value": "EN128S7NvEmRoHiSOaypRQ.VKYw5ad3cEKV8_P6V54QmQ.14RebQ_3f06a67qKQMM4Qw.iQPYtlq6VE2uAhAtiBOTaQ.W2XhStOz4ku8XmCbxt27oQ"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "usuario",
+							"value": "pablo",
+							"type": "text",
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "rut_representante",
+							"value": "9132984-0",
+							"type": "text",
+							"description": ""
+						},
+						{
+							"key": "nombre_representante",
+							"value": "VERGARA OLAVARRIA JOSE ANTONIO",
+							"type": "text",
+							"description": ""
+						},
+						{
+							"key": "modelo",
+							"value": "FGT45",
+							"type": "text",
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "marca",
+							"value": "ZKT",
+							"type": "text",
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "cantidad",
+							"value": "2",
+							"type": "text",
+							"description": "cantidad de relojes de esa marca",
+							"disabled": true
+						},
+						{
+							"key": "rut",
+							"value": "77687681-K",
+							"type": "text",
+							"description": ""
+						},
+						{
+							"key": "direccion",
+							"value": "Providencia",
+							"type": "text",
+							"description": ""
+						},
+						{
+							"key": "giro",
+							"value": "Informatismo",
+							"type": "text",
+							"description": ""
+						},
+						{
+							"key": "nombre",
+							"value": "Informática whared",
+							"type": "text",
+							"description": "nombre de empresa"
+						},
+						{
+							"key": "nombre_corto",
+							"value": "whared",
+							"type": "text",
+							"description": ""
+						},
+						{
+							"key": "apellido1",
+							"value": "Figueroa",
+							"type": "text",
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "apellido2",
+							"value": "Plaza",
+							"type": "text",
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "proxima_fecha_expiracion",
+							"value": "2017-12-31",
+							"type": "text",
+							"description": ""
+						},
+						{
+							"key": "num_relojes",
+							"value": "2",
+							"type": "text",
+							"description": ""
+						},
+						{
+							"key": "num_trab",
+							"value": "200",
+							"type": "text",
+							"description": ""
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:8000/pv/actEmpresa/3",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"pv",
+						"actEmpresa",
+						"3"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

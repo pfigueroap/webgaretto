@@ -43,6 +43,8 @@
                                     <th>Tipo Compra</th>
                                     <th>Fecha de Registro</th>
                                     <th>Hora de Registro</th>
+                                    <th>Fecha de Caducidad</th>
+                                    <th>Cantidad de Trabajadores</th>
                                     <th>Usuario de Registro</th>
                                     <th>Cantidad</th>
                                     <th style="text-align: center;">Acciones</th>
@@ -56,6 +58,8 @@
                                     <td><?php echo $registro->tipo_orden; ?></td>
                                     <td><?php echo $registro->f_registro; ?></td>
                                     <td><?php echo $registro->h_registro; ?></td>
+                                    <td><?php echo $registro->f_caducidad; ?></td>
+                                    <td><?php echo $registro->cant_trabajadores; ?></td>
                                     <td><?php echo $registro->usuario; ?></td>
                                     <td><?php echo $registro->cantidad; ?></td>
                                     <td style="text-align: center;"><?php if($registro->activo == '0'){ ?>
