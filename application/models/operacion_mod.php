@@ -158,7 +158,7 @@ class Operacion_mod extends CI_Controller {
     function correo_valida(){
         $query = $this->db->query("SELECT correo FROM configuracion WHERE tipo = 'valida' ORDER BY id_config DESC LIMIT 1");
         $result = $query->result();
-        $correo = $result[0]->correo_validacion;
+        $correo = $result[0]->correo;
         return $correo;
     }
     function tmp_clave($length) {
