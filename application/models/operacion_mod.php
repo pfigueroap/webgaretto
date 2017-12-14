@@ -156,7 +156,7 @@ class Operacion_mod extends CI_Controller {
         $this->db->query("UPDATE tmp_compra SET valida = '{$estado}' WHERE id_tmp_compra = '{$id_tmp_compra}'");
     }
     function correo_valida(){
-        $query = $this->db->query("SELECT correo_validacion FROM correo_valida ORDER BY id_config DESC LIMIT 1");
+        $query = $this->db->query("SELECT correo FROM configuracion WHERE tipo = 'valida' ORDER BY id_config DESC LIMIT 1");
         $result = $query->result();
         $correo = $result[0]->correo_validacion;
         return $correo;
